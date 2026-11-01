@@ -23,6 +23,15 @@ header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-it
 .toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,16px);z-index:1000;padding:11px 18px;border-radius:999px;background:#315d48;color:#fff;font-size:13px;font-weight:650;box-shadow:0 8px 26px rgba(25,48,34,.2);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}.related-picker{border:1px solid var(--line);border-radius:13px;padding:10px 12px;background:#fff}.related-picker-list{display:grid;gap:6px;max-height:190px;overflow:auto;margin-top:8px}.related-option{position:relative;display:flex;align-items:center;gap:10px;font-size:13px;padding:12px 42px 12px 14px;border:1px solid transparent;border-radius:13px;background:#fff;transition:background .15s,border-color .15s;cursor:pointer}.related-option.selected{background:#e4efe6;border-color:#b8d0bd;color:#244d37}.related-option.selected strong{color:#244d37}.related-option input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}.related-option.selected:after{content:'✓';position:absolute;right:15px;top:50%;transform:translateY(-50%);color:#315d48;font-size:19px;font-weight:750}.related-chip{display:inline-flex;padding:4px 9px;border-radius:99px;background:var(--soft);color:var(--accent);font-size:12px;margin:3px 4px 3px 0}
 
 
+
+/* Keep the scope explanation visually attached to its dropdown */
+.quiz-scope-column{display:grid;gap:8px;min-width:0}
+.quiz-scope-column .quiz-intro{width:100%;max-width:none;margin:0;box-sizing:border-box}
+@media(max-width:740px){
+ .quiz-scope-column{gap:7px}
+ .quiz-scope-column .quiz-intro{font-size:11px}
+}
+
 /* Quiz alignment refinements */
 @media(min-width:741px){
  #quiz .section-head:has(#quizMode){max-width:600px!important;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
@@ -349,15 +358,17 @@ button.secondary,button.ghost,button.danger{font-size:13px}
     <div class="section-head" style="width:100%;max-width:650px"><h2>월별 단어 테스트</h2></div>
     <div class="quiz-filters">
       <div class="field"><label for="quizMonth">기준 월</label><input type="month" id="quizMonth"></div>
-      <div class="field"><label for="quizScope">테스트할 단어</label><select id="quizScope">
-        <option value="monthAll">선택한 달에 등록한 단어 전체</option>
-        <option value="monthMastered">선택한 달에 완벽 암기한 단어</option>
-        <option value="allMastered">전체 완벽 암기 단어</option>
-        <option value="monthLearning">선택한 달에 등록한 단어 중 익히는 중</option>
-        <option value="monthReview">선택한 달에 등록한 단어 중 복습 필요</option>
-      </select></div>
+      <div class="quiz-scope-column">
+        <div class="field"><label for="quizScope">테스트할 단어</label><select id="quizScope">
+          <option value="monthAll">선택한 달에 등록한 단어 전체</option>
+          <option value="monthMastered">선택한 달에 완벽 암기한 단어</option>
+          <option value="allMastered">전체 완벽 암기 단어</option>
+          <option value="monthLearning">선택한 달에 등록한 단어 중 익히는 중</option>
+          <option value="monthReview">선택한 달에 등록한 단어 중 복습 필요</option>
+        </select></div>
+        <div class="quiz-intro" id="quizScopeDescription">선택한 달에 등록한 단어를 무작위로 출제해요. 완벽 암기 단어도 다시 테스트할 수 있어요.</div>
+      </div>
     </div>
-    <div class="quiz-intro" id="quizScopeDescription">선택한 달에 등록한 단어를 무작위로 출제해요. 완벽 암기 단어도 다시 테스트할 수 있어요.</div>
     <div class="section-head" style="width:100%;max-width:650px;margin-top:12px"><div class="field" style="min-width:210px;margin:0"><label for="quizMode">문제 방식</label><select id="quizMode" aria-label="테스트 방향"><option value="meaningToWord">뜻 보고 영어 단어 쓰기</option><option value="wordToMeaning">영어 보고 뜻 고르기</option></select></div><div class="muted" id="quizCount">테스트 준비</div></div>
     <div class="progress-track"><div class="progress-fill" id="quizProgress"></div></div>
     <div class="card-big" id="quizPrompt">테스트할 단어를 선택해 주세요.</div>
