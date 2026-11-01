@@ -169,6 +169,11 @@ button.secondary,button.ghost,button.danger{font-size:13px}
   #home .stat b{font-size:18px;line-height:1.15;letter-spacing:-.5px;margin-bottom:3px}
   #home .stat small{display:block;font-size:9px;line-height:1.2;white-space:nowrap;letter-spacing:-.3px}
 }
+
+.study-direction{display:flex;gap:7px;margin:0 0 14px}
+.study-direction button{flex:1;max-width:180px}
+.study-direction button.active{background:var(--soft);color:var(--accent);border-color:#cbdccc}
+@media(max-width:740px){.study-direction button{max-width:none}}
 </style>
 </head>
 <body>
@@ -257,7 +262,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 
 <section id="study" class="hidden">
   <div class="panel card-panel">
-    <div class="section-head" style="width:100%;max-width:650px"><div class="muted" id="studyCount">단어 복습</div><button class="secondary" id="wordQuizMode">월별 테스트 열기</button></div><div class="card-big" id="front">복습을 시작해 보세요.</div>
+    <div class="section-head" style="width:100%;max-width:650px"><div class="muted" id="studyCount">단어 복습</div><button class="secondary" id="wordQuizMode">월별 테스트 열기</button></div><div class="study-direction" role="group" aria-label="복습 방향"><button type="button" class="secondary active" data-study-direction="en-ko">영어 → 뜻</button><button type="button" class="secondary" data-study-direction="ko-en">뜻 → 영어</button></div><div class="card-big" id="front">복습을 시작해 보세요.</div>
     <button id="revealWord">뜻 확인하기</button>
     <div class="card-answer hidden" id="wordBack"><h2 id="backMeaning"></h2><div id="backExample" class="example-en"></div><div id="backTranslation" class="example-ko"></div><div id="backRelatedWrap" class="hidden" style="margin-top:12px;text-align:left"><div class="detail-label">연결된 단어</div><div id="backRelated"></div></div>
       <div class="grade"><button class="again" data-word-grade="again">다시</button><button class="hard" data-word-grade="hard">어려움</button><button class="good" data-word-grade="good">알겠음</button><button class="easy" data-word-grade="easy">쉬움</button></div>
@@ -595,9 +600,20 @@ $('search').oninput=renderList;
 $('wordList').addEventListener('click',async e=>{const t=e.target.closest('button');if(!t)return;const id=t.dataset.open||t.dataset.edit||t.dataset.delete||t.dataset.studySentence||t.dataset.studyWord;if(!id)return;if(t.dataset.open){expandedId=expandedId===id?null:id;renderList();}else if(t.dataset.edit){const w=words.find(x=>x.id===id);if(w)fillForm(w);}else if(t.dataset.delete){if(confirm('"'+(words.find(w=>String(w.id)===String(id))?.word||'이 단어')+'"을(를) 삭제할까요?')){clearTimeout(saveTimer);deletingWord=true;deletedIds.add(String(id));words=words.filter(w=>String(w.id)!==String(id));words.forEach(w=>{w.relatedIds=(Array.isArray(w.relatedIds)?w.relatedIds:[]).filter(x=>String(x)!==String(id));});if(expandedId===id)expandedId=null;saveLocal();try{if(currentUser){setSyncStatus('삭제 내용 동기화 중…');await writeCloud();}}finally{deletingWord=false;}showToast('단어가 삭제되었어요.');}}else if(t.dataset.studySentence){activateTab('sentences');startSentenceStudy(id);}else if(t.dataset.studyWord){activateTab('study');startWordStudy(id);}});
 
 // 단어 복습
+let studyDirection='en-ko';
+function setStudyDirection(direction){
+  studyDirection=direction;
+  document.querySelectorAll('[data-study-direction]').forEach(b=>b.classList.toggle('active',b.dataset.studyDirection===direction));
+  if(currentWord)showCurrentWordPrompt();
+}
+function showCurrentWordPrompt(){
+  $('front').textContent=studyDirection==='en-ko'?currentWord.word:currentWord.meaning;
+  $('studyHint').textContent=studyDirection==='en-ko'?'영어 단어를 보고 한국어 뜻을 떠올려 보세요.':'한국어 뜻을 보고 영어 단어를 떠올려 보세요.';
+}
+document.querySelectorAll('[data-study-direction]').forEach(b=>b.onclick=()=>setStudyDirection(b.dataset.studyDirection));
 function startWordStudy(onlyId=null){wordQueue=onlyId?words.filter(w=>w.id===onlyId):dueWords();currentWord=null;showWordCard();}
-function showWordCard(){currentWord=wordQueue.shift()||null;if(!currentWord){$('front').textContent=words.length?'오늘 복습할 단어가 없어요.':'등록된 단어가 없어요.';$('studyCount').textContent='단어 복습';$('revealWord').classList.add('hidden');$('wordBack').classList.add('hidden');$('studyHint').textContent=words.length?'복습할 단어가 생기면 여기에 표시돼요.':'먼저 단어를 등록해 주세요.';return;}$('front').textContent=currentWord.word;$('studyCount').textContent=`남은 카드 ${wordQueue.length+1}개`;$('wordBack').classList.add('hidden');$('revealWord').classList.remove('hidden');$('studyHint').textContent='영어 단어의 뜻을 먼저 떠올려 보세요.';}
-$('revealWord').onclick=()=>{if(!currentWord)return;$('backMeaning').textContent=currentWord.meaning;$('backExample').textContent=currentWord.example||'';$('backTranslation').textContent=currentWord.translation||'';const related=relatedWordsFor(currentWord);$('backRelated').innerHTML=related.map(w=>'<span class="related-chip">'+esc(w.word)+' · '+esc(w.meaning)+'</span>').join('');$('backRelatedWrap').classList.toggle('hidden',!related.length);$('wordBack').classList.remove('hidden');$('revealWord').classList.add('hidden');};
+function showWordCard(){currentWord=wordQueue.shift()||null;if(!currentWord){$('front').textContent=words.length?'오늘 복습할 단어가 없어요.':'등록된 단어가 없어요.';$('studyCount').textContent='단어 복습';$('revealWord').classList.add('hidden');$('wordBack').classList.add('hidden');$('studyHint').textContent=words.length?'복습할 단어가 생기면 여기에 표시돼요.':'먼저 단어를 등록해 주세요.';return;}showCurrentWordPrompt();$('studyCount').textContent=`남은 카드 ${wordQueue.length+1}개`;$('wordBack').classList.add('hidden');$('revealWord').classList.remove('hidden');}
+$('revealWord').onclick=()=>{if(!currentWord)return;$('backMeaning').textContent=studyDirection==='en-ko'?currentWord.meaning:currentWord.word;$('backExample').textContent=currentWord.example||'';$('backTranslation').textContent=currentWord.translation||'';const related=relatedWordsFor(currentWord);$('backRelated').innerHTML=related.map(w=>'<span class="related-chip">'+esc(w.word)+' · '+esc(w.meaning)+'</span>').join('');$('backRelatedWrap').classList.toggle('hidden',!related.length);$('wordBack').classList.remove('hidden');$('revealWord').classList.add('hidden');};
 document.querySelectorAll('[data-word-grade]').forEach(b=>b.onclick=()=>{
   if(!currentWord)return;
   const grade=b.dataset.wordGrade,now=Date.now();
