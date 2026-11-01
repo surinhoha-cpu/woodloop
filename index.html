@@ -202,7 +202,7 @@ main{margin-top:8px}
       </div>
     </div>
   </div>
-  <p class="footer-note">완벽 암기는 Good 또는 Easy를 5회 연속 선택한 단어예요. 완벽 암기 전에는 7일마다, 완벽 암기 후에는 30일마다 다시 복습해요.</p>
+  <p class="footer-note">Again은 다음 날, Hard와 익히는 중인 단어는 7일 뒤, 완벽 암기한 단어는 30일 뒤 다시 복습해요. 완벽 암기는 Good 또는 Easy 5회 연속 기준이에요.</p>
 </section>
 
 <section id="add" class="hidden">
@@ -536,8 +536,8 @@ document.querySelectorAll('[data-word-grade]').forEach(b=>b.onclick=()=>{
     currentWord.masteryStreak=0;
     currentWord.masteredAt=null;
   }
-  // Not fully mastered: review every 7 days. Fully mastered: review every 30 days.
-  const daysUntilNextReview=currentWord.masteryStreak>=5?30:7;
+  // Again: next day. Learning / Hard: 7 days. Mastered: 30 days.
+  const daysUntilNextReview=grade==='again'?1:(currentWord.masteryStreak>=5?30:7);
   currentWord.interval=daysUntilNextReview;
   currentWord.next=now+daysUntilNextReview*86400000;
   currentWord.lastGrade=grade;
