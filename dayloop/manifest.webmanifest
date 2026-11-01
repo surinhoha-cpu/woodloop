@@ -1,0 +1,11 @@
+{
+  "name": "Dayloop — Plan & Live",
+  "short_name": "Dayloop",
+  "description": "A personal planner for everyday life and FIFO rosters.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f5f1",
+  "theme_color": "#f3f5f1",
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
