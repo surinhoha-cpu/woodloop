@@ -153,6 +153,14 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 }
 
 .mastery-compact{padding:0 0 16px;margin:0 0 16px;border-bottom:1px solid var(--line)}.mastery-compact .section-head{margin-bottom:8px}.mastery-compact h2{font-size:15px;margin:0}.mastery-compact strong{font-size:14px;color:var(--accent)}.mastery-compact .mastery-track{height:7px}.mastery-compact .mastery-breakdown{font-size:11px;margin-top:7px}
+
+/* Ultra-compact mobile dashboard stats */
+@media(max-width:740px){
+  #home .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0 0 10px}
+  #home .stat{padding:5px 2px;background:transparent;border:0;border-radius:0;box-shadow:none;text-align:center;min-width:0}
+  #home .stat b{font-size:18px;line-height:1.15;letter-spacing:-.5px;margin-bottom:3px}
+  #home .stat small{display:block;font-size:9px;line-height:1.2;white-space:nowrap;letter-spacing:-.3px}
+}
 </style>
 </head>
 <body>
