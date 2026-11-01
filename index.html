@@ -177,6 +177,35 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 .study-direction button{flex:1;max-width:180px}
 .study-direction button.active{background:var(--soft);color:var(--accent);border-color:#cbdccc}
 @media(max-width:740px){.study-direction button{max-width:none}}
+
+/* Compact study and test screens */
+#study.card-panel,#sentences.card-panel,#quiz.card-panel{min-height:0;padding:24px 22px;gap:16px}
+#study #front,#sentences #sentenceFront{font-size:25px;line-height:1.4;letter-spacing:-.45px}
+#study .study-direction button,#sentences button,#quiz button{font-size:14px}
+#quiz.card-panel{min-height:0!important;gap:13px}
+#quiz .section-head h2{font-size:19px}
+#quiz .quiz-filters{max-width:600px;gap:8px;margin-bottom:10px}
+#quiz .quiz-filters .field label,#quiz .field label{font-size:12px}
+#quiz .quiz-intro{font-size:12px;padding:10px 12px}
+#quiz .quiz-prompt,#quiz #quizPrompt{font-size:25px;line-height:1.35;letter-spacing:-.45px}
+#quiz #quizAnswer,#quiz .quiz-filters input,#quiz .quiz-filters select{font-size:16px;min-height:48px}
+#quiz .quiz-options button{font-size:14px;padding:10px 12px;min-height:44px}
+#quiz .feedback{font-size:13px;padding:10px 12px}
+#quiz .quiz-footer button{font-size:13px;min-height:42px;padding:9px 13px}
+@media(max-width:740px){
+ #study.card-panel,#sentences.card-panel,#quiz.card-panel{padding:19px 15px;gap:13px;margin:10px auto}
+ #study #front,#sentences #sentenceFront{font-size:22px;line-height:1.4}
+ #sentences .pill{font-size:11px}
+ #quiz .section-head h2{font-size:18px}
+ #quiz #quizPrompt{font-size:22px;line-height:1.35}
+ #quiz .quiz-filters{grid-template-columns:1fr 1fr;gap:8px}
+ #quiz .quiz-intro{font-size:11px}
+ #quiz .quiz-options{gap:7px}
+ #quiz .quiz-options button{font-size:13px;min-height:42px;padding:9px 11px}
+ #quiz .quiz-footer{gap:6px}
+ #quiz .quiz-footer button{font-size:12px;padding:8px 10px}
+}
+
 </style>
 </head>
 <body>
