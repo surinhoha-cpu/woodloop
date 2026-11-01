@@ -28,8 +28,7 @@ button{min-height:42px;transition:transform .12s ease,background .12s ease,box-s
 button:active{transform:scale(.985)}
 button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(49,93,72,.2);outline-offset:2px}
 header{padding-top:calc(24px + env(safe-area-inset-top))}
-h1{font-weight:800;letter-spacing:-1px}
-h1 span{color:var(--accent)}
+h1{font-weight:800;letter-spacing:-1px}.logo-lockup{display:flex;align-items:center;gap:9px}.logo-bear{width:31px;height:31px;flex:0 0 auto}
 main{margin-top:8px}
 .panel,.stat{border-color:var(--line);border-radius:22px;box-shadow:0 7px 24px rgba(37,57,43,.045)}
 .panel{padding:21px}
@@ -138,7 +137,7 @@ main{margin-top:8px}
 </head>
 <body>
 <header>
-  <div><h1>word<span>loop</span></h1><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기</div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="0 0 48 48" role="img" aria-label="곰돌이 로고"><path d="M8.5 17.5C5.4 17.5 3 15 3 12s2.4-5.5 5.5-5.5c2.7 0 4.9 1.9 5.4 4.4 3.1-1.4 6.5-2.1 10.1-2.1s7 .7 10.1 2.1c.5-2.5 2.7-4.4 5.4-4.4 3.1 0 5.5 2.5 5.5 5.5s-2.4 5.5-5.5 5.5c1.3 2.3 2 5 2 7.8 0 9.2-7.8 15.2-17.5 15.2S6.5 34.5 6.5 25.3c0-2.8.7-5.5 2-7.8Z" fill="none" stroke="#315d48" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="24" r="1.9" fill="#315d48"/><circle cx="30" cy="24" r="1.9" fill="#315d48"/><path d="M21.5 29.5q2.5-2.5 5 0M24 29.5v1.3" fill="none" stroke="#315d48" stroke-width="2.5" stroke-linecap="round"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기</div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -307,6 +306,7 @@ function mergeCloudWords(remoteWords){
   let localOnly=false;
   for(const w of words){if(w&&w.id&&!map.has(String(w.id))){map.set(String(w.id),w);localOnly=true;}}
   words=Array.from(map.values());
+  normalizeRelatedLinks();
   saveLocal();
   return localOnly;
 }
@@ -518,16 +518,19 @@ function renderRelatedChoices(){
  $('relatedChoices').innerHTML=candidates.length?candidates.map(w=>'<label class="related-option"><input type="checkbox" data-related-id="'+esc(w.id)+'" '+(selectedRelatedIds.includes(w.id)?'checked':'')+'><span><strong>'+esc(w.word)+'</strong> <span class="muted">· '+esc(w.meaning)+'</span></span></label>').join(''):'<span class="muted">연결할 기존 단어가 없어요.</span>';
  $('relatedSelectedLabel').textContent=selectedRelatedIds.length?'선택한 단어 '+selectedRelatedIds.length+'개':'연결된 단어 없음';
 }
-function relatedWordsFor(w){return (Array.isArray(w.relatedIds)?w.relatedIds:[]).map(id=>words.find(x=>x.id===id)).filter(Boolean);}
+function relatedIdsFor(w){const ids=new Set(Array.isArray(w.relatedIds)?w.relatedIds.map(String):[]);words.forEach(x=>{if(x.id!==w.id&&Array.isArray(x.relatedIds)&&x.relatedIds.map(String).includes(String(w.id)))ids.add(String(x.id));});return [...ids];}
+function relatedWordsFor(w){return relatedIdsFor(w).map(id=>words.find(x=>String(x.id)===id)).filter(Boolean);}
+function syncRelatedLinks(wordId,selectedIds){const selected=new Set(selectedIds.map(String));const target=words.find(w=>String(w.id)===String(wordId));if(!target)return;target.relatedIds=[...selected].filter(id=>words.some(w=>String(w.id)===id&&String(w.id)!==String(wordId)));words.forEach(w=>{if(String(w.id)===String(wordId))return;const ids=new Set(Array.isArray(w.relatedIds)?w.relatedIds.map(String):[]);if(selected.has(String(w.id)))ids.add(String(wordId));else ids.delete(String(wordId));w.relatedIds=[...ids];});}
+function normalizeRelatedLinks(){const snapshot=words.map(w=>[String(w.id),relatedIdsFor(w)]);snapshot.forEach(([id,ids])=>syncRelatedLinks(id,ids));}
 
 function collectForm(){return{word:$('word').value.trim(),meaning:$('meaning').value.trim(),example:$('example').value.trim(),translation:$('translation').value.trim(),category:$('category').value,note:$('note').value.trim(),relatedIds:[...selectedRelatedIds]};}
 function clearForm(){['word','meaning','example','translation','note','relatedSearch'].forEach(id=>$(id).value='');$('category').value='일상 영어';editingId=null;selectedRelatedIds=[];$('addTitle').textContent='새 단어 등록';$('saveWord').textContent='단어 저장하기';$('cancelEdit').classList.add('hidden');renderRelatedChoices();}
-function fillForm(w){editingId=w.id;['word','meaning','example','translation','category','note'].forEach(k=>$(k).value=w[k]||'');selectedRelatedIds=Array.isArray(w.relatedIds)?[...w.relatedIds]:[];$('addTitle').textContent='단어 수정';$('saveWord').textContent='수정 내용 저장';$('cancelEdit').classList.remove('hidden');renderRelatedChoices();activateTab('add');}
+function fillForm(w){editingId=w.id;['word','meaning','example','translation','category','note'].forEach(k=>$(k).value=w[k]||'');selectedRelatedIds=relatedIdsFor(w);$('addTitle').textContent='단어 수정';$('saveWord').textContent='수정 내용 저장';$('cancelEdit').classList.remove('hidden');renderRelatedChoices();activateTab('add');}
 function renderList(){const q=($('search')?.value||'').trim().toLowerCase();const list=words.filter(w=>(`${w.word} ${w.meaning} ${w.category||''}`).toLowerCase().includes(q));if(!list.length){$('wordList').innerHTML='<div class="empty">'+(words.length?'검색 결과가 없어요.':'아직 등록된 단어가 없어요.')+'</div>';return;}
 $('wordList').innerHTML=list.map(w=>`<article class="word-item"><div class="word-head"><button class="word-open" data-open="${esc(w.id)}" aria-expanded="${expandedId===w.id}"><strong>${esc(w.word)} <span class="muted">${expandedId===w.id?'▴':'▾'}</span></strong><small>${esc(w.meaning)} · ${esc(w.category||'기타')}</small><div class="word-meta">${formatDate(w.created)} 등록 · <span class="word-status ${wordStatus(w)}">${statusLabel(w)}</span><div>${nextReviewText(w)}</div></div></button><div class="word-tools"><button class="secondary" data-edit="${esc(w.id)}">수정</button><button class="danger" data-delete="${esc(w.id)}">삭제</button></div></div>${expandedId===w.id?`<div class="word-detail"><div class="detail-meta"><span>등록일: ${formatDate(w.created)}</span><span>연속 정답: ${Number(w.masteryStreak||0)}/5회</span><span class="word-status ${wordStatus(w)}">${statusLabel(w)}</span><span>${nextReviewText(w)}</span></div><div class="detail-label">뜻</div><div class="detail-text">${esc(w.meaning)}</div>${relatedWordsFor(w).length?'<div class="detail-label">연결된 단어</div><div>'+relatedWordsFor(w).map(r=>'<span class="related-chip">'+esc(r.word)+'</span>').join('')+'</div>':''}<div class="detail-label">예문</div><div class="example-box"><div class="example-en">${w.example?esc(w.example):'등록된 예문이 없어요.'}</div><div class="example-ko">${w.translation?esc(w.translation):'예문 해석이 등록되지 않았어요.'}</div></div>${w.note?`<div class="detail-label">메모</div><div>${esc(w.note)}</div>`:''}<div class="row" style="margin-top:12px"><button class="secondary" data-study-sentence="${esc(w.id)}" ${!(w.example&&w.translation)?'disabled':''}>이 문장 복습하기</button><button class="secondary" data-study-word="${esc(w.id)}">이 단어 복습하기</button></div></div>`:''}</article>`).join('');}
 function activateTab(name){document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==name));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));if(name==='words')renderList();if(name==='quiz')startQuiz(false);if(name==='study')startWordStudy();if(name==='sentences')startSentenceStudy();}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>activateTab(b.dataset.tab)));
-$('saveWord').onclick=()=>{const d=collectForm();if(editingId){const i=words.findIndex(w=>w.id===editingId);if(i>=0){words[i]={...words[i],...d};save();clearForm();activateTab('words');showToast('단어 정보가 수정되었어요.');}}else if(addWord(d)){clearForm();showToast('단어가 등록되었어요.');}};
+$('saveWord').onclick=()=>{const d=collectForm();if(editingId){const i=words.findIndex(w=>w.id===editingId);if(i>=0){words[i]={...words[i],...d};syncRelatedLinks(editingId,d.relatedIds);save();clearForm();activateTab('words');showToast('단어 정보가 수정되었어요.');}}else if(addWord(d)){syncRelatedLinks(words[0].id,d.relatedIds);save();clearForm();showToast('단어가 등록되었어요.');}};
 $('cancelEdit').onclick=()=>{clearForm();activateTab('words');};
 $('relatedSearch').oninput=renderRelatedChoices;
 $('relatedChoices').addEventListener('change',e=>{const input=e.target.closest('[data-related-id]');if(!input)return;const id=input.dataset.relatedId;if(input.checked){if(!selectedRelatedIds.includes(id))selectedRelatedIds.push(id);}else selectedRelatedIds=selectedRelatedIds.filter(x=>x!==id);renderRelatedChoices();});
