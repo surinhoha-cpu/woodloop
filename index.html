@@ -30,7 +30,7 @@ header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-it
   <div class="auth-card">
     <h2>Wordloop 로그인</h2>
     <p class="muted">저장한 단어를 여러 기기에서 이어서 사용하세요.</p>
-    <div class="field"><label for="authEmail">이메일</label><input id="authEmail" type="email" value="srin001@icloud.com" autocomplete="username"></div>
+    <div class="field"><label for="authEmail">이메일</label><input id="authEmail" type="email" value="srin001@icloud.com" autocomplete="username" readonly></div>
     <div class="field"><label for="authPassword">비밀번호</label><input id="authPassword" type="password" minlength="8" placeholder="비밀번호 입력" autocomplete="current-password"></div>
     <div class="auth-actions">
       <button id="loginBtn">로그인</button>
@@ -125,7 +125,7 @@ const KEY='wordloop-v1';
 const SUPABASE_URL='https://jmjfhvlrwwfuyurbxlsy.supabase.co';
 const SUPABASE_KEY='sb_publishable_ED2G8FRPHtCz5y_AmazRiw_nCitH2d1';
 const OWNER_EMAIL='srin001@icloud.com';
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const supabaseClient=window.supabase?.createClient?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
 let words=[];
 try{words=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(words))words=[];}catch(e){words=[];}
 let currentUser=null,cloudReady=false,activatingUserId=null,saveTimer=null,syncChannel=null;
