@@ -540,7 +540,7 @@ function renderStats(){
   $('sentenceDue').textContent=dueSentences().length;
   const ratio=words.length?Math.round(counts.mastered/words.length*100):0;
   $('masteryFill').style.width=ratio+'%';
-  $('masteryBreakdown').innerHTML='<strong>'+ratio+'%</strong> 완벽 암기 · 익히는 중 '+counts.learning+'개 · 복습 필요 '+counts['needs-review']+'개';
+  if($('masteryPercent'))$('masteryPercent').textContent=ratio+'%';$('masteryBreakdown').innerHTML='완벽 암기 · 익히는 중 '+counts.learning+'개 · 복습 필요 '+counts['needs-review']+'개';
   renderCalendar();
 }
 function addWord(data){if(!data.word||!data.meaning){showToast('영어 단어와 뜻을 입력해 주세요.');return false;}if(words.some(w=>w.word.toLowerCase()===data.word.toLowerCase())){if(!confirm('이미 등록된 단어예요. 그래도 추가할까요?'))return false;}words.unshift({id:uid(),...data,relatedIds:Array.isArray(data.relatedIds)?data.relatedIds:[],created:Date.now(),interval:0,reps:0,next:Date.now(),sentenceInterval:0,sentenceReps:0,sentenceNext:Date.now(),masteryStreak:0,lastGrade:null,masteredAt:null,reviewLog:[],sentenceLog:[],testLog:[]});save();return true;}
