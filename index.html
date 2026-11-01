@@ -151,6 +151,8 @@ button.secondary,button.ghost,button.danger{font-size:13px}
  .top-actions button{font-size:11px;padding:6px 9px;min-height:33px}
  .quick-actions button{font-size:11px;padding:8px 5px;min-height:36px}
 }
+
+.mastery-compact{padding:0 0 16px;margin:0 0 16px;border-bottom:1px solid var(--line)}.mastery-compact .section-head{margin-bottom:8px}.mastery-compact h2{font-size:15px;margin:0}.mastery-compact strong{font-size:14px;color:var(--accent)}.mastery-compact .mastery-track{height:7px}.mastery-compact .mastery-breakdown{font-size:11px;margin-top:7px}
 </style>
 </head>
 <body>
@@ -191,6 +193,11 @@ button.secondary,button.ghost,button.danger{font-size:13px}
   </div>
   <div class="layout dashboard-layout">
     <div class="panel calendar-panel">
+      <div class="mastery-compact">
+        <div class="section-head"><h2>암기 진행률</h2><strong id="masteryPercent">0%</strong></div>
+        <div class="mastery-track"><div class="mastery-fill" id="masteryFill"></div></div>
+        <div class="mastery-breakdown" id="masteryBreakdown"></div>
+      </div>
       <div class="section-head">
         <div><h2>학습 캘린더</h2><p class="muted">등록한 날과 복습한 날을 기록해요.</p></div>
         <div class="month-nav"><button class="secondary" id="calendarPrev" aria-label="이전 달">‹</button><span class="month-label" id="calendarMonthLabel"></span><button class="secondary" id="calendarNext" aria-label="다음 달">›</button></div>
@@ -210,9 +217,6 @@ button.secondary,button.ghost,button.danger{font-size:13px}
           <div class="today-metric"><b id="due">0</b><span>복습 대기 단어</span></div>
           <div class="today-metric"><b id="sentenceDue">0</b><span>복습 대기 문장</span></div><div class="today-metric mascot-metric"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="currentColor"/><circle cx="30" cy="25" r="1.7" fill="currentColor"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="currentColor"/></svg><span>오늘도 차근차근!</span></div>
         </div>
-        <h2 style="margin-top:7px">암기 진행률</h2>
-        <div class="mastery-track"><div class="mastery-fill" id="masteryFill"></div></div>
-        <div class="mastery-breakdown" id="masteryBreakdown"></div>
         <div class="quick-actions">
           <button id="homeWordStudy">단어 복습</button>
           <button class="secondary" id="homeSentenceStudy">문장 복습</button>
