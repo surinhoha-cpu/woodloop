@@ -464,7 +464,13 @@ $('signupBtn').onclick=async()=>{
 $('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();showSignedOut();};
 window.addEventListener('focus',()=>{if(currentUser&&cloudReady)refreshCloud();});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&currentUser&&cloudReady)refreshCloud();});
-const dueWords=()=>words.filter(w=>!w.next||w.next<=Date.now());
+function getDirectionProgress(w,direction){
+  if(!w.directionProgress||typeof w.directionProgress!=='object')w.directionProgress={};
+  if(!w.directionProgress[direction])w.directionProgress[direction]={streak:0,next:0,reps:0,lastGrade:null};
+  return w.directionProgress[direction];
+}
+const isDirectionDue=(w,direction)=>{const p=getDirectionProgress(w,direction);return Number(p.streak||0)<5&&(!p.next||p.next<=Date.now());};
+const dueWords=()=>words.filter(w=>isDirectionDue(w,'en-ko')||isDirectionDue(w,'ko-en'));
 const sentenceWords=()=>words.flatMap(w=>(Array.isArray(w.examples)&&w.examples.length?w.examples:[{id:'legacy',example:w.example,translation:w.translation,sentenceNext:w.sentenceNext,sentenceInterval:w.sentenceInterval,sentenceReps:w.sentenceReps}]).filter(x=>x.example&&x.translation).map((x,i)=>({...x,id:w.id+'::'+(x.id||i),wordId:w.id,word:w.word,meaning:w.meaning})));
 const dueSentences=()=>sentenceWords().filter(w=>!w.sentenceNext||w.sentenceNext<=Date.now());
 function dateKey(value){
@@ -483,20 +489,24 @@ function formatDate(value){
   return Number.isNaN(d.getTime())?'날짜 정보 없음':d.toLocaleDateString('ko-KR',{year:'numeric',month:'short',day:'numeric'});
 }
 function wordStatus(w){
-  const streak=Number(w.masteryStreak||0);
-  if(streak>=5)return 'mastered';
-  if(streak>0)return 'learning';
+  const en=getDirectionProgress(w,'en-ko'),ko=getDirectionProgress(w,'ko-en');
+  if(Number(en.streak)>=5&&Number(ko.streak)>=5)return 'mastered';
+  if(Number(en.streak)>0||Number(ko.streak)>0)return 'learning';
   return 'needs-review';
 }
 function statusLabel(w){
   return ({mastered:'완벽 암기',learning:'익히는 중','needs-review':'복습 필요'})[wordStatus(w)];
 }
 function nextReviewText(w){
-  if(!w.next)return '복습 예정: 오늘';
-  const remaining=Number(w.next)-Date.now();
-  if(!Number.isFinite(remaining)||remaining<=0)return '복습 예정: 오늘';
-  const days=Math.ceil(remaining/86400000);
-  return '복습 예정: '+(days===1?'내일':days+'일 뒤')+' · '+formatDate(w.next);
+  const en=getDirectionProgress(w,'en-ko'),ko=getDirectionProgress(w,'ko-en');
+  const done=Number(en.streak)>=5&&Number(ko.streak)>=5;
+  if(done)return '양방향 암기 완료';
+  const pending=[['영어 → 뜻',en],['뜻 → 영어',ko]].filter(([,p])=>Number(p.streak)<5);
+  return pending.map(([label,p])=>{
+    if(!p.next||p.next<=Date.now())return label+' 복습 가능';
+    const days=Math.ceil((p.next-Date.now())/86400000);
+    return label+' '+(days===1?'내일':days+'일 뒤');
+  }).join(' · ');
 }
 function recordEvent(w,key,event){
   const list=Array.isArray(w[key])?w[key]:[];
@@ -601,36 +611,33 @@ $('wordList').addEventListener('click',async e=>{const t=e.target.closest('butto
 
 // 단어 복습
 let studyDirection='en-ko';
+let studyOnlyId=null;
 function setStudyDirection(direction){
   studyDirection=direction;
   document.querySelectorAll('[data-study-direction]').forEach(b=>b.classList.toggle('active',b.dataset.studyDirection===direction));
-  if(currentWord)showCurrentWordPrompt();
+  startWordStudy(studyOnlyId);
 }
 function showCurrentWordPrompt(){
   $('front').textContent=studyDirection==='en-ko'?currentWord.word:currentWord.meaning;
   $('studyHint').textContent=studyDirection==='en-ko'?'영어 단어를 보고 한국어 뜻을 떠올려 보세요.':'한국어 뜻을 보고 영어 단어를 떠올려 보세요.';
 }
 document.querySelectorAll('[data-study-direction]').forEach(b=>b.onclick=()=>setStudyDirection(b.dataset.studyDirection));
-function startWordStudy(onlyId=null){wordQueue=onlyId?words.filter(w=>w.id===onlyId):dueWords();currentWord=null;showWordCard();}
+function startWordStudy(onlyId=null){studyOnlyId=onlyId;wordQueue=onlyId?words.filter(w=>w.id===onlyId&&isDirectionDue(w,studyDirection)):words.filter(w=>isDirectionDue(w,studyDirection));currentWord=null;showWordCard();}
 function showWordCard(){currentWord=wordQueue.shift()||null;if(!currentWord){$('front').textContent=words.length?'오늘 복습할 단어가 없어요.':'등록된 단어가 없어요.';$('studyCount').textContent='단어 복습';$('revealWord').classList.add('hidden');$('wordBack').classList.add('hidden');$('studyHint').textContent=words.length?'복습할 단어가 생기면 여기에 표시돼요.':'먼저 단어를 등록해 주세요.';return;}showCurrentWordPrompt();$('studyCount').textContent=`남은 카드 ${wordQueue.length+1}개`;$('wordBack').classList.add('hidden');$('revealWord').classList.remove('hidden');}
 $('revealWord').onclick=()=>{if(!currentWord)return;$('backMeaning').textContent=studyDirection==='en-ko'?currentWord.meaning:currentWord.word;$('backExample').textContent=currentWord.example||'';$('backTranslation').textContent=currentWord.translation||'';const related=relatedWordsFor(currentWord);$('backRelated').innerHTML=related.map(w=>'<span class="related-chip">'+esc(w.word)+' · '+esc(w.meaning)+'</span>').join('');$('backRelatedWrap').classList.toggle('hidden',!related.length);$('wordBack').classList.remove('hidden');$('revealWord').classList.add('hidden');};
 document.querySelectorAll('[data-word-grade]').forEach(b=>b.onclick=()=>{
   if(!currentWord)return;
   const grade=b.dataset.wordGrade,now=Date.now();
+  const progress=getDirectionProgress(currentWord,studyDirection);
   currentWord.reps=(currentWord.reps||0)+1;
-  recordEvent(currentWord,'reviewLog',{at:now,grade});
-  if(grade==='good'||grade==='easy'){
-    currentWord.masteryStreak=(currentWord.masteryStreak||0)+1;
-    if(currentWord.masteryStreak>=5&&!currentWord.masteredAt)currentWord.masteredAt=now;
-  }else{
-    currentWord.masteryStreak=0;
-    currentWord.masteredAt=null;
-  }
-  // Again: next day. Learning / Hard: 7 days. Mastered: 30 days.
-  const daysUntilNextReview=grade==='again'?1:(currentWord.masteryStreak>=5?30:7);
-  currentWord.interval=daysUntilNextReview;
-  currentWord.next=now+daysUntilNextReview*86400000;
-  currentWord.lastGrade=grade;
+  recordEvent(currentWord,'reviewLog',{at:now,grade,direction:studyDirection});
+  if(grade==='good'||grade==='easy')progress.streak=(Number(progress.streak)||0)+1;
+  else progress.streak=0;
+  progress.reps=(Number(progress.reps)||0)+1;
+  progress.lastGrade=grade;
+  const daysUntilNextReview=grade==='again'?1:(progress.streak>=5?30:7);
+  progress.next=now+daysUntilNextReview*86400000;
+  currentWord.masteryStreak=Math.min(getDirectionProgress(currentWord,'en-ko').streak,getDirectionProgress(currentWord,'ko-en').streak);
   const i=words.findIndex(w=>w.id===currentWord.id);
   if(i>=0)words[i]=currentWord;
   save();
