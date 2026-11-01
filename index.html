@@ -8,15 +8,38 @@
 :root{--bg:#f6f5f1;--panel:#fff;--ink:#24251f;--muted:#77796f;--line:#e8e6df;--accent:#536b58;--soft:#edf2ec;--red:#a85d52;--gold:#9a8151;--blue:#58728a}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 15px;background:var(--accent);color:#fff;font-weight:650}button:disabled{opacity:.4;cursor:not-allowed}button.secondary{background:#f0f0eb;color:var(--ink);border:1px solid var(--line)}button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}button.danger{background:#f7edeb;color:var(--red);border:1px solid #ead5d1}
 header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-items:center;justify-content:space-between;gap:14px}h1{font-size:23px;letter-spacing:-.7px;margin:0}h1 span{color:var(--accent)}.sub,.muted{color:var(--muted);font-size:13px}.top-actions{display:flex;gap:8px;align-items:center}.top-actions button{font-size:13px}main{max-width:1100px;margin:12px auto;padding:0 22px 48px}.tabs{display:flex;gap:6px;overflow:auto;padding:8px 0 18px}.tab{white-space:nowrap;background:transparent;color:var(--muted);border:1px solid transparent}.tab.active{background:var(--soft);color:var(--accent);border-color:#dce6dc}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.stat,.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.stat b{display:block;font-size:26px;letter-spacing:-1px}.stat small{color:var(--muted)}.layout{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel h2{font-size:17px;margin:0 0 14px}.field{display:grid;gap:6px;margin:10px 0}.field label{font-size:12px;color:var(--muted);font-weight:650}.field input,.field textarea,.field select,.search{width:100%;border:1px solid var(--line);background:#fff;border-radius:11px;padding:11px 12px;color:var(--ink);outline:none}.field textarea{min-height:72px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus,.search:focus{border-color:var(--accent)}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.notice{font-size:12px;color:var(--muted);margin-top:10px}.hidden{display:none!important}.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--accent);font-size:11px;font-weight:650}.wordlist{display:grid;gap:9px}.word-item{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}.word-head{display:flex;align-items:center;gap:10px;padding:12px}.word-open{flex:1;text-align:left;background:transparent;color:var(--ink);padding:2px 0;border-radius:0}.word-open strong{display:block;font-size:16px}.word-open small{display:block;color:var(--muted);font-weight:400}.word-tools{display:flex;gap:6px}.word-tools button{padding:8px 10px;font-size:12px}.word-detail{padding:14px 15px 16px;border-top:1px solid var(--line);background:#fcfcfa}.detail-label{font-size:11px;color:var(--muted);font-weight:700;margin:10px 0 3px}.detail-text{white-space:pre-wrap}.example-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:6px}.example-en{font-weight:650}.example-ko{color:var(--muted);margin-top:4px}.card-panel{max-width:680px;margin:18px auto;min-height:300px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:13px}.card-big{font-size:32px;font-weight:750;letter-spacing:-.8px;white-space:pre-wrap;max-width:100%}.card-answer{border-top:1px solid var(--line);padding-top:15px;margin-top:4px;width:100%}.grade{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:16px}.grade button{min-width:76px}.grade .again{background:var(--red)}.grade .hard{background:var(--gold)}.grade .good{background:var(--accent)}.grade .easy{background:var(--blue)}.empty{text-align:center;padding:30px 15px;color:var(--muted)}.empty button{margin-top:12px}.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:520px;margin:8px auto}.quiz-options button{background:#f0f0eb;color:var(--ink);border:1px solid var(--line);text-align:left}.quiz-options button:disabled{opacity:1}.quiz-options button.chosen-correct{background:#e8f1e8;border-color:#a9c1aa;color:#35533b}.quiz-options button.chosen-wrong{background:#f7edeb;border-color:#d9aaa3;color:#8e4037}.feedback{padding:12px;border-radius:12px;background:var(--soft);margin:12px auto;max-width:520px}.feedback.wrong{background:#f7edeb}.quiz-footer{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}.progress-track{width:100%;max-width:520px;height:7px;border-radius:99px;background:#efeee9;overflow:hidden}.progress-fill{height:100%;width:0;background:var(--accent);transition:width .2s}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.section-head h2{margin:0}.search{max-width:300px}.footer-note{margin-top:18px;text-align:center;color:var(--muted);font-size:12px}
+.auth-wrap{max-width:440px;margin:34px auto 56px;padding:0 18px}
+.auth-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px}
+.auth-card h2{margin:0 0 6px;font-size:20px}
+.auth-card .muted{margin:0 0 18px}
+.auth-actions{display:grid;gap:9px;margin-top:16px}
+.auth-message{font-size:13px;color:var(--muted);margin-top:13px;min-height:20px;white-space:pre-wrap}
+.account-email{font-size:12px;color:var(--muted);padding:7px 9px;border:1px solid var(--line);border-radius:10px}
+.sync-status{font-size:11px;color:var(--muted)}
+#authGate .field{margin:12px 0}
+
 @media(max-width:740px){header{padding:18px 15px 8px;align-items:flex-start}.top-actions{flex-direction:column;align-items:stretch}.top-actions button{padding:8px 10px}main{padding:0 14px 34px}.layout{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:13px}.stat b{font-size:22px}.panel{padding:15px}.card-big{font-size:27px}.quiz-options{grid-template-columns:1fr}.word-head{align-items:flex-start}.word-tools{flex-direction:column}.search{max-width:100%}}
 </style>
 </head>
 <body>
 <header>
   <div><h1>word<span>loop</span></h1><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기</div></div>
-  <div class="top-actions"><button class="secondary" id="exportBtn">Anki 내보내기</button><button class="secondary" id="importBtn">가져오기</button><input id="fileInput" type="file" accept=".csv,.tsv,.txt" hidden></div>
+  <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="secondary" id="exportBtn">Anki 내보내기</button><button class="secondary" id="importBtn">가져오기</button><button class="ghost" id="logoutBtn">로그아웃</button><input id="fileInput" type="file" accept=".csv,.tsv,.txt" hidden></div>
 </header>
-<main>
+<section id="authGate" class="auth-wrap hidden">
+  <div class="auth-card">
+    <h2>Wordloop 로그인</h2>
+    <p class="muted">저장한 단어를 여러 기기에서 이어서 사용하세요.</p>
+    <div class="field"><label for="authEmail">이메일</label><input id="authEmail" type="email" value="srin001@icloud.com" autocomplete="username"></div>
+    <div class="field"><label for="authPassword">비밀번호</label><input id="authPassword" type="password" minlength="8" placeholder="비밀번호 입력" autocomplete="current-password"></div>
+    <div class="auth-actions">
+      <button id="loginBtn">로그인</button>
+      <button class="secondary" id="signupBtn">처음 한 번 계정 만들기</button>
+    </div>
+    <div class="auth-message" id="authMessage">처음 이용할 때 계정을 만들고, 이메일 인증을 마친 뒤 로그인하세요.</div>
+  </div>
+</section>
+<main id="appMain" class="hidden">
 <nav class="tabs" aria-label="메인 메뉴">
   <button class="tab active" data-tab="home">대시보드</button>
   <button class="tab" data-tab="add">단어 등록</button>
@@ -41,7 +64,7 @@ header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-it
       <button id="quickAdd">단어 추가</button>
     </div>
   </div>
-  <p class="footer-note">현재 데이터는 이 브라우저에 저장돼요. 기기 간 동기화는 다음 단계에서 연결할 예정이에요.</p>
+  <p class="footer-note">단어는 계정에 안전하게 저장되며, 같은 계정으로 로그인한 기기에서 동기화돼요.</p>
 </section>
 
 <section id="add" class="hidden">
@@ -95,17 +118,144 @@ header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-it
   </div>
 </section>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';
 const KEY='wordloop-v1';
+const SUPABASE_URL='https://jmjfhvlrwwfuyurbxlsy.supabase.co';
+const SUPABASE_KEY='sb_publishable_ED2G8FRPHtCz5y_AmazRiw_nCitH2d1';
+const OWNER_EMAIL='srin001@icloud.com';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 let words=[];
 try{words=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(words))words=[];}catch(e){words=[];}
+let currentUser=null,cloudReady=false,activatingUserId=null,saveTimer=null,syncChannel=null;
 let expandedId=null,editingId=null,wordQueue=[],currentWord=null,sentenceQueue=[],currentSentence=null;
 let quizState={queue:[],current:null,index:0,score:0,wrong:[],answered:false,mode:'meaningToWord',onlyWrong:false};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-const save=()=>{localStorage.setItem(KEY,JSON.stringify(words));renderStats();renderList();};
+const setSyncStatus=(message)=>{const el=$('syncStatus');if(el)el.textContent=message;};
+const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify(words));renderStats();renderList();};
+const save=()=>{saveLocal();if(currentUser&&cloudReady){setSyncStatus('저장 중…');clearTimeout(saveTimer);saveTimer=setTimeout(writeCloud,450);}};
+async function writeCloud(){
+  if(!currentUser||!cloudReady)return;
+  const snapshot=JSON.parse(JSON.stringify(words));
+  const {error}=await supabaseClient.from('wordloop_data').upsert(
+    {user_id:currentUser.id,words:snapshot,updated_at:new Date().toISOString()},
+    {onConflict:'user_id'}
+  );
+  if(error){console.error(error);setSyncStatus('동기화 오류 · 인터넷 연결 확인');return;}
+  setSyncStatus('동기화 완료');
+}
+function mergeCloudWords(remoteWords){
+  const remote=Array.isArray(remoteWords)?remoteWords:[];
+  const map=new Map(remote.filter(w=>w&&w.id).map(w=>[String(w.id),w]));
+  let localOnly=false;
+  for(const w of words){if(w&&w.id&&!map.has(String(w.id))){map.set(String(w.id),w);localOnly=true;}}
+  words=Array.from(map.values());
+  saveLocal();
+  return localOnly;
+}
+async function pullCloud(){
+  if(!currentUser)return;
+  cloudReady=false;
+  setSyncStatus('불러오는 중…');
+  const {data,error}=await supabaseClient.from('wordloop_data').select('words').eq('user_id',currentUser.id).maybeSingle();
+  if(error){console.error(error);setSyncStatus('동기화 오류 · 새로고침해 주세요');cloudReady=true;return;}
+  const hasLocal=words.length>0;
+  const hasCloud=!!data;
+  const localOnly=mergeCloudWords(data?.words||[]);
+  cloudReady=true;
+  if(localOnly||!hasCloud||(!hasLocal&&hasCloud)){
+    await writeCloud();
+  }else{
+    setSyncStatus('동기화 완료');
+  }
+  subscribeToCloud();
+}
+async function refreshCloud(){
+  if(!currentUser||!cloudReady)return;
+  const {data,error}=await supabaseClient.from('wordloop_data').select('words').eq('user_id',currentUser.id).maybeSingle();
+  if(error){console.error(error);return;}
+  const localOnly=mergeCloudWords(data?.words||[]);
+  if(localOnly||!data)await writeCloud();
+}
+function subscribeToCloud(){
+  if(syncChannel){supabaseClient.removeChannel(syncChannel);syncChannel=null;}
+  syncChannel=supabaseClient.channel('wordloop-sync-'+currentUser.id)
+    .on('postgres_changes',{event:'*',schema:'public',table:'wordloop_data',filter:'user_id=eq.'+currentUser.id},payload=>{
+      if(payload.new&&Array.isArray(payload.new.words)){
+        const localOnly=mergeCloudWords(payload.new.words);
+        if(localOnly)writeCloud();
+      }
+    }).subscribe();
+}
+async function activateAccount(user){
+  if(!user)return;
+  if(activatingUserId===user.id)return;
+  if(currentUser&&currentUser.id===user.id&&cloudReady)return;
+  activatingUserId=user.id;
+  currentUser=user;
+  $('authGate').classList.add('hidden');
+  $('appMain').classList.remove('hidden');
+  $('topActions').classList.remove('hidden');
+  $('currentAccount').textContent=user.email||OWNER_EMAIL;
+  $('authPassword').value='';
+  await pullCloud();
+  activatingUserId=null;
+}
+function showSignedOut(){
+  currentUser=null;cloudReady=false;activatingUserId=null;
+  if(syncChannel){supabaseClient.removeChannel(syncChannel);syncChannel=null;}
+  clearTimeout(saveTimer);
+  $('appMain').classList.add('hidden');
+  $('topActions').classList.add('hidden');
+  $('authGate').classList.remove('hidden');
+  $('authMessage').textContent='이메일과 비밀번호로 로그인하세요.';
+}
+function authErrorMessage(error){
+  const msg=String(error?.message||error||'로그인에 실패했어요.');
+  if(msg.toLowerCase().includes('redirect')||msg.toLowerCase().includes('url')){
+    return '인증 주소가 허용되지 않았어요. Supabase의 Authentication → URL Configuration → Redirect URLs에 아래 주소를 추가해야 해요:\n'+window.location.origin+window.location.pathname;
+  }
+  if(msg.toLowerCase().includes('email not confirmed'))return '먼저 이메일로 받은 인증 링크를 눌러 이메일 인증을 완료해 주세요.';
+  if(msg.toLowerCase().includes('invalid login credentials'))return '이메일 또는 비밀번호가 맞지 않아요. 처음 이용한다면 계정 만들기를 먼저 해 주세요.';
+  return msg;
+}
+async function bootAuth(){
+  if(!window.supabase?.createClient){$('authGate').classList.remove('hidden');$('authMessage').textContent='로그인 기능을 불러오지 못했어요. 인터넷 연결을 확인한 뒤 새로고침해 주세요.';return;}
+  supabaseClient.auth.onAuthStateChange((event,session)=>{
+    if(event==='SIGNED_OUT'){showSignedOut();return;}
+    if(session)setTimeout(()=>activateAccount(session.user),0);
+  });
+  const {data,error}=await supabaseClient.auth.getSession();
+  if(error){console.error(error);showSignedOut();return;}
+  if(data.session)await activateAccount(data.session.user);
+  else{$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');}
+}
+$('loginBtn').onclick=async()=>{
+  const email=$('authEmail').value.trim().toLowerCase(),password=$('authPassword').value;
+  if(!email||!password){$('authMessage').textContent='이메일과 비밀번호를 입력해 주세요.';return;}
+  $('loginBtn').disabled=true;$('authMessage').textContent='로그인 중…';
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+  $('loginBtn').disabled=false;
+  if(error){$('authMessage').textContent=authErrorMessage(error);return;}
+  await activateAccount(data.user);
+};
+$('signupBtn').onclick=async()=>{
+  const email=$('authEmail').value.trim().toLowerCase(),password=$('authPassword').value;
+  if(email!==OWNER_EMAIL){$('authMessage').textContent='이 Wordloop 계정은 지정된 이메일 주소만 사용할 수 있어요.';return;}
+  if(password.length<8){$('authMessage').textContent='비밀번호는 8자 이상으로 설정해 주세요.';return;}
+  $('signupBtn').disabled=true;$('authMessage').textContent='계정을 만들고 있어요…';
+  const {data,error}=await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin+window.location.pathname}});
+  $('signupBtn').disabled=false;
+  if(error){$('authMessage').textContent=authErrorMessage(error);return;}
+  if(data.session){await activateAccount(data.user);}
+  else{$('authMessage').textContent='인증 메일을 보냈어요. 메일함에서 인증 링크를 누른 뒤 이 페이지로 돌아와 로그인해 주세요.';}
+};
+$('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();showSignedOut();};
+window.addEventListener('focus',()=>{if(currentUser&&cloudReady)refreshCloud();});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&currentUser&&cloudReady)refreshCloud();});
 const dueWords=()=>words.filter(w=>!w.next||w.next<=Date.now());
 const sentenceWords=()=>words.filter(w=>w.example&&w.translation);
 const dueSentences=()=>sentenceWords().filter(w=>!w.sentenceNext||w.sentenceNext<=Date.now());
@@ -153,6 +303,7 @@ $('exportBtn').onclick=()=>{const rows=[['Word','Meaning','Example','Translation
 $('importBtn').onclick=()=>$('fileInput').click();
 $('fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;const raw=(await f.text()).replace(/^\ufeff/,'');const lines=raw.split(/\r?\n/).filter(Boolean);const parse=line=>{const out=[];let v='',q=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'&&line[i+1]==='"'){v+='"';i++;}else if(c==='"')q=!q;else if(c===','&&!q){out.push(v);v='';}else v+=c;}out.push(v);return out;};if(!lines.length){alert('파일에 가져올 내용이 없어요.');return;}const head=parse(lines.shift()).map(x=>x.toLowerCase().trim());let added=0;for(const line of lines){const r=parse(line),o={};head.forEach((h,i)=>o[h]=r[i]||'');const word=o.word||o.front||r[0],meaning=o.meaning||o.back||r[1];if(word&&meaning&&!words.some(w=>w.word.toLowerCase()===word.toLowerCase())){words.push({id:uid(),word,meaning,example:o.example||r[2]||'',translation:o.translation||r[3]||'',category:o.category||'가져온 단어',note:o.note||'',created:Date.now(),interval:0,reps:0,next:Date.now(),sentenceInterval:0,sentenceReps:0,sentenceNext:Date.now()});added++;}}save();alert(`${added}개 단어를 가져왔어요.`);e.target.value='';};
 renderStats();renderList();
+bootAuth();
 </script>
 </body>
 </html>
