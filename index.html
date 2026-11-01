@@ -22,7 +22,6 @@ header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-it
   <button class="tab" data-tab="add">단어 등록</button>
   <button class="tab" data-tab="study">단어 복습</button>
   <button class="tab" data-tab="sentences">문장 복습</button>
-  <button class="tab" data-tab="quiz">테스트</button>
   <button class="tab" data-tab="words">내 단어장</button>
 </nav>
 
@@ -33,7 +32,7 @@ header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-it
     <div class="stat"><b id="sentenceDue">0</b><small>오늘 복습할 문장</small></div>
   </div>
   <div class="layout">
-    <div class="panel"><h2>오늘의 복습</h2><p class="muted">단어와 예문을 따로 복습할 수 있어요.</p><div class="row"><button id="homeWordStudy">단어 복습</button><button class="secondary" id="homeSentenceStudy">문장 복습</button></div><div style="margin-top:12px"><button class="secondary" id="homeQuiz">테스트 시작</button></div></div>
+    <div class="panel"><h2>오늘의 복습</h2><p class="muted">단어와 예문을 따로 복습할 수 있어요.</p><div class="row"><button id="homeWordStudy">단어 복습</button><button class="secondary" id="homeSentenceStudy">문장 복습</button></div></div>
     <div class="panel"><h2>빠른 등록</h2>
       <div class="field"><label for="quickWord">영어 단어 / 표현 *</label><input id="quickWord" placeholder="e.g. reluctant"></div>
       <div class="field"><label for="quickMeaning">뜻 *</label><input id="quickMeaning" placeholder="꺼리는, 내키지 않는"></div>
@@ -58,7 +57,7 @@ header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-it
 
 <section id="study" class="hidden">
   <div class="panel card-panel">
-    <div class="muted" id="studyCount">단어 복습</div><div class="card-big" id="front">복습을 시작해 보세요.</div>
+    <div class="section-head" style="width:100%;max-width:650px"><div class="muted" id="studyCount">단어 복습</div><button class="secondary" id="wordQuizMode">직접 입력하며 복습하기</button></div><div class="card-big" id="front">복습을 시작해 보세요.</div>
     <button id="revealWord">뜻 확인하기</button>
     <div class="card-answer hidden" id="wordBack"><h2 id="backMeaning"></h2><div id="backExample" class="example-en"></div><div id="backTranslation" class="example-ko"></div>
       <div class="grade"><button class="again" data-word-grade="again">다시</button><button class="hard" data-word-grade="hard">어려움</button><button class="good" data-word-grade="good">알겠음</button><button class="easy" data-word-grade="easy">쉬움</button></div>
@@ -79,13 +78,13 @@ header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-it
 
 <section id="quiz" class="hidden">
   <div class="panel card-panel" style="min-height:370px">
-    <div class="section-head" style="width:100%;max-width:650px"><h2>단어 테스트</h2><div class="field" style="min-width:210px;margin:0"><select id="quizMode" aria-label="테스트 방향"><option value="meaningToWord">뜻 보고 영어 단어 쓰기</option><option value="wordToMeaning">영어 보고 뜻 고르기</option></select></div></div>
+    <div class="section-head" style="width:100%;max-width:650px"><h2>직접 입력 복습</h2><div class="field" style="min-width:210px;margin:0"><select id="quizMode" aria-label="테스트 방향"><option value="meaningToWord">뜻 보고 영어 단어 쓰기</option><option value="wordToMeaning">영어 보고 뜻 고르기</option></select></div></div>
     <div class="progress-track"><div class="progress-fill" id="quizProgress"></div></div>
     <div class="muted" id="quizCount">테스트 준비</div><div class="card-big" id="quizPrompt">단어를 등록한 뒤 테스트를 시작해 보세요.</div>
     <div class="field" id="quizInputWrap" style="width:100%;max-width:520px"><input id="quizAnswer" placeholder="영어 단어를 입력하세요" autocomplete="off"></div>
     <div class="quiz-options hidden" id="quizOptions"></div>
     <div id="quizFeedback" class="feedback hidden"></div>
-    <div class="quiz-footer"><button id="checkQuiz">정답 확인</button><button class="secondary hidden" id="nextQuiz">다음 문제</button><button class="secondary hidden" id="retryWrong">오답 다시 풀기</button><button class="ghost hidden" id="restartQuiz">전체 다시 풀기</button><button class="ghost hidden" id="goAddFromQuiz">단어 등록하기</button></div>
+    <div class="quiz-footer"><button class="ghost" id="backToWordReview">← 단어 복습으로 돌아가기</button><button id="checkQuiz">정답 확인</button><button class="secondary hidden" id="nextQuiz">다음 문제</button><button class="secondary hidden" id="retryWrong">오답 다시 풀기</button><button class="ghost hidden" id="restartQuiz">전체 다시 풀기</button><button class="ghost hidden" id="goAddFromQuiz">단어 등록하기</button></div>
     <p class="notice" id="quizHint">등록한 단어를 무작위로 출제해요.</p>
   </div>
 </section>
@@ -146,7 +145,7 @@ function checkAnswer(given){if(!quizState.current||quizState.answered)return;con
 function finishQuiz(){$('quizProgress').style.width='100%';$('quizPrompt').textContent=`${quizState.score} / ${quizState.queue.length}개 정답`;$('quizCount').textContent=quizState.onlyWrong?'오답 재시험 완료':'테스트 완료';$('quizInputWrap').classList.add('hidden');$('quizOptions').classList.add('hidden');$('checkQuiz').classList.add('hidden');$('nextQuiz').classList.add('hidden');$('quizFeedback').classList.remove('hidden');$('quizFeedback').classList.remove('wrong');$('quizFeedback').innerHTML=`정답률 <strong>${quizState.queue.length?Math.round(quizState.score/quizState.queue.length*100):0}%</strong><br>틀린 단어 ${quizState.wrong.length}개`;$('restartQuiz').classList.remove('hidden');if(quizState.wrong.length){$('retryWrong').classList.remove('hidden');$('retryWrong').textContent=`오답 ${quizState.wrong.length}개 다시 풀기`;}else{$('retryWrong').classList.add('hidden');}$('quizHint').textContent='오답은 다시 풀면서 확실히 익혀 보세요.';}
 $('checkQuiz').onclick=()=>checkAnswer();$('quizAnswer').addEventListener('keydown',e=>{if(e.key==='Enter'&&!quizState.answered)checkAnswer();});$('nextQuiz').onclick=()=>{quizState.index++;nextQuestion();};$('retryWrong').onclick=()=>{const wrong=[...quizState.wrong];quizState.wrong=wrong;startQuiz(true);};$('restartQuiz').onclick=()=>startQuiz(false);$('quizMode').onchange=()=>startQuiz(false);$('goAddFromQuiz').onclick=()=>activateTab('add');
 
-$('homeWordStudy').onclick=()=>activateTab('study');$('homeSentenceStudy').onclick=()=>activateTab('sentences');$('homeQuiz').onclick=()=>activateTab('quiz');
+$('homeWordStudy').onclick=()=>activateTab('study');$('homeSentenceStudy').onclick=()=>activateTab('sentences');$('wordQuizMode').onclick=()=>activateTab('quiz');$('backToWordReview').onclick=()=>activateTab('study');
 
 // CSV export/import (Anki-friendly six fields)
 function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"';}
