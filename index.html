@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wordloop — My Vocabulary</title>
+<style>
+:root{--bg:#f6f5f1;--panel:#fff;--ink:#24251f;--muted:#77796f;--line:#e8e6df;--accent:#536b58;--soft:#edf2ec;--danger:#a85d52}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:11px 15px;background:var(--accent);color:white;font-weight:650}
+button.secondary{background:#f0f0eb;color:var(--ink);border:1px solid var(--line)}
+header{max-width:1100px;margin:auto;padding:26px 22px 10px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:23px;margin:0}h1 span{color:var(--accent)}
+.sub,.muted{color:var(--muted);font-size:13px}
+main{max-width:1100px;margin:12px auto;padding:0 22px 48px}
+.tabs{display:flex;gap:7px;overflow:auto;padding:8px 0 18px}
+.tab{white-space:nowrap;background:transparent;color:var(--muted)}
+.tab.active{background:var(--soft);color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.stat,.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
+.stat b{display:block;font-size:26px}
+.layout{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+.panel h2{font-size:17px;margin:0 0 14px}
+.field{display:grid;gap:6px;margin:10px 0}
+.field label{font-size:12px;color:var(--muted);font-weight:650}
+.field input,.field textarea,.field select,.search{width:100%;border:1px solid var(--line);background:white;border-radius:11px;padding:11px 12px}
+.field textarea{min-height:72px;resize:vertical}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.row>*{flex:1}
+.wordlist{display:grid;gap:8px}
+.word{border:1px solid var(--line);border-radius:13px;padding:12px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.word small{display:block;color:var(--muted)}
+.card{max-width:650px;margin:20px auto;text-align:center;min-height:300px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:13px}
+.big{font-size:34px;font-weight:750}
+.answer{border-top:1px solid var(--line);padding-top:16px;margin-top:4px;width:100%}
+.grade{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.grade button{min-width:75px}
+.hidden{display:none!important}
+.notice{font-size:12px;color:var(--muted);margin-top:10px}
+.empty{text-align:center;padding:28px;color:var(--muted)}
+@media(max-width:760px){header{padding:20px 16px}main{padding:0 16px 36px}.layout{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:13px}.panel{padding:15px}.big{font-size:29px}}
+</style>
+</head>
+<body>
+<header>
+<div><h1>word<span>loop</span></h1><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기</div></div>
+<div class="row">
+<button class="secondary" id="exportBtn">Anki 내보내기</button>
+<button class="secondary" id="importBtn">가져오기</button>
+<input id="fileInput" type="file" accept=".csv,.tsv,.txt" hidden>
+</div>
+</header>
+<main>
+<nav class="tabs">
+<button class="tab active" data-tab="home">대시보드</button>
+<button class="tab" data-tab="add">단어 등록</button>
+<button class="tab" data-tab="study">플래시카드</button>
+<button class="tab" data-tab="quiz">테스트</button>
+<button class="tab" data-tab="words">내 단어장</button>
+</nav>
+
+<section id="home">
+<div class="stats">
+<div class="stat"><b id="total">0</b><small>전체 단어</small></div>
+<div class="stat"><b id="due">0</b><small>오늘 복습</small></div>
+<div class="stat"><b id="known">0</b><small>익숙한 단어</small></div>
+</div>
+<div class="layout">
+<div class="panel">
+<h2>오늘의 학습</h2>
+<p class="muted">짧게 자주 복습하는 것이 오래 기억하는 데 도움이 돼요.</p>
+<div class="row">
+<button id="startStudy">복습 시작하기</button>
+<button class="secondary" id="startQuiz">뜻 테스트</button>
+</div>
+<p class="notice">정답 난이도에 따라 다음 복습 간격이 달라집니다.</p>
+</div>
+<div class="panel">
+<h2>빠른 등록</h2>
+<div class="field"><label>영어 단어 / 표현 *</label><input id="quickWord" placeholder="e.g. reluctant"></div>
+<div class="field"><label>뜻 *</label><input id="quickMeaning" placeholder="꺼리는, 내키지 않는"></div>
+<div class="field"><label>영어 예문</label><textarea id="quickExample" placeholder="She was reluctant to leave."></textarea></div>
+<div class="field"><label>예문 해석</label><textarea id="quickTranslation" placeholder="그녀는 떠나기를 꺼렸다."></textarea></div>
+<button id="quickAdd">단어 추가</button>
+</div>
+</div>
+</section>
+
+<section id="add" class="hidden">
+<div class="panel">
+<h2>새 단어 등록</h2>
+<div class="field"><label>영어 단어 / 표현 *</label><input id="word"></div>
+<div class="field"><label>뜻 *</label><input id="meaning"></div>
+<div class="field"><label>영어 예문</label><textarea id="example"></textarea></div>
+<div class="field"><label>예문 해석</label><textarea id="translation"></textarea></div>
+<div class="row">
+<div class="field"><label>카테고리</label><select id="category"><option>일상 영어</option><option>직장 영어</option><option>IELTS</option><option>기타</option></select></div>
+<div class="field"><label>메모</label><input id="note"></div>
+</div>
+<button id="saveWord">단어 저장하기</button>
+</div>
+</section>
+
+<section id="study" class="hidden">
+<div class="panel card">
+<div class="muted" id="studyCount">복습 카드</div>
+<div class="big" id="front">단어가 없습니다</div>
+<button id="reveal">뜻 확인하기</button>
+<div class="answer hidden" id="back">
+<h2 id="backMeaning"></h2>
+<p id="backExample"></p>
+<p class="muted" id="backTranslation"></p>
+<div class="grade">
+<button data-grade="again">다시</button>
+<button data-grade="hard">어려움</button>
+<button data-grade="good">알겠음</button>
+<button data-grade="easy">쉬움</button>
+</div>
+</div>
+<p class="notice" id="studyHint">먼저 영어 단어의 뜻을 떠올려 보세요.</p>
+</div>
+</section>
+
+<section id="quiz" class="hidden">
+<div class="panel card">
+<div class="muted" id="quizCount">뜻 테스트</div>
+<div class="big" id="quizPrompt">준비됐나요?</div>
+<div class="field" style="width:100%;max-width:430px"><input id="quizAnswer" placeholder="영어 단어를 입력하세요"></div>
+<button id="checkQuiz">정답 확인</button>
+<div id="quizResult" class="answer hidden"></div>
+<button class="secondary hidden" id="nextQuiz">다음 문제</button>
+</div>
+</section>
+
+<section id="words" class="hidden">
+<div class="panel">
+<div class="row"><h2 style="flex:2">내 단어장</h2><input class="search" id="search" placeholder="단어 검색..."></div>
+<div id="wordList" class="wordlist"></div>
+</div>
+</section>
+</main>
+
+<script>
+const KEY='wordloop-v1';
+let words=JSON.parse(localStorage.getItem(KEY)||'[]');
+let queue=[],current=null,quizQueue=[],quizCurrent=null;
+const $=id=>document.getElementById(id);
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(words));render()};
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function dueWords(){return words.filter(w=>!w.next||w.next<=Date.now())}
+function render(){
+$('total').textContent=words.length;
+$('due').textContent=dueWords().length;
+$('known').textContent=words.filter(w=>(w.interval||0)>=3).length;
+renderList();
+}
+function add(data){
+if(!data.word||!data.meaning){alert('영어 단어와 뜻은 필수예요.');return}
+if(words.some(w=>w.word.toLowerCase()===data.word.toLowerCase())){
+if(!confirm('이미 등록된 단어예요. 그래도 추가할까요?'))return;
+}
+words.unshift({id:uid(),...data,created:Date.now(),interval:0,reps:0,next:Date.now()});
+save();
+}
+function clearForm(){['word','meaning','example','translation','note'].forEach(x=>$(x).value='')}
+function collect(){return{
+word:$('word').value.trim(),meaning:$('meaning').value.trim(),
+example:$('example').value.trim(),translation:$('translation').value.trim(),
+category:$('category').value,note:$('note').value.trim()
+}}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderList(){
+let q=($('search')?.value||'').toLowerCase();
+let list=words.filter(w=>(w.word+' '+w.meaning+' '+w.category).toLowerCase().includes(q));
+$('wordList').innerHTML=list.length?list.map(w=>`<div class="word"><div><strong>${esc(w.word)}</strong><small>${esc(w.meaning)} · ${esc(w.category||'기타')}</small></div><button class="secondary" data-delete="${w.id}">삭제</button></div>`).join(''):'<div class="empty">아직 등록된 단어가 없어요.</div>';
+}
+function tab(name){
+document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==name));
+document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+if(name==='words')renderList();
+}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+$('saveWord').onclick=()=>{add(collect());clearForm();tab('words')};
+$('quickAdd').onclick=()=>{
+add({
+word:$('quickWord').value.trim(),
+meaning:$('quickMeaning').value.trim(),
+example:$('quickExample').value.trim(),
+translation:$('quickTranslation').value.trim(),
+category:'일상 영어',note:''
+});
+['quickWord','quickMeaning','quickExample','quickTranslation'].forEach(id=>$(id).value='');
+};
+$('search').oninput=renderList;
+$('wordList').onclick=e=>{
+let id=e.target.dataset.delete;
+if(id&&confirm('이 단어를 삭제할까요?')){
+words=words.filter(w=>w.id!==id);save();
+}
+};
+function startStudy(){
+queue=dueWords().sort((a,b)=>(a.next||0)-(b.next||0));
+if(!queue.length)queue=[...words];
+showCard();tab('study');
+}
+function showCard(){
+current=queue.shift()||null;
+if(!current){
+$('front').textContent='오늘 복습 완료!';
+$('studyCount').textContent='수고했어요';
+$('reveal').classList.add('hidden');
+$('back').classList.add('hidden');
+$('studyHint').textContent='내일 다시 만나요.';
+return;
+}
+$('front').textContent=current.word;
+$('studyCount').textContent=`남은 카드 ${queue.length+1}개`;
+$('back').classList.add('hidden');
+$('reveal').classList.remove('hidden');
+$('studyHint').textContent='뜻을 먼저 떠올려 보세요.';
+}
+$('startStudy').onclick=startStudy;
+$('reveal').onclick=()=>{
+if(!current)return;
+$('backMeaning').textContent=current.meaning;
+$('backExample').textContent=current.example;
+$('backTranslation').textContent=current.translation;
+$('back').classList.remove('hidden');
+$('reveal').classList.add('hidden');
+};
+document.querySelectorAll('[data-grade]').forEach(b=>b.onclick=()=>{
+if(!current)return;
+let days={again:0.007,hard:1,good:3,easy:7}[b.dataset.grade];
+current.reps=(current.reps||0)+1;
+current.interval=days;
+current.next=Date.now()+days*86400000;
+let i=words.findIndex(w=>w.id===current.id);
+if(i>=0)words[i]=current;
+save();showCard();
+});
+function startQuiz(){quizQueue=[...words].sort(()=>Math.random()-.5);nextQuiz();tab('quiz')}
+function nextQuiz(){
+quizCurrent=quizQueue.shift();
+if(!quizCurrent){
+$('quizPrompt').textContent='테스트 완료!';
+$('quizCount').textContent='수고했어요';
+$('quizAnswer').classList.add('hidden');
+$('checkQuiz').classList.add('hidden');
+$('nextQuiz').classList.add('hidden');
+return;
+}
+$('quizPrompt').textContent=quizCurrent.meaning;
+$('quizCount').textContent=`남은 문제 ${quizQueue.length+1}개`;
+$('quizAnswer').value='';
+$('quizAnswer').classList.remove('hidden');
+$('checkQuiz').classList.remove('hidden');
+$('nextQuiz').classList.add('hidden');
+$('quizResult').classList.add('hidden');
+}
+$('startQuiz').onclick=startQuiz;
+$('checkQuiz').onclick=()=>{
+if(!quizCurrent)return;
+let ok=$('quizAnswer').value.trim().toLowerCase()===quizCurrent.word.toLowerCase();
+$('quizResult').textContent=(ok?'정답이에요! ':'아쉬워요. 정답: ')+quizCurrent.word;
+$('quizResult').classList.remove('hidden');
+$('nextQuiz').classList.remove('hidden');
+$('checkQuiz').classList.add('hidden');
+};
+$('nextQuiz').onclick=nextQuiz;
+function csvCell(s){return '"'+String(s||'').replace(/"/g,'""')+'"'}
+$('exportBtn').onclick=()=>{
+let rows=[['Word','Meaning','Example','Translation','Category','Note'],...words.map(w=>[w.word,w.meaning,w.example,w.translation,w.category,w.note])];
+let csv='\ufeff'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n');
+let a=document.createElement('a');
+a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+a.download='wordloop-anki.csv';a.click();
+URL.revokeObjectURL(a.href);
+};
+$('importBtn').onclick=()=>$('fileInput').click();
+$('fileInput').onchange=async e=>{
+let f=e.target.files[0];if(!f)return;
+let text=await f.text();
+let lines=text.replace(/^\ufeff/,'').split(/\r?\n/).filter(Boolean);
+let parse=line=>{
+let out=[],v='',q=false;
+for(let i=0;i<line.length;i++){
+let c=line[i];
+if(c==='"'&&line[i+1]==='"'){v+='"';i++}
+else if(c==='"')q=!q;
+else if(c===','&&!q){out.push(v);v=''}
+else v+=c;
+}
+out.push(v);return out;
+};
+let head=parse(lines.shift()).map(x=>x.toLowerCase()),added=0;
+for(let line of lines){
+let r=parse(line),obj={};head.forEach((h,i)=>obj[h]=r[i]||'');
+let word=obj.word||obj.front||r[0],meaning=obj.meaning||obj.back||r[1];
+if(word&&meaning&&!words.some(w=>w.word.toLowerCase()===word.toLowerCase())){
+words.push({id:uid(),word,meaning,example:obj.example||r[2]||'',translation:obj.translation||r[3]||'',category:obj.category||'가져온 단어',note:obj.note||'',created:Date.now(),interval:0,reps:0,next:Date.now()});
+added++;
+}
+}
+save();alert(`${added}개 단어를 가져왔어요.`);e.target.value='';
+};
+render();
+</script>
+</body>
+</html>
