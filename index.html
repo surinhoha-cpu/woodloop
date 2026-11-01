@@ -281,7 +281,7 @@ const supabaseClient=window.supabase?.createClient?window.supabase.createClient(
 let words=[];
 try{words=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(words))words=[];}catch(e){words=[];}
 let currentUser=null,cloudReady=false,activatingUserId=null,saveTimer=null,syncChannel=null;
-let selectedRelatedIds=[],toastTimer=null;
+let selectedRelatedIds=[],toastTimer=null,deletingWord=false;
 let expandedId=null,editingId=null,wordQueue=[],currentWord=null,sentenceQueue=[],currentSentence=null;
 let quizState={queue:[],current:null,index:0,score:0,wrong:[],answered:false,mode:'meaningToWord',onlyWrong:false};
 const $=id=>document.getElementById(id);
@@ -291,7 +291,7 @@ const setSyncStatus=(message)=>{const el=$('syncStatus');if(el)el.textContent=me
 const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify(words));renderStats();renderList();};
 const save=()=>{saveLocal();if(currentUser&&cloudReady){setSyncStatus('저장 중…');clearTimeout(saveTimer);saveTimer=setTimeout(writeCloud,450);}};
 async function writeCloud(){
-  if(!currentUser||!cloudReady)return;
+  if(!currentUser)return;
   const snapshot=JSON.parse(JSON.stringify(words));
   const {error}=await supabaseClient.from('wordloop_data').upsert(
     {user_id:currentUser.id,words:snapshot,updated_at:new Date().toISOString()},
@@ -328,7 +328,7 @@ async function pullCloud(){
   subscribeToCloud();
 }
 async function refreshCloud(){
-  if(!currentUser||!cloudReady)return;
+  if(!currentUser||!cloudReady||deletingWord)return;
   const {data,error}=await supabaseClient.from('wordloop_data').select('words').eq('user_id',currentUser.id).maybeSingle();
   if(error){console.error(error);return;}
   const localOnly=mergeCloudWords(data?.words||[]);
@@ -338,7 +338,7 @@ function subscribeToCloud(){
   if(syncChannel){supabaseClient.removeChannel(syncChannel);syncChannel=null;}
   syncChannel=supabaseClient.channel('wordloop-sync-'+currentUser.id)
     .on('postgres_changes',{event:'*',schema:'public',table:'wordloop_data',filter:'user_id=eq.'+currentUser.id},payload=>{
-      if(payload.new&&Array.isArray(payload.new.words)){
+      if(!deletingWord&&payload.new&&Array.isArray(payload.new.words)){
         const localOnly=mergeCloudWords(payload.new.words);
         if(localOnly)writeCloud();
       }
@@ -537,7 +537,7 @@ $('relatedChoices').addEventListener('change',e=>{const input=e.target.closest('
 
 
 $('search').oninput=renderList;
-$('wordList').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const id=t.dataset.open||t.dataset.edit||t.dataset.delete||t.dataset.studySentence||t.dataset.studyWord;if(!id)return;if(t.dataset.open){expandedId=expandedId===id?null:id;renderList();}else if(t.dataset.edit){const w=words.find(x=>x.id===id);if(w)fillForm(w);}else if(t.dataset.delete){if(confirm('이 단어를 삭제할까요?')){words=words.filter(w=>w.id!==id);if(expandedId===id)expandedId=null;save();}}else if(t.dataset.studySentence){activateTab('sentences');startSentenceStudy(id);}else if(t.dataset.studyWord){activateTab('study');startWordStudy(id);}});
+$('wordList').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const id=t.dataset.open||t.dataset.edit||t.dataset.delete||t.dataset.studySentence||t.dataset.studyWord;if(!id)return;if(t.dataset.open){expandedId=expandedId===id?null:id;renderList();}else if(t.dataset.edit){const w=words.find(x=>x.id===id);if(w)fillForm(w);}else if(t.dataset.delete){if(confirm('이 단어를 삭제할까요?')){clearTimeout(saveTimer);deletingWord=true;words=words.filter(w=>w.id!==id);words.forEach(w=>{w.relatedIds=(Array.isArray(w.relatedIds)?w.relatedIds:[]).filter(x=>String(x)!==String(id));});if(expandedId===id)expandedId=null;saveLocal();if(currentUser&&cloudReady){setSyncStatus('삭제 내용 동기화 중…');await writeCloud();}deletingWord=false;showToast('단어가 삭제되었어요.');}}else if(t.dataset.studySentence){activateTab('sentences');startSentenceStudy(id);}else if(t.dataset.studyWord){activateTab('study');startWordStudy(id);}});
 
 // 단어 복습
 function startWordStudy(onlyId=null){wordQueue=onlyId?words.filter(w=>w.id===onlyId):dueWords();currentWord=null;showWordCard();}
