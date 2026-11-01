@@ -138,7 +138,7 @@ main{margin-top:8px}
 <body>
 <header>
   <div><h1>word<span>loop</span></h1><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기</div></div>
-  <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="secondary" id="exportBtn">Anki 내보내기</button><button class="secondary" id="importBtn">가져오기</button><button class="ghost" id="logoutBtn">로그아웃</button><input id="fileInput" type="file" accept=".csv,.tsv,.txt" hidden></div>
+  <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <section id="authGate" class="auth-wrap hidden">
   <div class="auth-card">
@@ -623,11 +623,6 @@ $('activityCalendar').addEventListener('click',e=>{
   renderCalendar();
 });
 
-// CSV export/import (Anki-friendly six fields)
-function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"';}
-$('exportBtn').onclick=()=>{const rows=[['Word','Meaning','Example','Translation','Category','Note'],...words.map(w=>[w.word,w.meaning,w.example,w.translation,w.category,w.note])];const csv='\ufeff'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='wordloop-anki.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
-$('importBtn').onclick=()=>$('fileInput').click();
-$('fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;const raw=(await f.text()).replace(/^\ufeff/,'');const lines=raw.split(/\r?\n/).filter(Boolean);const parse=line=>{const out=[];let v='',q=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'&&line[i+1]==='"'){v+='"';i++;}else if(c==='"')q=!q;else if(c===','&&!q){out.push(v);v='';}else v+=c;}out.push(v);return out;};if(!lines.length){alert('파일에 가져올 내용이 없어요.');return;}const head=parse(lines.shift()).map(x=>x.toLowerCase().trim());let added=0;for(const line of lines){const r=parse(line),o={};head.forEach((h,i)=>o[h]=r[i]||'');const word=o.word||o.front||r[0],meaning=o.meaning||o.back||r[1];if(word&&meaning&&!words.some(w=>w.word.toLowerCase()===word.toLowerCase())){words.push({id:uid(),word,meaning,example:o.example||r[2]||'',translation:o.translation||r[3]||'',category:o.category||'가져온 단어',note:o.note||'',created:Date.now(),interval:0,reps:0,next:Date.now(),sentenceInterval:0,sentenceReps:0,sentenceNext:Date.now(),masteryStreak:0,lastGrade:null,masteredAt:null,reviewLog:[],sentenceLog:[],testLog:[]});added++;}}save();alert(`${added}개 단어를 가져왔어요.`);e.target.value='';};
 renderStats();renderList();
 bootAuth();
 </script>
