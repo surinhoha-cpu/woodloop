@@ -24,13 +24,6 @@ header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-it
 
 
 
-/* Keep the scope explanation visually attached to its dropdown */
-.quiz-scope-column{display:grid;gap:8px;min-width:0}
-.quiz-scope-column .quiz-intro{width:100%;max-width:none;margin:0;box-sizing:border-box}
-@media(max-width:740px){
- .quiz-scope-column{gap:7px}
- .quiz-scope-column .quiz-intro{font-size:11px}
-}
 
 /* Quiz alignment refinements */
 @media(min-width:741px){
@@ -358,16 +351,13 @@ button.secondary,button.ghost,button.danger{font-size:13px}
     <div class="section-head" style="width:100%;max-width:650px"><h2>월별 단어 테스트</h2></div>
     <div class="quiz-filters">
       <div class="field"><label for="quizMonth">기준 월</label><input type="month" id="quizMonth"></div>
-      <div class="quiz-scope-column">
-        <div class="field"><label for="quizScope">테스트할 단어</label><select id="quizScope">
+      <div class="field"><label for="quizScope">테스트할 단어</label><select id="quizScope">
           <option value="monthAll">선택한 달에 등록한 단어 전체</option>
           <option value="monthMastered">선택한 달에 완벽 암기한 단어</option>
           <option value="allMastered">전체 완벽 암기 단어</option>
           <option value="monthLearning">선택한 달에 등록한 단어 중 익히는 중</option>
           <option value="monthReview">선택한 달에 등록한 단어 중 복습 필요</option>
         </select></div>
-        <div class="quiz-intro" id="quizScopeDescription">선택한 달에 등록한 단어를 무작위로 출제해요. 완벽 암기 단어도 다시 테스트할 수 있어요.</div>
-      </div>
     </div>
     <div class="section-head" style="width:100%;max-width:650px;margin-top:12px"><div class="field" style="min-width:210px;margin:0"><label for="quizMode">문제 방식</label><select id="quizMode" aria-label="테스트 방향"><option value="meaningToWord">뜻 보고 영어 단어 쓰기</option><option value="wordToMeaning">영어 보고 뜻 고르기</option></select></div><div class="muted" id="quizCount">테스트 준비</div></div>
     <div class="progress-track"><div class="progress-fill" id="quizProgress"></div></div>
