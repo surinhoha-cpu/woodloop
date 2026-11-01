@@ -44,7 +44,7 @@ main{margin-top:8px}
 .tab.active{background:var(--soft);border-color:#d8e5da}
 .section-head{align-items:center}
 .panel h2{letter-spacing:-.35px}
-.dashboard-layout{grid-template-columns:minmax(0,1.25fr) minmax(290px,.75fr);align-items:start}
+.dashboard-layout{grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr);align-items:start}
 .dashboard-side{display:grid;gap:14px}
 .calendar-panel{min-width:0}
 .month-nav{display:flex;align-items:center;gap:7px;flex:0 0 auto}
@@ -200,17 +200,9 @@ main{margin-top:8px}
           <button class="secondary" id="homeQuizStart">테스트</button>
         </div>
       </div>
-      <div class="panel">
-        <h2>빠른 단어 등록</h2>
-        <div class="field"><label for="quickWord">영어 단어 / 표현 *</label><input id="quickWord" placeholder="e.g. reluctant"></div>
-        <div class="field"><label for="quickMeaning">뜻 *</label><input id="quickMeaning" placeholder="꺼리는, 내키지 않는"></div>
-        <div class="field"><label for="quickExample">영어 예문</label><textarea id="quickExample" placeholder="She was reluctant to leave."></textarea></div>
-        <div class="field"><label for="quickTranslation">예문 해석</label><textarea id="quickTranslation" placeholder="그녀는 떠나기를 꺼렸다."></textarea></div>
-        <button id="quickAdd">단어 추가</button>
-      </div>
     </div>
   </div>
-  <p class="footer-note">완벽 암기는 Good 또는 Easy를 5회 연속 선택한 단어로 계산해요. 날짜별 학습 기록은 새 버전부터 쌓입니다.</p>
+  <p class="footer-note">완벽 암기는 Good 또는 Easy를 5회 연속 선택한 단어예요. 완벽 암기 전에는 7일마다, 완벽 암기 후에는 30일마다 다시 복습해요.</p>
 </section>
 
 <section id="add" class="hidden">
@@ -441,6 +433,13 @@ function wordStatus(w){
 function statusLabel(w){
   return ({mastered:'완벽 암기',learning:'익히는 중','needs-review':'복습 필요'})[wordStatus(w)];
 }
+function nextReviewText(w){
+  if(!w.next)return '복습 예정: 오늘';
+  const remaining=Number(w.next)-Date.now();
+  if(!Number.isFinite(remaining)||remaining<=0)return '복습 예정: 오늘';
+  const days=Math.ceil(remaining/86400000);
+  return '복습 예정: '+(days===1?'내일':days+'일 뒤')+' · '+formatDate(w.next);
+}
 function recordEvent(w,key,event){
   const list=Array.isArray(w[key])?w[key]:[];
   list.push(event);
@@ -512,12 +511,12 @@ function collectForm(){return{word:$('word').value.trim(),meaning:$('meaning').v
 function clearForm(){['word','meaning','example','translation','note'].forEach(id=>$(id).value='');$('category').value='일상 영어';editingId=null;$('addTitle').textContent='새 단어 등록';$('saveWord').textContent='단어 저장하기';$('cancelEdit').classList.add('hidden');}
 function fillForm(w){editingId=w.id;['word','meaning','example','translation','category','note'].forEach(k=>$(k).value=w[k]||'');$('addTitle').textContent='단어 수정';$('saveWord').textContent='수정 내용 저장';$('cancelEdit').classList.remove('hidden');activateTab('add');}
 function renderList(){const q=($('search')?.value||'').trim().toLowerCase();const list=words.filter(w=>(`${w.word} ${w.meaning} ${w.category||''}`).toLowerCase().includes(q));if(!list.length){$('wordList').innerHTML='<div class="empty">'+(words.length?'검색 결과가 없어요.':'아직 등록된 단어가 없어요.')+'</div>';return;}
-$('wordList').innerHTML=list.map(w=>`<article class="word-item"><div class="word-head"><button class="word-open" data-open="${esc(w.id)}" aria-expanded="${expandedId===w.id}"><strong>${esc(w.word)} <span class="muted">${expandedId===w.id?'▴':'▾'}</span></strong><small>${esc(w.meaning)} · ${esc(w.category||'기타')}</small><div class="word-meta">${formatDate(w.created)} 등록 <span class="word-status ${wordStatus(w)}">${statusLabel(w)}</span></div></button><div class="word-tools"><button class="secondary" data-edit="${esc(w.id)}">수정</button><button class="danger" data-delete="${esc(w.id)}">삭제</button></div></div>${expandedId===w.id?`<div class="word-detail"><div class="detail-meta"><span>등록일: ${formatDate(w.created)}</span><span>연속 정답: ${Number(w.masteryStreak||0)}/5회</span><span class="word-status ${wordStatus(w)}">${statusLabel(w)}</span></div><div class="detail-label">뜻</div><div class="detail-text">${esc(w.meaning)}</div><div class="detail-label">예문</div><div class="example-box"><div class="example-en">${w.example?esc(w.example):'등록된 예문이 없어요.'}</div><div class="example-ko">${w.translation?esc(w.translation):'예문 해석이 등록되지 않았어요.'}</div></div>${w.note?`<div class="detail-label">메모</div><div>${esc(w.note)}</div>`:''}<div class="row" style="margin-top:12px"><button class="secondary" data-study-sentence="${esc(w.id)}" ${!(w.example&&w.translation)?'disabled':''}>이 문장 복습하기</button><button class="secondary" data-study-word="${esc(w.id)}">이 단어 복습하기</button></div></div>`:''}</article>`).join('');}
+$('wordList').innerHTML=list.map(w=>`<article class="word-item"><div class="word-head"><button class="word-open" data-open="${esc(w.id)}" aria-expanded="${expandedId===w.id}"><strong>${esc(w.word)} <span class="muted">${expandedId===w.id?'▴':'▾'}</span></strong><small>${esc(w.meaning)} · ${esc(w.category||'기타')}</small><div class="word-meta">${formatDate(w.created)} 등록 · <span class="word-status ${wordStatus(w)}">${statusLabel(w)}</span><div>${nextReviewText(w)}</div></div></button><div class="word-tools"><button class="secondary" data-edit="${esc(w.id)}">수정</button><button class="danger" data-delete="${esc(w.id)}">삭제</button></div></div>${expandedId===w.id?`<div class="word-detail"><div class="detail-meta"><span>등록일: ${formatDate(w.created)}</span><span>연속 정답: ${Number(w.masteryStreak||0)}/5회</span><span class="word-status ${wordStatus(w)}">${statusLabel(w)}</span><span>${nextReviewText(w)}</span></div><div class="detail-label">뜻</div><div class="detail-text">${esc(w.meaning)}</div><div class="detail-label">예문</div><div class="example-box"><div class="example-en">${w.example?esc(w.example):'등록된 예문이 없어요.'}</div><div class="example-ko">${w.translation?esc(w.translation):'예문 해석이 등록되지 않았어요.'}</div></div>${w.note?`<div class="detail-label">메모</div><div>${esc(w.note)}</div>`:''}<div class="row" style="margin-top:12px"><button class="secondary" data-study-sentence="${esc(w.id)}" ${!(w.example&&w.translation)?'disabled':''}>이 문장 복습하기</button><button class="secondary" data-study-word="${esc(w.id)}">이 단어 복습하기</button></div></div>`:''}</article>`).join('');}
 function activateTab(name){document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==name));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));if(name==='words')renderList();if(name==='quiz')startQuiz(false);if(name==='study')startWordStudy();if(name==='sentences')startSentenceStudy();}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>activateTab(b.dataset.tab)));
 $('saveWord').onclick=()=>{const d=collectForm();if(editingId){const i=words.findIndex(w=>w.id===editingId);if(i>=0){words[i]={...words[i],...d};save();clearForm();activateTab('words');}}else if(addWord(d)){clearForm();activateTab('words');}};
 $('cancelEdit').onclick=()=>{clearForm();activateTab('words');};
-$('quickAdd').onclick=()=>{const d={word:$('quickWord').value.trim(),meaning:$('quickMeaning').value.trim(),example:$('quickExample').value.trim(),translation:$('quickTranslation').value.trim(),category:'일상 영어',note:''};if(addWord(d))['quickWord','quickMeaning','quickExample','quickTranslation'].forEach(id=>$(id).value='');};
+
 $('search').oninput=renderList;
 $('wordList').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const id=t.dataset.open||t.dataset.edit||t.dataset.delete||t.dataset.studySentence||t.dataset.studyWord;if(!id)return;if(t.dataset.open){expandedId=expandedId===id?null:id;renderList();}else if(t.dataset.edit){const w=words.find(x=>x.id===id);if(w)fillForm(w);}else if(t.dataset.delete){if(confirm('이 단어를 삭제할까요?')){words=words.filter(w=>w.id!==id);if(expandedId===id)expandedId=null;save();}}else if(t.dataset.studySentence){activateTab('sentences');startSentenceStudy(id);}else if(t.dataset.studyWord){activateTab('study');startWordStudy(id);}});
 
@@ -528,10 +527,7 @@ $('revealWord').onclick=()=>{if(!currentWord)return;$('backMeaning').textContent
 document.querySelectorAll('[data-word-grade]').forEach(b=>b.onclick=()=>{
   if(!currentWord)return;
   const grade=b.dataset.wordGrade,now=Date.now();
-  const days={again:0.007,hard:1,good:3,easy:7}[grade];
   currentWord.reps=(currentWord.reps||0)+1;
-  currentWord.interval=days;
-  currentWord.next=now+days*86400000;
   recordEvent(currentWord,'reviewLog',{at:now,grade});
   if(grade==='good'||grade==='easy'){
     currentWord.masteryStreak=(currentWord.masteryStreak||0)+1;
@@ -540,6 +536,10 @@ document.querySelectorAll('[data-word-grade]').forEach(b=>b.onclick=()=>{
     currentWord.masteryStreak=0;
     currentWord.masteredAt=null;
   }
+  // Not fully mastered: review every 7 days. Fully mastered: review every 30 days.
+  const daysUntilNextReview=currentWord.masteryStreak>=5?30:7;
+  currentWord.interval=daysUntilNextReview;
+  currentWord.next=now+daysUntilNextReview*86400000;
   currentWord.lastGrade=grade;
   const i=words.findIndex(w=>w.id===currentWord.id);
   if(i>=0)words[i]=currentWord;
