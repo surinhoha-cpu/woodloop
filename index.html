@@ -329,6 +329,18 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 
 
 #wordbookViewSelect{flex:0 0 78px;width:78px;min-width:78px;height:32px;min-height:32px;padding:4px 22px 4px 9px;border:1px solid var(--line);border-radius:9px;background-color:#f7f9f6;color:var(--accent);font-size:12px;font-weight:650;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,#718077 50%),linear-gradient(135deg,#718077 50%,transparent 50%);background-position:calc(100% - 12px) 13px,calc(100% - 8px) 13px;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
+
+/* Wordbook header alignment */
+#words .wordbook-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,300px);align-items:center;column-gap:16px;row-gap:12px;width:100%}
+#words .wordbook-title-group{display:flex;align-items:center;justify-content:flex-start;gap:12px;min-width:0;white-space:nowrap}
+#words .wordbook-title-group h2{margin:0;line-height:1.25;white-space:nowrap}
+#words #wordbookViewSelect{flex:0 0 72px;width:72px;min-width:72px;height:34px;min-height:34px;padding:4px 20px 4px 9px;font-size:12px;box-sizing:border-box}
+#words #search{width:100%;max-width:300px;min-width:0;box-sizing:border-box;justify-self:end}
+@media(max-width:740px){
+ #words .wordbook-head{grid-template-columns:minmax(0,1fr);gap:12px}
+ #words #search{max-width:none;justify-self:stretch}
+}
+
 </style>
 </head>
 <body>
@@ -466,7 +478,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 
 <section id="sentenceAdd" class="hidden"><div class="panel"><h2 id="sentenceFormTitle">새 문장 등록</h2><div class="field"><label for="newSentenceEn">영어 문장 *</label><textarea id="newSentenceEn" placeholder="I was reluctant to ask for help."></textarea></div><div class="field"><div class="section-head"><label for="newSentenceKo">한국어 해석 *</label><button type="button" class="secondary" id="translateSentence">자동 번역</button></div><textarea id="newSentenceKo" placeholder="나는 도움을 요청하는 것이 내키지 않았다."></textarea></div><div class="field"><label>기존 표현 연결</label><input id="sentenceExpressionSearch" placeholder="기존 단어 검색"><div id="sentenceExpressionResults" class="related-picker-list"></div><div id="sentenceExpressionSelected" class="muted">선택한 표현 없음</div></div><div class="field"><label>새 표현 추가</label><div class="row"><input id="newExpression" placeholder="reluctant"><input id="newExpressionMeaning" placeholder="꺼리는, 내키지 않는"></div><button type="button" class="secondary" id="addSentenceExpression">＋ 표현 추가</button></div><div id="newSentenceExpressionTags"></div><button id="saveStandaloneSentence">문장 저장하기</button></div></section>
 <section id="words" class="hidden">
-  <div class="panel"><div class="section-head"><div style="display:flex;align-items:center;gap:8px;flex:0 0 auto;white-space:nowrap"><h2 style="white-space:nowrap;flex:0 0 auto">내 단어장</h2><select id="wordbookViewSelect" aria-label="단어장 보기" style="flex:0 0 68px;width:68px;min-width:68px;height:29px;min-height:29px;padding:3px 19px 3px 7px;font-size:11px;border-radius:8px"><option value="words">단어</option><option value="sentences">예문</option></select></div><input class="search" id="search" placeholder="단어·뜻 검색..."></div>
+  <div class="panel"><div class="section-head wordbook-head"><div class="wordbook-title-group"><h2>내 단어장</h2><select id="wordbookViewSelect" aria-label="단어장 보기"><option value="words">단어</option><option value="sentences">예문</option></select></div><input class="search" id="search" placeholder="단어·뜻 검색..."></div>
     <p class="notice">단어를 누르면 뜻과 예문이 펼쳐져요.</p><div id="wordList" class="wordlist"></div>
   </div>
 </section>
