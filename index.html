@@ -390,7 +390,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
       </div>
       <div class="section-head">
         <div><h2>학습 캘린더</h2><p class="muted">등록한 날과 복습한 날을 기록해요.</p></div>
-        <div class="month-nav"><button class="secondary" id="calendarPrev" aria-label="이전 달">‹</button><span class="month-label" id="calendarMonthLabel"></span><button class="secondary" id="calendarNext" aria-label="다음 달">›</button></div>
+        <div class="month-nav"><button type="button" class="secondary" id="calendarPrev" aria-label="이전 달">‹</button><span class="month-label" id="calendarMonthLabel"></span><button type="button" class="secondary" id="calendarNext" aria-label="다음 달">›</button></div>
       </div>
       <div class="calendar-weekdays"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span></div>
       <div class="activity-calendar" id="activityCalendar"></div>
@@ -990,16 +990,21 @@ $('homeQuizStart').onclick=()=>activateTab('quiz');
 $('wordQuizMode').onclick=()=>activateTab('quiz');
 $('backToWordReview').onclick=()=>activateTab('study');
 
-$('calendarPrev').onclick=()=>{
-  calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()-1,1);
+function changeCalendarMonth(delta){
+  calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+delta,1);
   selectedCalendarDate=dateKey(calendarMonth);
   renderCalendar();
-};
-$('calendarNext').onclick=()=>{
-  calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,1);
-  selectedCalendarDate=dateKey(calendarMonth);
-  renderCalendar();
-};
+}
+['calendarPrev','calendarNext'].forEach((id,index)=>{
+  const button=$(id);
+  if(!button)return;
+  button.type='button';
+  button.addEventListener('click',event=>{
+    event.preventDefault();
+    event.stopPropagation();
+    changeCalendarMonth(index===0?-1:1);
+  });
+});
 $('activityCalendar').addEventListener('click',e=>{
   const button=e.target.closest('[data-calendar-date]');
   if(!button)return;
