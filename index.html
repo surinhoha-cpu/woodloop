@@ -701,7 +701,7 @@ function renderCalendar(){
     const a=activityForDate(key);
     const events=[];
     const monthId=key.slice(0,7),monthTest=monthlyTestLog.find(x=>x.month===monthId);
-    if(day===totalDays)events.push('<i class="test-count">테스트 '+(monthTest?'✓':'○')+'</i>');
+    if(day===totalDays){const testLabel=monthTest?'테스트 완료✔️':(monthId<monthKey(new Date())?'테스트 미완❌':'테스트일');events.push('<i class="test-count">'+testLabel+'</i>');}
     if(a.added)events.push('<i class="add-count">+'+a.added+' 등록</i>');
     if(a.word+a.sentence)events.push('<i class="review-count">↻'+(a.word+a.sentence)+' 복습</i>');
     if(a.test)events.push('<i class="test-count">T'+a.test+'</i>');
@@ -712,12 +712,13 @@ function renderCalendar(){
   }
   $('activityCalendar').innerHTML=parts.join('');
   const a=activityForDate(selectedCalendarDate);
-  $('calendarDayDetail').innerHTML='<div class="calendar-detail-date"><strong>'+selectedCalendarDate+'</strong></div><div class="calendar-detail-counts">등록 '+a.added+'개 · 단어 복습 '+a.word+'회 · 문장 복습 '+a.sentence+'회 · 테스트 '+a.test+'회'+(monthlyTestLog.find(x=>x.month===selectedCalendarDate.slice(0,7))?' · 월간 테스트 완료':' · 월간 테스트 예정')+'</div>';
+  const selectedMonth=selectedCalendarDate.slice(0,7),selectedTest=monthlyTestLog.find(x=>x.month===selectedMonth),selectedTestLabel=selectedTest?'테스트 완료✔️':(selectedMonth<monthKey(new Date())?'테스트 미완❌':'테스트일');
+  $('calendarDayDetail').innerHTML='<div class="calendar-detail-date"><strong>'+selectedCalendarDate+'</strong></div><div class="calendar-detail-counts">등록 '+a.added+'개 · 단어 복습 '+a.word+'회 · 문장 복습 '+a.sentence+'회 · 테스트 '+a.test+'회 · '+selectedTestLabel+'</div>';
   const todayActivity=activityForDate(today);
   $('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
   $('todayAdded').textContent=todayActivity.added;
   $('todayReviewed').textContent=todayActivity.word+todayActivity.sentence;
-  $('monthlyTestStatus').textContent=monthlyTestLog.some(x=>x.month===monthKey(new Date()))?'✓':'○';
+  $('monthlyTestStatus').textContent=monthlyTestLog.some(x=>x.month===monthKey(new Date()))?'O':'X';
 }
 function renderStats(){
   const counts={mastered:0,learning:0,'needs-review':0};
