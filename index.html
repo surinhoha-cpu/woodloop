@@ -128,7 +128,7 @@ main{margin-top:8px}
   .top-actions button{padding:8px 10px;font-size:12px}
   .account-email{font-size:11px;padding:6px 8px}
   main{padding:0 13px 28px;margin-top:5px}
-  .tabs{position:fixed;z-index:30;left:0;right:0;bottom:0;margin:0;padding:8px 7px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);border-top:1px solid rgba(218,227,218,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);justify-content:space-around;gap:2px;overflow-x:auto;scrollbar-width:none}
+  .tabs{position:fixed;z-index:30;left:0;right:0;bottom:0;margin:0;padding:8px 7px calc(8px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid rgba(218,227,218,.9);backdrop-filter:none;-webkit-backdrop-filter:none;justify-content:space-around;gap:2px;overflow-x:auto;scrollbar-width:none}
   .tabs::-webkit-scrollbar{display:none}
   .tab{flex:1 0 auto;min-width:0;padding:9px 7px;font-size:11px;border-radius:12px}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
@@ -366,7 +366,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 40</span></div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 41</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -513,7 +513,7 @@ const SUPABASE_URL='https://jmjfhvlrwwfuyurbxlsy.supabase.co';
 const SUPABASE_KEY='sb_publishable_ED2G8FRPHtCz5y_AmazRiw_nCitH2d1';
 const OWNER_EMAIL='srin001@icloud.com';
 const AUTH_STORAGE_KEY='sb-jmjfhvlrwwfuyurbxlsy-auth-token';
-const supabaseClient=window.supabase?.createClient?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{storage:window.localStorage,storageKey:AUTH_STORAGE_KEY,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
+const supabaseClient=window.supabase?.createClient?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{storage:window.localStorage,storageKey:AUTH_STORAGE_KEY,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,lock:async(_name,_timeout,fn)=>await fn()}}):null;
 function authStorageDiagnostic(){try{const raw=window.localStorage.getItem(AUTH_STORAGE_KEY);if(!raw)return '저장된 로그인 정보가 Safari에 없어요. 로그인할 때 저장이 안 된 상태예요.';let parsed;try{parsed=JSON.parse(raw);}catch(e){return 'Safari에 로그인 데이터는 있지만 읽을 수 없는 형식이에요.';}return parsed?.refresh_token?'Safari에 로그인 데이터가 저장돼 있지만 세션 복원에 실패했어요. 토큰 또는 Supabase 인증 상태를 확인해야 해요.':'Safari에 로그인 데이터가 있지만 갱신 토큰이 없어요.';}catch(e){return 'Safari가 웹사이트 저장 공간에 접근하지 못하고 있어요. 개인정보 보호 설정이나 콘텐츠 차단 설정을 확인해야 해요.';}}
 let words=[];
 let standaloneSentences=[];
@@ -588,9 +588,8 @@ async function refreshCloud(){
 }
 function subscribeToCloud(){
   if(syncChannel){supabaseClient.removeChannel(syncChannel);syncChannel=null;}
-  // iPad Safari can terminate this page under memory pressure; use foreground refresh instead of a persistent realtime socket.
-  const isIPad= /iPad/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  if(isIPad)return;
+  // Avoid a persistent realtime websocket; foreground refresh keeps devices in sync with lower memory use.
+  return;
   syncChannel=supabaseClient.channel('wordloop-sync-'+currentUser.id)
     .on('postgres_changes',{event:'*',schema:'public',table:'wordloop_data',filter:'user_id=eq.'+currentUser.id},payload=>{
       if(!deletingWord&&payload.new&&Array.isArray(payload.new.words)){
@@ -1090,8 +1089,15 @@ function changeCalendarMonth(delta){
   selectedCalendarDate=dateKey(calendarMonth);
   renderCalendar();
 }
-$('calendarPrev').onclick=e=>{e.preventDefault();changeCalendarMonth(-1);};
-$('calendarNext').onclick=e=>{e.preventDefault();changeCalendarMonth(1);};
+let lastCalendarTouch=0;
+function bindCalendarNav(id,delta){
+  const button=$(id);
+  const move=e=>{if(e.type==='touchend'){lastCalendarTouch=Date.now();}else if(e.type==='click'&&Date.now()-lastCalendarTouch<700){e.preventDefault();return;}e.preventDefault();changeCalendarMonth(delta);};
+  button.addEventListener('touchend',move,{passive:false});
+  button.addEventListener('click',move);
+}
+bindCalendarNav('calendarPrev',-1);
+bindCalendarNav('calendarNext',1);
 $('activityCalendar').addEventListener('click',e=>{
   const button=e.target.closest('[data-calendar-date]');
   if(!button)return;
