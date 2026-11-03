@@ -465,15 +465,14 @@ button.secondary,button.ghost,button.danger{font-size:13px}
   #home .calendar-legend{align-items:center}
   #home .calendar-legend>span{display:inline-flex;align-items:center;gap:6px;line-height:1.2}
   #home .calendar-legend .legend-plus,
-  #home .calendar-legend .legend-dot{display:inline-flex;align-items:center;justify-content:center;flex:0 0 14px;width:14px;height:14px;min-width:14px;min-height:14px;box-sizing:border-box;margin:0;padding:0;line-height:14px;vertical-align:middle}
-  #home .calendar-legend .legend-plus{font-size:19px}
-  #home .calendar-legend .legend-dot{width:8px;height:8px;min-width:8px;min-height:8px;flex-basis:14px}
-  #home .calendar-day .day-events>i{display:flex;align-items:center;justify-content:flex-start;text-align:left;box-sizing:border-box}
-  #home .calendar-day .day-events>i .calendar-event-dot,
-  #home .calendar-day .day-events>i .calendar-event-plus{display:inline-flex;align-items:center;justify-content:center;flex:0 0 14px;width:14px;height:14px;min-width:14px;min-height:14px;box-sizing:border-box;margin:0 6px 0 0;padding:0;border:0;transform:none}
-  #home .calendar-day .day-events>i .calendar-event-plus{font-size:17px;line-height:14px;font-weight:800}
-  #home .calendar-day .day-events>i .calendar-event-dot{border-radius:50%;background-image:radial-gradient(circle 4px at center,#667e9a 99%,transparent 100%)}
-  #home .calendar-day .day-events>i .calendar-event-dot.sentence-dot{background-image:radial-gradient(circle 4px at center,#9a78ad 99%,transparent 100%)}
+  #home .calendar-legend .legend-dot{display:inline-flex;align-items:center;justify-content:center;flex:0 0 10px;width:10px;height:10px;min-width:10px;min-height:10px;box-sizing:border-box;margin:0;padding:0;line-height:10px;vertical-align:middle}
+  #home .calendar-legend .legend-plus{font-size:14px}
+  #home .calendar-legend .legend-dot{border-radius:50%;background-color:#667e9a}
+  #home .calendar-legend .legend-dot.sentence{background-color:#9a78ad}
+  #home .calendar-day .day-events>i{display:flex;align-items:center;justify-content:flex-start;text-align:left;box-sizing:border-box;gap:2px}
+  #home .calendar-day .day-events>i .calendar-event-dot{display:block!important;flex:0 0 7px!important;width:7px!important;height:7px!important;min-width:7px!important;min-height:7px!important;max-width:7px!important;max-height:7px!important;aspect-ratio:1/1;box-sizing:border-box;margin:0!important;padding:0!important;border:0;border-radius:50%!important;transform:none!important;background-color:#667e9a!important;background-image:none!important}
+  #home .calendar-day .day-events>i .calendar-event-dot.sentence-dot{background-color:#9a78ad!important}
+  #home .calendar-day .day-events>i .calendar-event-plus{display:inline-flex;flex:0 0 10px;width:10px;height:10px;min-width:10px;min-height:10px;align-items:center;justify-content:center;margin:0;padding:0;font-size:14px;line-height:10px;font-weight:800;box-sizing:border-box}
   #home .calendar-day .day-events>i.review-count,
   #home .calendar-day .day-events>i.sentence-review-count,
   #home .calendar-day .day-events>i.add-count{padding:0}
@@ -487,7 +486,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 82</span></div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 83</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -932,9 +931,9 @@ function renderCalendar(){
     const key=[year,String(month+1).padStart(2,'0'),String(day).padStart(2,'0')].join('-');
     const a=activityForDate(key);
     const events=[];
-    events.push(a.added?'<i class="add-count" title="단어 등록 '+a.added+'개"><span class="calendar-event-plus" aria-hidden="true">+</span> '+a.added+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
-    events.push(a.word?'<i class="review-count" title="단어 복습 '+a.word+'회"><span class="calendar-event-dot review-dot" aria-hidden="true"></span> '+a.word+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
-    events.push(a.sentence?'<i class="sentence-review-count" title="문장 복습 '+a.sentence+'회"><span class="calendar-event-dot sentence-dot" aria-hidden="true"></span> '+a.sentence+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.added?'<i class="add-count" title="단어 등록 '+a.added+'개"><span class="calendar-event-plus" aria-hidden="true">+</span>'+a.added+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.word?'<i class="review-count" title="단어 복습 '+a.word+'회"><span class="calendar-event-dot review-dot" aria-hidden="true"></span>'+a.word+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.sentence?'<i class="sentence-review-count" title="문장 복습 '+a.sentence+'회"><span class="calendar-event-dot sentence-dot" aria-hidden="true"></span>'+a.sentence+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
     let monthTestHtml='';
     if(day===totalDays){
       const monthId=key.slice(0,7),monthTest=monthlyTestLog.find(x=>x.month===monthId);
