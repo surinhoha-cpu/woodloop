@@ -78,7 +78,7 @@ main{margin-top:8px}
 .dashboard-side{display:grid;gap:14px}
 .calendar-panel{min-width:0}
 .month-nav{display:flex;align-items:center;gap:7px;flex:0 0 auto}
-.month-nav{position:relative;z-index:10;isolation:isolate;touch-action:manipulation}.month-nav button{position:relative;z-index:11;pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;padding:7px 11px;min-width:44px;min-height:44px}
+.month-nav{position:relative;z-index:100;isolation:isolate;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.month-nav button{position:relative;z-index:101;display:inline-flex;align-items:center;justify-content:center;pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;padding:7px 11px;min-width:48px;min-height:48px}.month-label{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .month-label{font-weight:750;min-width:92px;text-align:center;font-size:14px}
 .calendar-weekdays,.activity-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
 .calendar-weekdays{margin:19px 0 7px;text-align:center;color:var(--muted);font-size:11px;font-weight:700}
@@ -366,7 +366,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 37</span></div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 38</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -411,7 +411,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
       </div>
       <div class="section-head">
         <div><h2>학습 캘린더</h2><p class="muted">등록한 날과 복습한 날을 기록해요.</p></div>
-        <div class="month-nav"><button type="button" class="secondary" id="calendarPrev" aria-label="이전 달">‹</button><span class="month-label" id="calendarMonthLabel"></span><button type="button" class="secondary" id="calendarNext" aria-label="다음 달">›</button></div>
+        <div class="month-nav"><button type="button" class="secondary" id="calendarPrev" aria-label="이전 달" onclick="window.wordloopChangeMonth(-1)">‹</button><span class="month-label" id="calendarMonthLabel"></span><button type="button" class="secondary" id="calendarNext" aria-label="다음 달" onclick="window.wordloopChangeMonth(1)">›</button></div>
       </div>
       <div class="calendar-weekdays"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span></div>
       <div class="activity-calendar" id="activityCalendar"></div>
@@ -1087,24 +1087,7 @@ function changeCalendarMonth(delta){
   selectedCalendarDate=dateKey(calendarMonth);
   renderCalendar();
 }
-['calendarPrev','calendarNext'].forEach((id,index)=>{
-  const button=$(id);
-  if(!button)return;
-  const delta=index===0?-1:1;
-  button.type='button';
-  button.style.webkitUserSelect='none';
-  button.style.userSelect='none';
-  button.addEventListener('touchend',event=>{
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    changeCalendarMonth(delta);
-  },{passive:false});
-  button.addEventListener('click',event=>{
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    changeCalendarMonth(delta);
-  });
-});
+window.wordloopChangeMonth=changeCalendarMonth;
 $('activityCalendar').addEventListener('click',e=>{
   const button=e.target.closest('[data-calendar-date]');
   if(!button)return;
