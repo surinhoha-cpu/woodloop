@@ -244,22 +244,47 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 /* iPad 9.7-inch and medium tablet layout: keep phone and desktop layouts unchanged */
 @media (min-width:741px) and (max-width:1100px){
   header,main{width:100%;max-width:960px}
-  header{padding:20px 20px 8px;gap:12px}
-  main{padding:0 20px 38px;margin-top:8px}
-  .tabs{gap:4px;padding:8px 0 15px;flex-wrap:wrap;overflow:visible}
-  .tab{padding:9px 11px;font-size:12px}
-  .panel{padding:18px;border-radius:18px}
-  .stat{padding:14px}
-  .stat b{font-size:25px}
-  .dashboard-layout{grid-template-columns:minmax(0,1.12fr) minmax(270px,.88fr);gap:12px}
-  .dashboard-side{min-width:0;gap:12px}
-  .calendar-day{min-height:62px;padding:7px 5px}
-  .calendar-day .day-events{font-size:8px}
-  .calendar-weekdays,.activity-calendar{gap:4px}
-  .today-metric{padding:10px}
-  .today-metric b{font-size:21px}
-  .quick-actions{gap:5px}
-  .quick-actions button{padding:9px 5px;font-size:11px}
+  header{padding:13px 18px 5px;gap:9px}
+  header .sub{font-size:11px}
+  h1{font-size:20px}
+  main{padding:0 18px 26px;margin-top:4px}
+  .tabs{gap:3px;padding:5px 0 9px;flex-wrap:nowrap;overflow-x:auto}
+  .tab{padding:7px 9px;font-size:11px;min-height:32px}
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-bottom:9px}
+  .stat{padding:8px 9px;border-radius:14px}
+  .stat b{font-size:19px;line-height:1.1;letter-spacing:-.5px}
+  .stat small{font-size:10px;line-height:1.2}
+  .dashboard-layout{grid-template-columns:minmax(0,1.12fr) minmax(270px,.88fr);gap:10px}
+  .dashboard-side{min-width:0;gap:10px}
+  .panel{padding:13px;border-radius:16px}
+  .panel h2{font-size:15px;margin-bottom:8px}
+  .calendar-day{min-height:43px;padding:5px 4px;border-radius:9px;gap:3px}
+  .calendar-day .day-number{font-size:11px}
+  .calendar-day .day-events{font-size:7px}
+  .calendar-weekdays,.activity-calendar{gap:3px}
+  .calendar-weekdays{margin:11px 0 5px;font-size:9px}
+  .calendar-legend{font-size:9px;margin-top:8px;gap:9px}
+  .calendar-detail{margin-top:8px;padding:8px 10px;font-size:10px}
+  .mastery-compact{padding-bottom:9px;margin-bottom:9px}
+  .mastery-compact h2{font-size:13px}
+  .mastery-compact .mastery-track{margin:7px 0 5px}
+  .mastery-compact .mastery-breakdown{font-size:9px;line-height:1.4}
+  .today-metrics{gap:6px;margin:8px 0}
+  .today-metric{padding:8px;border-radius:11px}
+  .today-metric b{font-size:18px}
+  .today-metric span{font-size:9px}
+  .mascot-metric{min-height:60px}
+  .mascot-metric svg{width:28px;height:28px}
+  .quick-actions{gap:4px;margin-top:9px}
+  .quick-actions button{padding:7px 4px;font-size:10px;min-height:32px}
+  .word-head{gap:9px;padding:11px}
+  .word-open{min-width:0;overflow-wrap:anywhere}
+  .word-tools{flex:0 0 auto;gap:5px}
+  .word-tools button{padding:8px 9px;font-size:12px}
+  .word-detail{padding:13px}
+  .search{max-width:260px}
+  .card-panel{max-width:760px}
+  .field input,.field textarea,.field select,.search{font-size:15px}
   .word-head{gap:9px;padding:11px}
   .word-open{min-width:0;overflow-wrap:anywhere}
   .word-tools{flex:0 0 auto;gap:5px}
