@@ -411,7 +411,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
       </div>
       <div class="section-head">
         <div><h2>학습 캘린더</h2><p class="muted">등록한 날과 복습한 날을 기록해요.</p></div>
-        <div class="month-nav"><button type="button" class="secondary" id="calendarPrev" aria-label="이전 달" onclick="window.wordloopChangeMonth(-1)">‹</button><span class="month-label" id="calendarMonthLabel"></span><button type="button" class="secondary" id="calendarNext" aria-label="다음 달" onclick="window.wordloopChangeMonth(1)">›</button></div>
+        <div class="month-nav"><button type="button" class="secondary" id="calendarPrev" aria-label="이전 달" >‹</button><span class="month-label" id="calendarMonthLabel"></span><button type="button" class="secondary" id="calendarNext" aria-label="다음 달" >›</button></div>
       </div>
       <div class="calendar-weekdays"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span></div>
       <div class="activity-calendar" id="activityCalendar"></div>
@@ -1120,11 +1120,14 @@ function changeCalendarMonth(delta){
   selectedCalendarDate=dateKey(calendarMonth);
   renderCalendar();
 }
-window.wordloopChangeMonth=function(delta){
+function handleCalendarMonthClick(delta){
   const amount=Number(delta);
   if(amount!==-1&&amount!==1)return;
   changeCalendarMonth(amount);
-};
+}
+window.wordloopChangeMonth=handleCalendarMonthClick;
+$('calendarPrev').addEventListener('click',()=>handleCalendarMonthClick(-1));
+$('calendarNext').addEventListener('click',()=>handleCalendarMonthClick(1));
 $('activityCalendar').addEventListener('click',e=>{
   const button=e.target.closest('[data-calendar-date]');
   if(!button)return;
@@ -1147,8 +1150,16 @@ function placeMasteryPanel(){
 }
 placeMasteryPanel();
 window.addEventListener('resize',placeMasteryPanel);
-renderExampleFields([]);renderStats();renderList();
-bootAuth();
+// Keep authentication startup independent from optional UI rendering.
+try{renderExampleFields([]);}catch(error){console.error('Wordloop example-field startup failed:',error);}
+try{renderStats();}catch(error){console.error('Wordloop dashboard startup failed:',error);}
+try{renderList();}catch(error){console.error('Wordloop list startup failed:',error);}
+bootAuth().catch(error=>{
+  console.error('Wordloop authentication startup failed:',error);
+  $('authGate').classList.remove('hidden');
+  $('appMain').classList.add('hidden');
+  $('authMessage').textContent='로그인 초기화 오류: '+String(error?.message||error)+' · '+authStorageDiagnostic();
+});
 </script>
 </body>
 </html>
