@@ -562,14 +562,16 @@ async function activateAccount(user){
   $('topActions').classList.remove('hidden');
   $('currentAccount').textContent=user.email||OWNER_EMAIL;
   $('authPassword').value='';
-  // Keep all sections hidden while cloud data loads to prevent a dashboard flash.
+  // Show the selected screen immediately. Cloud sync must not hold the whole app blank.
   document.querySelectorAll('main>section').forEach(section=>section.classList.add('hidden'));
   const savedTab=localStorage.getItem('wordloop-active-tab');
   const hashTab=location.hash.replace(/^#/, '');
   const validTabs=['home','add','sentenceAdd','study','sentences','quiz','words'];
   const restoreTab=validTabs.includes(hashTab)?hashTab:(validTabs.includes(savedTab)?savedTab:'home');
-  try{await pullCloud();}catch(error){console.error('Wordloop cloud startup failed:',error);setSyncStatus('동기화 오류 · 화면은 계속 사용할 수 있어요');}
+  // Render the app before waiting for Supabase. A slow or stalled network request
+  // must not leave every main section hidden behind the header.
   activateTab(restoreTab);
+  try{await pullCloud();}catch(error){console.error('Wordloop cloud startup failed:',error);setSyncStatus('동기화 오류 · 화면은 계속 사용할 수 있어요');}
   activatingUserId=null;
 }
 function showSignedOut(){
