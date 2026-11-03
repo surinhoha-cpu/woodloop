@@ -294,6 +294,17 @@ button.secondary,button.ghost,button.danger{font-size:13px}
   .card-panel{max-width:760px}
   .field input,.field textarea,.field select,.search{font-size:15px}
 }
+@media (min-width:821px) and (max-width:1100px){
+  .dashboard-side>.mastery-compact{
+    background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    box-shadow:0 7px 24px rgba(37,57,43,.045);
+    padding:13px;margin:0;min-width:0;
+  }
+  .dashboard-side>.mastery-compact .section-head{margin-bottom:7px}
+  .dashboard-side>.mastery-compact h2{font-size:14px}
+  .dashboard-side>.mastery-compact .mastery-track{margin:8px 0 6px}
+  .dashboard-side>.mastery-compact .mastery-breakdown{font-size:10px;line-height:1.5}
+}
 @media (min-width:741px) and (max-width:820px){
   header,main{max-width:760px}
   header{padding-left:16px;padding-right:16px;align-items:flex-start;flex-wrap:wrap}
@@ -350,6 +361,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
   </div>
   <div class="layout dashboard-layout">
     <div class="panel calendar-panel">
+      <div id="masteryOriginalSlot"></div>
       <div class="mastery-compact">
         <div class="section-head"><h2>암기 진행률</h2><strong id="masteryPercent">0%</strong></div>
         <div class="mastery-track"><div class="mastery-fill" id="masteryFill"></div></div>
@@ -905,6 +917,21 @@ $('activityCalendar').addEventListener('click',e=>{
   renderCalendar();
 });
 
+// iPad landscape: move mastery progress into the open space below today's learning panel.
+const masteryPanel=document.querySelector('.mastery-compact');
+const masterySlot=$('masteryOriginalSlot');
+const dashboardSide=document.querySelector('.dashboard-side');
+function placeMasteryPanel(){
+  if(!masteryPanel||!masterySlot||!dashboardSide)return;
+  const tabletLandscape=window.matchMedia('(min-width:821px) and (max-width:1100px)').matches;
+  if(tabletLandscape){
+    if(masteryPanel.parentElement!==dashboardSide)dashboardSide.appendChild(masteryPanel);
+  }else if(masteryPanel.parentElement!==masterySlot.parentElement){
+    masterySlot.parentElement.insertBefore(masteryPanel,masterySlot.nextSibling);
+  }
+}
+placeMasteryPanel();
+window.addEventListener('resize',placeMasteryPanel);
 renderExampleFields([]);renderStats();renderList();
 bootAuth();
 </script>
