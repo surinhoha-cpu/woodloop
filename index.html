@@ -747,6 +747,7 @@ async function runAIReview(){
   if(data?.error)throw new Error(data.error);
   if(!data?.result)throw new Error('검수 결과를 받지 못했어요.');
   latestAIReview={fingerprint:reviewFingerprint(word,meaning,getExamplesFromForm()),result:data.result};
+  if(editingId){const existing=words.find(w=>String(w.id)===String(editingId));if(existing){existing.aiReview=data.result;save();}}
   renderAIReview(data.result);refreshAIReviewStatus();
  }catch(err){
   console.error('AI review failed',err);
