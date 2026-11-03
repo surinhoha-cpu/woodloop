@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ef">
+<title>Collect — LOOP</title>
+<style>
+:root{--bg:#f5f4ef;--paper:#fffefa;--ink:#252821;--muted:#85877e;--line:#e7e5dc;--accent:#526b58;--soft:#edf1eb;--sand:#eee9df;--shadow:0 12px 34px rgba(35,42,32,.055)}
+*{box-sizing:border-box}html{background:var(--bg);-webkit-text-size-adjust:100%}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #526b5833;outline-offset:2px}.shell{max-width:1240px;margin:auto;padding:30px 34px 70px}.top{display:flex;justify-content:space-between;align-items:center;padding-bottom:26px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:34px;height:34px;border:1px solid #cdd6ca;border-radius:50%;display:grid;place-items:center;color:var(--accent);font-family:Georgia,serif;font-size:21px}.brand-name{font-weight:750;letter-spacing:-.7px;font-size:19px}.brand-sub{font-size:10px;letter-spacing:2px;color:var(--muted);margin-top:1px}.top-right{font-size:11px;letter-spacing:2px;color:var(--muted)}.intro{padding:38px 0 29px;display:flex;justify-content:space-between;align-items:end;gap:20px}.eyebrow{font-size:10px;letter-spacing:2px;color:var(--accent);font-weight:750;text-transform:uppercase}.intro h1{font:500 clamp(36px,5vw,56px)/1.05 Georgia,serif;letter-spacing:-1.8px;margin:9px 0 10px}.intro p{margin:0;color:var(--muted);font-size:13px}.primary{border:0;background:var(--ink);color:#fff;padding:12px 18px;border-radius:3px;font-size:12px;font-weight:650;letter-spacing:.2px}.primary:hover{background:var(--accent)}.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:34px}.sidebar{padding-top:5px}.side-label{font-size:10px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin:0 0 12px}.nav{display:grid;gap:4px}.nav button{background:transparent;border:0;text-align:left;padding:10px 12px;border-radius:4px;color:#66695f;font-size:13px;display:flex;justify-content:space-between;align-items:center}.nav button.active{background:var(--soft);color:var(--accent);font-weight:700}.count{font-size:10px;color:var(--muted)}.side-divider{height:1px;background:var(--line);margin:25px 0}.side-note{font:italic 15px/1.5 Georgia,serif;color:#85877e;padding:0 10px}.content{min-width:0}.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:19px}.toolbar h2{font:500 23px Georgia,serif;margin:0}.tools{display:flex;gap:8px;align-items:center}.search{width:min(250px,42vw);border:1px solid var(--line);background:var(--paper);padding:9px 12px;border-radius:3px;font-size:12px}.select{border:1px solid var(--line);background:var(--paper);padding:9px 10px;border-radius:3px;color:#686b62;font-size:12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}.stat{background:var(--paper);border:1px solid var(--line);padding:13px 15px}.stat b{display:block;font:500 25px Georgia,serif}.stat span{font-size:10px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}.cards{display:grid;gap:11px}.quote{background:var(--paper);border:1px solid var(--line);padding:19px 21px;position:relative;box-shadow:var(--shadow)}.quote-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:11px}.source-type{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-weight:750}.quote-actions{display:flex;gap:5px}.icon-btn{border:1px solid transparent;background:transparent;color:#85877e;padding:4px 7px;font-size:12px}.icon-btn:hover{border-color:var(--line);color:var(--ink)}.quote-text{font:500 20px/1.4 Georgia,serif;letter-spacing:-.3px;margin:0 0 9px;white-space:pre-wrap}.translation{font-size:12px;color:#77796f;margin:0 0 10px;white-space:pre-wrap}.quote-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--muted);font-size:10px}.dot{width:3px;height:3px;border-radius:50%;background:#b8b8ad;display:inline-block}.tag{background:var(--soft);color:#596f5d;padding:3px 7px;font-size:9px;border-radius:2px}.empty{border:1px dashed #d8d7cd;text-align:center;padding:55px 20px;color:var(--muted)}.empty strong{display:block;font:500 22px Georgia,serif;color:var(--ink);margin-bottom:7px}.empty p{font-size:12px;margin:0 0 15px}.view{display:none}.view.active{display:block}.form-wrap{max-width:760px}.form-card{background:var(--paper);border:1px solid var(--line);padding:23px;margin-bottom:14px}.form-card h3{font:500 20px Georgia,serif;margin:0 0 18px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);background:#fff;padding:11px 12px;border-radius:3px;color:var(--ink);font-size:13px}.field textarea{min-height:110px;resize:vertical}.field textarea.tall{min-height:220px}.hint{font-size:10px;color:var(--muted);margin-top:3px}.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:15px}.secondary{border:1px solid var(--line);background:transparent;padding:10px 15px;border-radius:3px;font-size:12px;color:#686b62}.source-list{display:grid;gap:9px}.source-row{background:var(--paper);border:1px solid var(--line);padding:15px 17px;display:flex;justify-content:space-between;gap:14px;align-items:center}.source-row h3{font:500 17px Georgia,serif;margin:0 0 3px}.source-row p{font-size:10px;color:var(--muted);margin:0}.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,15px);background:#26382c;color:white;padding:10px 16px;border-radius:3px;font-size:12px;opacity:0;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}.modal-backdrop{display:none;position:fixed;inset:0;background:#1e241f66;z-index:10;padding:18px;align-items:center;justify-content:center}.modal-backdrop.open{display:flex}.modal{background:var(--bg);width:min(680px,100%);max-height:90vh;overflow:auto;padding:24px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.modal-head h2{font:500 23px Georgia,serif;margin:0}.modal-close{border:0;background:transparent;font-size:22px;color:var(--muted)}.source-chip{display:inline-block;background:var(--sand);padding:4px 8px;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#746d5e}.mobile-nav{display:none}
+@media(max-width:760px){.shell{padding:17px 16px 95px}.top{padding-bottom:16px}.top-right{display:none}.intro{padding:29px 0 22px;align-items:start;flex-direction:column}.intro h1{font-size:43px}.intro .primary{align-self:stretch}.layout{grid-template-columns:1fr;gap:18px}.sidebar{display:none}.mobile-nav{display:flex;gap:5px;overflow:auto;padding:0 0 12px;margin-bottom:13px;border-bottom:1px solid var(--line)}.mobile-nav button{white-space:nowrap;background:transparent;border:1px solid transparent;color:var(--muted);padding:8px 10px;font-size:11px}.mobile-nav button.active{background:var(--soft);color:var(--accent);border-color:#dce5d9}.toolbar{align-items:flex-start;flex-direction:column}.tools{width:100%}.search{width:100%;flex:1}.stats{gap:7px}.stat{padding:10px}.stat b{font-size:22px}.stat span{font-size:8px}.quote{padding:16px}.quote-text{font-size:19px}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.form-card{padding:17px}.source-row{align-items:flex-start}.source-row .secondary{white-space:nowrap}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top">
+  <div class="brand"><div class="brand-mark">c.</div><div><div class="brand-name">Collect</div><div class="brand-sub">A PART OF LOOP</div></div></div>
+  <div class="top-right">DISCOVER · KEEP · RETURN</div>
+</header>
+<section class="intro">
+  <div><div class="eyebrow">Your personal archive</div><h1>Keep what<br>speaks to you.</h1><p>Collect sentences, ideas and expressions from everything you read and watch.</p></div>
+  <button class="primary" id="newQuoteTop">＋ &nbsp; Save a sentence</button>
+</section>
+<div class="layout">
+  <aside class="sidebar">
+    <p class="side-label">Workspace</p>
+    <nav class="nav">
+      <button class="active" data-view="library">Library <span class="count" id="sideQuoteCount">0</span></button>
+      <button data-view="sources">Sources <span class="count" id="sideSourceCount">0</span></button>
+      <button data-view="addSource">Add a source <span>＋</span></button>
+    </nav>
+    <div class="side-divider"></div>
+    <p class="side-label">Your loop</p>
+    <div class="side-note">Notice something.<br>Keep it close.<br>Come back to it.</div>
+  </aside>
+  <main class="content">
+    <nav class="mobile-nav">
+      <button class="active" data-view="library">Library</button><button data-view="sources">Sources</button><button data-view="addSource">Add source</button>
+    </nav>
+    <section class="view active" id="libraryView">
+      <div class="toolbar"><h2>Your collection</h2><div class="tools"><input class="search" id="search" placeholder="Search sentences, notes, tags…"><select class="select" id="filterType"><option value="all">All types</option><option>YouTube</option><option>Podcast</option><option>Article</option><option>Book</option><option>Other</option></select></div></div>
+      <div class="stats"><div class="stat"><b id="quoteTotal">0</b><span>Sentences saved</span></div><div class="stat"><b id="sourceTotal">0</b><span>Sources collected</span></div><div class="stat"><b id="tagTotal">0</b><span>Tags created</span></div></div>
+      <div class="cards" id="quoteList"></div>
+    </section>
+    <section class="view" id="sourcesView">
+      <div class="toolbar"><h2>Sources</h2><button class="primary" id="addSourceFromList">＋ Add a source</button></div>
+      <div class="source-list" id="sourceList"></div>
+    </section>
+    <section class="view" id="addSourceView">
+      <div class="toolbar"><h2>Add a source</h2></div>
+      <div class="form-wrap">
+        <div class="form-card"><h3>Where did you find it?</h3><form id="sourceForm"><div class="fields">
+          <div class="field"><label for="sourceType">Content type</label><select id="sourceType"><option>YouTube</option><option>Podcast</option><option>Article</option><option>Book</option><option>Other</option></select></div>
+          <div class="field"><label for="sourceCreator">Creator / author</label><input id="sourceCreator" placeholder="e.g. Emma Chamberlain"></div>
+          <div class="field full"><label for="sourceTitle">Title *</label><input id="sourceTitle" required placeholder="Video, episode, article or book title"></div>
+          <div class="field full"><label for="sourceUrl">Link</label><input id="sourceUrl" type="url" placeholder="https://…"></div>
+          <div class="field full"><label for="sourceTranscript">Transcript / excerpt</label><textarea class="tall" id="sourceTranscript" placeholder="Paste a transcript or an excerpt here. You can save individual sentences from it afterwards."></textarea><div class="hint">Collect stores the text you provide. Automatic transcript extraction is not included in this first version.</div></div>
+          <div class="field full"><label for="sourceNotes">Source notes</label><textarea id="sourceNotes" placeholder="Optional notes about this content…"></textarea></div>
+        </div><div class="form-actions"><button type="button" class="secondary" id="cancelSource">Cancel</button><button class="primary" type="submit">Save source</button></div></form></div>
+      </div>
+    </section>
+  </main>
+</div>
+</div>
+<div class="modal-backdrop" id="quoteModal">
+  <div class="modal">
+    <div class="modal-head"><h2 id="quoteModalTitle">Save a sentence</h2><button class="modal-close" id="closeQuote">×</button></div>
+    <form id="quoteForm">
+      <input type="hidden" id="quoteId">
+      <div class="fields">
+        <div class="field full"><label for="quoteText">Sentence / expression *</label><textarea id="quoteText" required placeholder="Write or paste the sentence you want to keep…"></textarea></div>
+        <div class="field full"><label for="quoteTranslation">Meaning / translation</label><textarea id="quoteTranslation" placeholder="한국어 뜻이나 자연스러운 해석…"></textarea></div>
+        <div class="field full"><label for="quoteSource">Source</label><select id="quoteSource"><option value="">No source linked</option></select></div>
+        <div class="field full"><label for="quoteContext">Context / personal note</label><textarea id="quoteContext" placeholder="Why did you save this? How was it used?"></textarea></div>
+        <div class="field full"><label for="quoteTags">Tags</label><input id="quoteTags" placeholder="e.g. daily conversation, work, phrasal verb"><div class="hint">Separate tags with commas.</div></div>
+      </div>
+      <div class="form-actions"><button type="button" class="secondary" id="cancelQuote">Cancel</button><button type="submit" class="primary">Save to library</button></div>
+    </form>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const KEY='collect-loop-v1';
+let state={sources:[],quotes:[]};
+try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&Array.isArray(saved.sources)&&Array.isArray(saved.quotes))state=saved}catch(e){}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
+const toast=msg=>{const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900)};
+function switchView(name){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(name+'View').classList.add('active');document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));if(name==='library')renderQuotes();if(name==='sources')renderSources();window.scrollTo({top:0,behavior:'smooth'});}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
+function sourceById(id){return state.sources.find(s=>s.id===id)}
+function renderStats(){const tags=[...new Set(state.quotes.flatMap(q=>q.tags||[]))];$('quoteTotal').textContent=state.quotes.length;$('sourceTotal').textContent=state.sources.length;$('tagTotal').textContent=tags.length;$('sideQuoteCount').textContent=state.quotes.length;$('sideSourceCount').textContent=state.sources.length}
+function renderSourceOptions(selected=''){$('quoteSource').innerHTML='<option value="">No source linked</option>'+state.sources.map(s=>'<option value="'+esc(s.id)+'" '+(s.id===selected?'selected':'')+'>'+esc(s.title)+'</option>').join('')}
+function renderQuotes(){renderStats();const query=$('search').value.trim().toLowerCase(),type=$('filterType').value;const list=state.quotes.filter(q=>{const s=sourceById(q.sourceId);const hay=[q.text,q.translation,q.context,...(q.tags||[]),s?.title,s?.creator].join(' ').toLowerCase();return (!query||hay.includes(query))&&(type==='all'||(s?.type||'Other')===type)}).sort((a,b)=>b.created-a.created);$('quoteList').innerHTML=list.length?list.map(q=>{const s=sourceById(q.sourceId);return '<article class="quote"><div class="quote-top"><span class="source-type">'+esc(s?.type||'Personal note')+'</span><div class="quote-actions"><button class="icon-btn" data-edit="'+esc(q.id)+'" aria-label="Edit">Edit</button><button class="icon-btn" data-copy="'+esc(q.id)+'" aria-label="Copy">Copy</button><button class="icon-btn" data-delete="'+esc(q.id)+'" aria-label="Delete">Delete</button></div></div><p class="quote-text">'+esc(q.text)+'</p>'+(q.translation?'<p class="translation">'+esc(q.translation)+'</p>':'')+'<div class="quote-meta">'+(s?'<span>'+esc(s.title)+'</span>':'<span>Unlinked source</span>')+(q.context?'<span class="dot"></span><span>'+esc(q.context)+'</span>':'')+'<span class="dot"></span><span>'+new Date(q.created).toLocaleDateString()+'</span></div>'+(q.tags?.length?'<div style="margin-top:10px">'+q.tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join(' ')+'</div>':'')+'</article>'}).join(''):'<div class="empty"><strong>Your library is waiting.</strong><p>Save a sentence from something you watched, read or heard.</p><button class="primary" id="emptyAdd">Save your first sentence</button></div>';const empty=$('emptyAdd');if(empty)empty.onclick=openQuote}
+function renderSources(){renderStats();$('sourceList').innerHTML=state.sources.length?state.sources.slice().sort((a,b)=>b.created-a.created).map(s=>'<article class="source-row"><div><span class="source-type">'+esc(s.type)+'</span><h3>'+esc(s.title)+'</h3><p>'+esc(s.creator||'')+(s.creator?' · ':'')+state.quotes.filter(q=>q.sourceId===s.id).length+' saved sentences</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="secondary" data-source-quote="'+esc(s.id)+'">＋ Sentence</button><button class="secondary" data-source-delete="'+esc(s.id)+'">Delete</button></div></article>').join(''):'<div class="empty"><strong>No sources yet.</strong><p>Add a video, podcast, article, book or anything worth keeping.</p><button class="primary" id="emptySource">Add a source</button></div>';const b=$('emptySource');if(b)b.onclick=()=>switchView('addSource')}
+function openQuote(q=null,sourceId=''){renderSourceOptions(q?.sourceId||sourceId);$('quoteId').value=q?.id||'';$('quoteText').value=q?.text||'';$('quoteTranslation').value=q?.translation||'';$('quoteContext').value=q?.context||'';$('quoteTags').value=(q?.tags||[]).join(', ');$('quoteModalTitle').textContent=q?'Edit sentence':'Save a sentence';$('quoteModal').classList.add('open');setTimeout(()=>$('quoteText').focus(),50)}
+function closeQuote(){$('quoteModal').classList.remove('open')}
+$('newQuoteTop').onclick=()=>openQuote();$('closeQuote').onclick=closeQuote;$('cancelQuote').onclick=closeQuote;
+$('quoteForm').onsubmit=e=>{e.preventDefault();const id=$('quoteId').value;const item={id:id||uid(),text:$('quoteText').value.trim(),translation:$('quoteTranslation').value.trim(),sourceId:$('quoteSource').value,context:$('quoteContext').value.trim(),tags:$('quoteTags').value.split(',').map(x=>x.trim()).filter(Boolean),created:id?(state.quotes.find(q=>q.id===id)?.created||Date.now()):Date.now(),updated:Date.now()};if(id){state.quotes=state.quotes.map(q=>q.id===id?item:q)}else state.quotes.unshift(item);save();closeQuote();renderQuotes();toast(id?'Sentence updated':'Saved to your library')};
+$('sourceForm').onsubmit=e=>{e.preventDefault();const title=$('sourceTitle').value.trim();if(!title)return;const url=$('sourceUrl').value.trim();if(url&&!/^https?:\/\//i.test(url)){toast('Please enter a valid http(s) link');return}state.sources.unshift({id:uid(),type:$('sourceType').value,title,creator:$('sourceCreator').value.trim(),url,transcript:$('sourceTranscript').value.trim(),notes:$('sourceNotes').value.trim(),created:Date.now()});save();$('sourceForm').reset();renderSources();switchView('sources');toast('Source added')};
+$('cancelSource').onclick=()=>switchView('library');$('addSourceFromList').onclick=()=>switchView('addSource');
+$('search').oninput=renderQuotes;$('filterType').onchange=renderQuotes;
+$('quoteList').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;const q=state.quotes.find(x=>x.id===b.dataset.edit||x.id===b.dataset.copy||x.id===b.dataset.delete);if(!q)return;if(b.dataset.edit)openQuote(q);if(b.dataset.copy){try{await navigator.clipboard.writeText(q.text);toast('Sentence copied')}catch(err){toast('Copy is not available in this browser')}}if(b.dataset.delete&&confirm('Delete this saved sentence?')){state.quotes=state.quotes.filter(x=>x.id!==q.id);save();renderQuotes();toast('Sentence deleted')}});
+$('sourceList').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.sourceQuote)openQuote(null,b.dataset.sourceQuote);if(b.dataset.sourceDelete&&confirm('Delete this source? Saved sentences will remain in your library without a linked source.')){state.quotes=state.quotes.map(q=>q.sourceId===b.dataset.sourceDelete?{...q,sourceId:''}:q);state.sources=state.sources.filter(s=>s.id!==b.dataset.sourceDelete);save();renderSources();toast('Source deleted')}});
+$('quoteModal').addEventListener('click',e=>{if(e.target===$('quoteModal'))closeQuote()});
+renderQuotes();
+</script>
+</body>
+</html>
