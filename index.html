@@ -366,7 +366,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 43</span></div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 44</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -411,7 +411,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
       </div>
       <div class="section-head">
         <div><h2>학습 캘린더</h2><p class="muted">등록한 날과 복습한 날을 기록해요.</p></div>
-        <div class="month-nav"><button type="button" class="secondary" id="calendarPrev" aria-label="이전 달">‹</button><span class="month-label" id="calendarMonthLabel"></span><button type="button" class="secondary" id="calendarNext" aria-label="다음 달">›</button></div>
+        <div class="month-nav"><button type="button" class="secondary" id="calendarPrev" aria-label="이전 달" onclick="window.wordloopChangeMonth(-1)">‹</button><span class="month-label" id="calendarMonthLabel"></span><button type="button" class="secondary" id="calendarNext" aria-label="다음 달" onclick="window.wordloopChangeMonth(1)">›</button></div>
       </div>
       <div class="calendar-weekdays"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span></div>
       <div class="activity-calendar" id="activityCalendar"></div>
@@ -513,6 +513,8 @@ const SUPABASE_URL='https://jmjfhvlrwwfuyurbxlsy.supabase.co';
 const SUPABASE_KEY='sb_publishable_ED2G8FRPHtCz5y_AmazRiw_nCitH2d1';
 const OWNER_EMAIL='srin001@icloud.com';
 const AUTH_STORAGE_KEY='sb-jmjfhvlrwwfuyurbxlsy-auth-token';
+const AUTH_BACKUP_KEY='wordloop-auth-refresh-backup-v1';
+function backupAuthSession(session){try{if(session?.refresh_token)localStorage.setItem(AUTH_BACKUP_KEY,JSON.stringify({refresh_token:session.refresh_token,updated_at:Date.now()}));}catch(e){console.error('Wordloop auth backup failed:',e);}}
 const supabaseClient=window.supabase?.createClient?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{storage:window.localStorage,storageKey:AUTH_STORAGE_KEY,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
 function authStorageDiagnostic(){try{const raw=window.localStorage.getItem(AUTH_STORAGE_KEY);if(!raw)return '저장된 로그인 정보가 Safari에 없어요. 로그인할 때 저장이 안 된 상태예요.';let parsed;try{parsed=JSON.parse(raw);}catch(e){return 'Safari에 로그인 데이터는 있지만 읽을 수 없는 형식이에요.';}return parsed?.refresh_token?'Safari에 로그인 데이터가 저장돼 있지만 세션 복원에 실패했어요. 토큰 또는 Supabase 인증 상태를 확인해야 해요.':'Safari에 로그인 데이터가 있지만 갱신 토큰이 없어요.';}catch(e){return 'Safari가 웹사이트 저장 공간에 접근하지 못하고 있어요. 개인정보 보호 설정이나 콘텐츠 차단 설정을 확인해야 해요.';}}
 let words=[];
@@ -642,23 +644,26 @@ function authErrorMessage(error){
 async function bootAuth(){
   if(!window.supabase?.createClient){$('authGate').classList.remove('hidden');$('authMessage').textContent='로그인 기능을 불러오지 못했어요. 인터넷 연결을 확인한 뒤 새로고침해 주세요.';return;}
   supabaseClient.auth.onAuthStateChange((event,session)=>{
-    if(session){setTimeout(()=>activateAccount(session.user),0);return;}
+    if(session){backupAuthSession(session);setTimeout(()=>activateAccount(session.user),0);return;}
     if(event==='SIGNED_OUT'&&!currentUser){$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');}
   });
   let {data,error}=await supabaseClient.auth.getSession();
   if(!error&&!data.session){
     try{
       const raw=localStorage.getItem(AUTH_STORAGE_KEY);
-      const saved=raw?JSON.parse(raw):null;
+      const primary=raw?JSON.parse(raw):null;
+      const backupRaw=localStorage.getItem(AUTH_BACKUP_KEY);
+      const backup=backupRaw?JSON.parse(backupRaw):null;
+      const saved=primary?.refresh_token?primary:backup;
       if(saved?.refresh_token){
         const recovered=await supabaseClient.auth.refreshSession({refresh_token:saved.refresh_token});
-        if(!recovered.error&&recovered.data.session)data={session:recovered.data.session};
+        if(!recovered.error&&recovered.data.session){data={session:recovered.data.session};backupAuthSession(recovered.data.session);}
         else if(recovered.error)error=recovered.error;
       }
     }catch(recoveryError){console.error('Wordloop refresh-token recovery failed:',recoveryError);}
   }
   if(error){console.error('Wordloop session restore failed:',error);$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent='로그인 복원 오류: '+String(error.message||error)+' · '+authStorageDiagnostic();return;}
-  if(data.session)await activateAccount(data.session.user);
+  if(data.session){backupAuthSession(data.session);await activateAccount(data.session.user);}
   else{$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent=authStorageDiagnostic();}
 }
 $('loginBtn').onclick=async()=>{
@@ -668,6 +673,7 @@ $('loginBtn').onclick=async()=>{
   const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
   $('loginBtn').disabled=false;
   if(error){$('authMessage').textContent=authErrorMessage(error);return;}
+  backupAuthSession(data.session);
   await activateAccount(data.user);
 };
 $('signupBtn').onclick=async()=>{
@@ -681,7 +687,7 @@ $('signupBtn').onclick=async()=>{
   if(data.session){await activateAccount(data.user);}
   else{$('authMessage').textContent='인증 메일을 보냈어요. 메일함에서 인증 링크를 누른 뒤 이 페이지로 돌아와 로그인해 주세요.';}
 };
-$('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();showSignedOut();};
+$('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();try{localStorage.removeItem(AUTH_BACKUP_KEY);}catch(e){}showSignedOut();};
 window.addEventListener('focus',()=>{if(currentUser&&cloudReady)refreshCloud();});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&currentUser&&cloudReady)refreshCloud();});
 function getDirectionProgress(w,direction){
@@ -1100,21 +1106,18 @@ function changeCalendarMonth(delta){
   selectedCalendarDate=dateKey(calendarMonth);
   renderCalendar();
 }
-let lastCalendarNavAt=0;
-function bindCalendarNav(id,delta){
-  const button=$(id);
-  const move=e=>{
-    if(e.type==='click'&&Date.now()-lastCalendarNavAt<650){e.preventDefault();return;}
-    e.preventDefault();
-    lastCalendarNavAt=Date.now();
-    changeCalendarMonth(delta);
-  };
-  button.addEventListener('pointerup',move);
-  button.addEventListener('click',move);
-  button.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();changeCalendarMonth(delta);}});
-}
-bindCalendarNav('calendarPrev',-1);
-bindCalendarNav('calendarNext',1);
+window.wordloopChangeMonth=function(delta){
+  const amount=Number(delta);
+  if(amount!==-1&&amount!==1)return;
+  changeCalendarMonth(amount);
+};
+document.addEventListener('click',function(e){
+  const button=e.target.closest('#calendarPrev,#calendarNext');
+  if(!button)return;
+  e.preventDefault();
+  e.stopPropagation();
+  window.wordloopChangeMonth(button.id==='calendarPrev'?-1:1);
+},true);
 $('activityCalendar').addEventListener('click',e=>{
   const button=e.target.closest('[data-calendar-date]');
   if(!button)return;
