@@ -253,7 +253,13 @@ button.secondary,button.ghost,button.danger{font-size:13px}
   .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:6px}
   .stat{padding:5px 8px;border-radius:12px;box-shadow:none}
   .stat b{font-size:16px;line-height:1.05;letter-spacing:-.4px;margin-bottom:2px}
-  .stat small{font-size:9px;line-height:1.1}
+  .stat small{font-size:10px;line-height:1.15}
+  .calendar-weekdays{font-size:10px}
+  .calendar-day .day-number{font-size:12px}
+  .calendar-legend{font-size:10px}
+  .calendar-detail{font-size:11px}
+  .mastery-compact .mastery-breakdown{font-size:10px}
+  .today-metric span{font-size:10px}
   .dashboard-layout{grid-template-columns:minmax(0,1.12fr) minmax(270px,.88fr);gap:10px}
   .dashboard-side{min-width:0;gap:10px}
   .panel{padding:13px;border-radius:16px}
@@ -739,7 +745,7 @@ function syncRelatedLinks(wordId,selectedIds){const selected=new Set(selectedIds
 function normalizeRelatedLinks(){const links=new Map(words.map(w=>[String(w.id),new Set()]));words.forEach(w=>(Array.isArray(w.relatedIds)?w.relatedIds:[]).forEach(id=>{const a=String(w.id),b=String(id);if(a!==b&&links.has(a)&&links.has(b)){links.get(a).add(b);links.get(b).add(a);}}));words.forEach(w=>w.relatedIds=[...(links.get(String(w.id))||[])]);}
 
 function getExamplesFromForm(){return [...document.querySelectorAll('.example-entry')].map(el=>({id:el.dataset.exampleId||uid(),example:el.querySelector('[data-example-en]').value.trim(),translation:el.querySelector('[data-example-ko]').value.trim(),sentenceNext:Number(el.dataset.next)||Date.now(),sentenceInterval:Number(el.dataset.interval)||0,sentenceReps:Number(el.dataset.reps)||0})).filter(x=>x.example||x.translation);}
-function renderExampleFields(items){items=items&&items.length?items:[{example:'',translation:''}];$('examplesList').innerHTML=items.map((x,i)=>'<div class="example-entry" data-example-id="'+esc(x.id||uid())+'" data-next="'+Number(x.sentenceNext||Date.now())+'" data-interval="'+Number(x.sentenceInterval||0)+'" data-reps="'+Number(x.sentenceReps||0)+'" style="border:1px solid var(--line);border-radius:13px;padding:12px;margin-top:8px"><div class="section-head"><strong class="muted">예문 '+(i+1)+'</strong><div style="display:flex;gap:6px;align-items:center"><button type="button" class="secondary translate-btn" data-translate="example" style="min-height:32px;padding:5px 9px">해석 자동 번역</button>'+(i?'<button type="button" class="ghost" data-remove-example style="min-height:32px;padding:5px 9px">삭제</button>':'')+'</div></div><textarea data-example-en placeholder="영어 예문" style="width:100%;margin-top:8px;min-height:65px;border:1px solid var(--line);border-radius:10px;padding:10px">'+esc(x.example||'')+'</textarea><textarea data-example-ko placeholder="예문 해석" style="width:100%;margin-top:7px;min-height:65px;border:1px solid var(--line);border-radius:10px;padding:10px">'+esc(x.translation||'')+'</textarea><div class="muted translate-status" data-translate-status></div></div>').join('');}
+function renderExampleFields(items){items=items&&items.length?items:[{example:'',translation:''}];$('examplesList').innerHTML=items.map((x,i)=>'<div class="example-entry" data-example-id="'+esc(x.id||uid())+'" data-next="'+Number(x.sentenceNext||Date.now())+'" data-interval="'+Number(x.sentenceInterval||0)+'" data-reps="'+Number(x.sentenceReps||0)+'" style="border:1px solid var(--line);border-radius:13px;padding:12px;margin-top:8px"><div class="section-head"><strong class="muted">예문 '+(i+1)+'</strong><div style="display:flex;gap:6px;align-items:center"><button type="button" class="secondary" data-generate-example style="min-height:32px;padding:5px 9px">✦ AI 예문 생성</button><button type="button" class="secondary translate-btn" data-translate="example" style="min-height:32px;padding:5px 9px">해석 자동 번역</button>'+(i?'<button type="button" class="ghost" data-remove-example style="min-height:32px;padding:5px 9px">삭제</button>':'')+'</div></div><textarea data-example-en placeholder="영어 예문" style="width:100%;margin-top:8px;min-height:65px;border:1px solid var(--line);border-radius:10px;padding:10px">'+esc(x.example||'')+'</textarea><textarea data-example-ko placeholder="예문 해석" style="width:100%;margin-top:7px;min-height:65px;border:1px solid var(--line);border-radius:10px;padding:10px">'+esc(x.translation||'')+'</textarea><div class="muted translate-status" data-translate-status></div></div>').join('');}
 function reviewFingerprint(word,meaning,examples){return JSON.stringify({word,meaning,examples:examples.map(x=>({example:x.example,translation:x.translation}))});}
 function savedAIReviewHTML(r){
  if(!r)return '';
@@ -803,6 +809,23 @@ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>acti
 $('aiReviewBtn').onclick=runAIReview;
 ['word','meaning'].forEach(id=>$(id).addEventListener('input',refreshAIReviewStatus));
 $('examplesList').addEventListener('input',refreshAIReviewStatus);
+$('examplesList').addEventListener('click',async e=>{
+ const btn=e.target.closest('[data-generate-example]');if(!btn)return;
+ const word=$('word').value.trim(),meaning=$('meaning').value.trim();
+ if(!word){showToast('먼저 영어 단어를 입력해 주세요.');return;}
+ const entry=btn.closest('.example-entry');const en=entry?.querySelector('[data-example-en]');const ko=entry?.querySelector('[data-example-ko]');
+ if(!entry||!supabaseClient){showToast('AI 서버에 연결할 수 없어요.');return;}
+ btn.disabled=true;btn.textContent='생성 중…';
+ try{
+  const {data,error}=await supabaseClient.functions.invoke('word-check',{body:{action:'generate-example',word,meaning}});
+  if(error)throw error;if(data?.error)throw new Error(data.error);
+  if(!data?.result?.example||!data?.result?.translation)throw new Error('예문 생성 결과가 올바르지 않아요.');
+  en.value=data.result.example;ko.value=data.result.translation;
+  en.dispatchEvent(new Event('input',{bubbles:true}));ko.dispatchEvent(new Event('input',{bubbles:true}));
+  const status=entry.querySelector('[data-translate-status]');if(status)status.textContent='AI가 예문과 해석을 생성했어요. 자연스러운지 확인해 주세요.';
+ }catch(err){const status=entry?.querySelector('[data-translate-status]');if(status)status.textContent=err?.message||'AI 예문 생성에 실패했어요.';}
+ finally{btn.disabled=false;btn.textContent='✦ AI 예문 생성';}
+});
 $('saveWord').onclick=()=>{const d=collectForm();if(editingId){const i=words.findIndex(w=>w.id===editingId);if(i>=0){words[i]={...words[i],...d};syncRelatedLinks(editingId,d.relatedIds);save();clearForm();activateTab('words');showToast('단어 정보가 수정되었어요.');window.scrollTo({top:0,behavior:'smooth'});}}else if(addWord(d)){syncRelatedLinks(words[0].id,d.relatedIds);save();clearForm();showToast('단어가 등록되었어요.');window.scrollTo({top:0,behavior:'smooth'});}};
 $('cancelEdit').onclick=()=>{clearForm();activateTab('words');};
 async function translateText(text){const url='https://api.mymemory.translated.net/get?'+new URLSearchParams({q:text,langpair:'en|ko'});const res=await fetch(url);if(!res.ok)throw new Error('번역 서버에 연결하지 못했어요.');const data=await res.json();if(data.responseStatus!==200||!data.responseData?.translatedText)throw new Error(data.responseDetails||'번역 결과가 없어요.');const box=document.createElement('textarea');box.innerHTML=data.responseData.translatedText;return box.value;}
