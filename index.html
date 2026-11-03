@@ -345,7 +345,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 16</span></div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 17</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -760,7 +760,7 @@ function showToast(message){const el=$('appToast');if(!el)return;el.textContent=
 function renderRelatedChoices(){
  const q=($('relatedSearch')?.value||'').trim().toLowerCase();
  const candidates=q?words.filter(w=>w.id!==editingId&&((w.word+' '+w.meaning).toLowerCase().includes(q))):[];
- $('relatedChoices').innerHTML=!q?'':candidates.length?candidates.map(w=>'<label class="related-option '+(selectedRelatedIds.includes(w.id)?'selected':'')+'"><input type="checkbox" data-related-id="'+esc(w.id)+'" '+(selectedRelatedIds.includes(w.id)?'checked':'')+'><span><strong>'+esc(w.word)+'</strong> <span class="muted">· '+esc(w.meaning)+'</span></span></label>').join(''):'<span class="muted">검색 결과가 없어요.</span>';
+ $('relatedChoices').innerHTML=!q?'':candidates.length?candidates.map(w=>'<label class="related-option '+(selectedRelatedIds.includes(w.id)?'selected':'')+'"><input type="checkbox" data-related-id="'+esc(w.id)+'" '+(selectedRelatedIds.includes(w.id)?'checked':'')+'><span><strong>'+esc(w.word)+'</strong> <span class="muted">· '+esc(w.meaning)+'</span></span></label>').join(''):'<span class="muted">'+(q?'검색 결과가 없어요.':'연결된 문장이 없어요. 검색해서 추가할 수 있어요.')+'</span>';
  $('relatedSelectedLabel').textContent=selectedRelatedIds.length?'선택한 단어 '+selectedRelatedIds.length+'개':'연결된 단어 없음';
 }
 function relatedIdsFor(w){const byId=new Map(words.map(x=>[String(x.id),x]));const seen=new Set([String(w.id)]),queue=[String(w.id)];while(queue.length){const id=queue.shift(),item=byId.get(id);if(!item)continue;const neighbors=new Set([...(Array.isArray(item.relatedIds)?item.relatedIds.map(String):[]),...words.filter(x=>Array.isArray(x.relatedIds)&&x.relatedIds.map(String).includes(id)).map(x=>String(x.id))]);neighbors.forEach(next=>{if(byId.has(next)&&!seen.has(next)){seen.add(next);queue.push(next);}});}seen.delete(String(w.id));return [...seen];}
@@ -830,7 +830,7 @@ function fillForm(w){editingId=w.id;['word','meaning','category','note'].forEach
 
 function renderWordSentenceChoices(){
  const q=($('wordSentenceSearch')?.value||'').trim().toLowerCase(),chosen=new Set(selectedSentenceIds.map(String));
- const items=sentenceWords().filter(x=>(x.example+' '+x.translation+' '+(x.expressions||[]).map(e=>e.expression).join(' ')).toLowerCase().includes(q));
+ const items=sentenceWords().filter(x=>{const id=String(x.id);const matches=(x.example+' '+x.translation+' '+(x.expressions||[]).map(e=>e.expression).join(' ')).toLowerCase().includes(q);return q?matches:chosen.has(id);});
  $('wordSentenceSelectedLabel').textContent=chosen.size?'연결한 문장 '+chosen.size+'개':'연결한 문장 없음';
  $('wordSentenceChoices').innerHTML=items.length?items.slice(0,40).map(x=>'<label class="related-option '+(chosen.has(String(x.id))?'selected':'')+'"><input type="checkbox" data-word-sentence="'+esc(x.id)+'" '+(chosen.has(String(x.id))?'checked':'')+'><span><strong>'+esc(x.example)+'</strong><br><span class="muted">'+esc(x.translation)+'</span></span></label>').join(''):'<span class="muted">검색 결과가 없어요.</span>';
 }
