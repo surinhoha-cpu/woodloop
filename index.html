@@ -78,7 +78,7 @@ main{margin-top:8px}
 .dashboard-side{display:grid;gap:14px}
 .calendar-panel{min-width:0}
 .month-nav{display:flex;align-items:center;gap:7px;flex:0 0 auto}
-.month-nav button{padding:7px 11px;min-width:38px}
+.month-nav{position:relative;z-index:3;isolation:isolate}.month-nav button{position:relative;z-index:4;pointer-events:auto;touch-action:manipulation;padding:7px 11px;min-width:38px}
 .month-label{font-weight:750;min-width:92px;text-align:center;font-size:14px}
 .calendar-weekdays,.activity-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
 .calendar-weekdays{margin:19px 0 7px;text-align:center;color:var(--muted);font-size:11px;font-weight:700}
@@ -1018,7 +1018,7 @@ function quizQuestionsForMonth(m,mode){
  const source=isSentence?sentenceWords().filter(x=>x.example&&x.translation):words.filter(x=>x.word&&x.meaning);
  const recent=source.filter(x=>monthKey(x.created)===m);
  const older=source.filter(x=>monthKey(x.created)!==m);
- const selected=shuffle([...shuffle(recent).slice(0,20),...shuffle(older).slice(0,Math.max(0,20-recent.length))]).slice(0,20);
+ const selected=shuffle([...shuffle(recent).slice(0,30),...shuffle(older).slice(0,Math.max(0,30-recent.length))]).slice(0,30);
  return shuffle(selected).map(x=>({source:x,isSentence,prompt:isSentence?x.translation:x.meaning,answer:isSentence?x.example:x.word}));
 }
 function startQuiz(onlyWrong=false){
@@ -1088,11 +1088,12 @@ function changeCalendarMonth(delta){
   const button=$(id);
   if(!button)return;
   button.type='button';
-  button.addEventListener('click',event=>{
+  button.onclick=event=>{
     event.preventDefault();
     event.stopPropagation();
     changeCalendarMonth(index===0?-1:1);
-  });
+    return false;
+  };
 });
 $('activityCalendar').addEventListener('click',e=>{
   const button=e.target.closest('[data-calendar-date]');
