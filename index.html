@@ -858,7 +858,7 @@ function fillForm(w){editingId=w.id;['word','meaning','category','note'].forEach
 
 function renderWordSentenceChoices(){
  const q=($('wordSentenceSearch')?.value||'').trim().toLowerCase(),term=($('word')?.value||'').trim().toLowerCase(),chosen=new Set(selectedSentenceIds.map(String));
- const normalize=value=>String(value||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9']+/g,' ').replace(/\\s+/g,' ').trim();
+ const normalize=value=>String(value||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9']+/g,' ').replace(/\s+/g,' ').trim();
  const stop=new Set(['a','an','the','i','you','he','she','it','we','they','to','of','in','on','at','for','and','or','but','am','is','are','be','been','being','do','does','did']);
  const phrase=normalize(term),tokens=phrase.split(' ').filter(t=>t&&!stop.has(t));
  const all=sentenceWords().filter(x=>!(editingId&&String(x.wordId)===String(editingId))),ranked=all.map(x=>{const sentence=normalize(x.example),exact=!!phrase&&sentence.includes(phrase),hits=tokens.filter(t=>sentence.includes(t)).length;const score=exact?3:tokens.length&&hits===tokens.length?2:hits?1:0;return {...x,_recommendScore:score};}).filter(x=>x._recommendScore>0).sort((a,b)=>b._recommendScore-a._recommendScore);
