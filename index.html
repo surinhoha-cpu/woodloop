@@ -367,6 +367,21 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 #quiz .quiz-footer{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 #quiz #quizHint{text-align:center;margin-top:22px}
 @media(max-width:600px){#quiz .quiz-setup{grid-template-columns:1fr 1fr}#quiz #startQuizBtn{grid-column:1/-1;width:100%}#quiz .quiz-answer-form{flex-direction:column}#quiz #submitQuizAnswer{width:100%}#quiz .quiz-mark{width:44px;height:44px}}
+
+/* Calendar: fixed, consistent date and activity alignment */
+.calendar-day{justify-content:flex-start;align-items:stretch;gap:0}
+.calendar-day .day-number{display:block;min-height:1.45em;line-height:1.45}
+.calendar-day .day-events{display:grid;grid-template-rows:repeat(4,minmax(1.35em,auto));align-content:start;gap:0;margin-top:5px;min-height:5.4em;width:100%;font-size:clamp(9px,1.05vw,11px);line-height:1.35;text-align:left;font-variant-numeric:tabular-nums}
+.calendar-day .day-events i{display:block;min-width:0;min-height:1.35em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:normal;font-weight:700}
+.calendar-day .day-events .event-empty{visibility:hidden}
+.calendar-day .day-events .add-count{color:#4f8060}
+.calendar-day .day-events .review-count{color:#667e9a}
+.calendar-day .day-events .sentence-review-count{color:#71849d;font-size:inherit}
+.calendar-day .day-events .test-count{color:#9b8050}
+@media(max-width:740px){
+ .calendar-day{min-height:86px;padding:7px 5px 6px}
+ .calendar-day .day-events{margin-top:5px;grid-template-rows:repeat(4,minmax(1.35em,auto));min-height:5.4em;font-size:9px}
+}
 </style>
 </head>
 <body>
@@ -814,11 +829,15 @@ function renderCalendar(){
     const a=activityForDate(key);
     const events=[];
     const monthId=key.slice(0,7),monthTest=monthlyTestLog.find(x=>x.month===monthId);
-    if(day===totalDays){const testLabel=monthTest?'테스트 완료✔️':(monthId<monthKey(new Date())?'테스트 미완❌':'테스트일');events.push('<i class="test-count">'+testLabel+'</i>');}
-    if(a.added)events.push('<i class="add-count">+'+a.added+'</i>');
-    if(a.word)events.push('<i class="review-count" title="단어 복습 '+a.word+'회">● '+a.word+'</i>');
-    if(a.sentence)events.push('<i class="sentence-review-count" title="문장 복습 '+a.sentence+'회">◆ '+a.sentence+'</i>');
-    if(a.test)events.push('<i class="test-count" title="테스트 '+a.test+'회">★ '+a.test+'</i>');
+    events.push(a.added?'<i class="add-count">+'+a.added+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.word?'<i class="review-count" title="단어 복습 '+a.word+'회">● '+a.word+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.sentence?'<i class="sentence-review-count" title="문장 복습 '+a.sentence+'회">◆ '+a.sentence+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    if(day===totalDays){
+      const testLabel=monthTest?'테스트 완료':(monthId<monthKey(new Date())?'테스트 미완':'테스트일');
+      events.push('<i class="test-count" title="'+testLabel+'">★ '+(a.test?a.test+' · ':'')+testLabel+'</i>');
+    }else{
+      events.push(a.test?'<i class="test-count" title="테스트 '+a.test+'회">★ '+a.test+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    }
     const classes=['calendar-day'];
     if(key===today)classes.push('today');
     if(key===selectedCalendarDate)classes.push('selected');
