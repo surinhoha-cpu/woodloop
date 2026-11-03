@@ -433,11 +433,22 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 .calendar-day .day-events .sentence-review-count{color:#9a78ad}
 .calendar-day .month-test-day{margin-top:3px}
 @media(max-width:740px){.calendar-day{min-height:60px}.calendar-day .day-events{grid-template-rows:none;min-height:0;gap:2px}}
+
+/* Fixed activity slots: additions, word reviews, then sentence reviews */
+.calendar-day .day-events{display:grid;grid-template-rows:repeat(3,1.35em);grid-auto-rows:1.35em;align-content:start;gap:0;min-height:4.05em}
+.calendar-day .day-events i{height:1.35em;min-height:1.35em;line-height:1.35em}
+.calendar-day .day-events .event-empty{visibility:hidden}
+.calendar-day .day-events .calendar-event-dot{width:7px;height:7px;min-width:7px;min-height:7px;border-radius:50%;display:inline-block;box-sizing:border-box;vertical-align:middle;transform:none}
+.calendar-day .day-events .review-dot{background:#667e9a}
+.calendar-day .day-events .sentence-dot{background:#9a78ad}
+.calendar-day .day-events .review-count{color:#667e9a}
+.calendar-day .day-events .sentence-review-count{color:#9a78ad}
+@media(max-width:740px){.calendar-day .day-events{grid-template-rows:repeat(3,1.35em);min-height:4.05em}}
 </style>
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 72</span></div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 73</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -882,9 +893,9 @@ function renderCalendar(){
     const key=[year,String(month+1).padStart(2,'0'),String(day).padStart(2,'0')].join('-');
     const a=activityForDate(key);
     const events=[];
-    if(a.added)events.push('<i class="add-count" title="단어 등록 '+a.added+'개">+'+a.added+'</i>');
-    if(a.word)events.push('<i class="review-count" title="단어 복습 '+a.word+'회"><span class="calendar-event-dot review-dot" aria-hidden="true"></span> '+a.word+'</i>');
-    if(a.sentence)events.push('<i class="sentence-review-count" title="문장 복습 '+a.sentence+'회"><span class="calendar-event-dot sentence-dot" aria-hidden="true"></span> '+a.sentence+'</i>');
+    events.push(a.added?'<i class="add-count" title="단어 등록 '+a.added+'개">+'+a.added+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.word?'<i class="review-count" title="단어 복습 '+a.word+'회"><span class="calendar-event-dot review-dot" aria-hidden="true"></span> '+a.word+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.sentence?'<i class="sentence-review-count" title="문장 복습 '+a.sentence+'회"><span class="calendar-event-dot sentence-dot" aria-hidden="true"></span> '+a.sentence+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
     let monthTestHtml='';
     if(day===totalDays){
       const monthId=key.slice(0,7),monthTest=monthlyTestLog.find(x=>x.month===monthId);
