@@ -382,6 +382,8 @@ button.secondary,button.ghost,button.danger{font-size:13px}
  .calendar-day{min-height:86px;padding:7px 5px 6px}
  .calendar-day .day-events{margin-top:5px;grid-template-rows:repeat(4,minmax(1.35em,auto));min-height:5.4em;font-size:9px}
 }
+
+.collect-import-backdrop{display:none;position:fixed;inset:0;z-index:1200;background:#17231dcc;padding:18px;align-items:center;justify-content:center}.collect-import-backdrop.open{display:flex}.collect-import-card{width:min(520px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 60px #0003}.collect-import-card h2{margin:0 0 7px;font-size:20px}.collect-import-preview{background:#f7f9f6;border:1px solid var(--line);border-radius:13px;padding:13px;margin:14px 0;white-space:pre-wrap;overflow-wrap:anywhere}.collect-import-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.collect-import-actions button{min-height:46px}.collect-import-source{font-size:12px;color:var(--muted);margin-top:8px}.collect-import-foot{display:flex;justify-content:flex-end;margin-top:12px}
 </style>
 </head>
 <body>
@@ -529,6 +531,8 @@ button.secondary,button.ghost,button.danger{font-size:13px}
   </div>
 </section>
 </main>
+
+<div class="collect-import-backdrop" id="collectImportModal" role="dialog" aria-modal="true" aria-labelledby="collectImportTitle"><div class="collect-import-card"><h2 id="collectImportTitle">Collect에서 가져오기</h2><p class="muted">가져올 형식을 선택하면 Wordloop 입력 화면에 내용을 채워둘게요. 확인 후 직접 저장해야 등록됩니다.</p><div class="collect-import-preview" id="collectImportPreview"></div><div class="collect-import-source" id="collectImportSource"></div><div class="collect-import-actions"><button type="button" id="collectImportSentence">문장으로 가져오기</button><button type="button" class="secondary" id="collectImportWord">단어로 가져오기</button></div><div class="collect-import-foot"><button type="button" class="ghost" id="collectImportCancel">닫기</button></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1"></script>
 <script>
 'use strict';
@@ -668,6 +672,7 @@ async function activateAccount(user){
   activateTab(restoreTab);
   try{await pullCloud();}catch(error){console.error('Wordloop cloud startup failed:',error);setSyncStatus('동기화 오류 · 화면은 계속 사용할 수 있어요');}
   activatingUserId=null;
+  openCollectImportIfPending();
 }
 function showSignedOut(){
   currentUser=null;cloudReady=false;activatingUserId=null;
@@ -866,6 +871,35 @@ function renderStats(){
   if($('masteryPercent'))$('masteryPercent').textContent=ratio+'%';$('masteryBreakdown').innerHTML='완벽 암기 · 익히는 중 '+counts.learning+'개 · 복습 필요 '+counts['needs-review']+'개';
   renderCalendar();
 }
+
+function openCollectImportIfPending(){
+ let payload;try{payload=JSON.parse(localStorage.getItem('collect-to-wordloop-pending')||'null');}catch(e){payload=null;}
+ if(!payload||payload.version!==1||!payload.text)return;
+ $('collectImportPreview').textContent=payload.text;
+ const source=[payload.sourceTitle,payload.sourceCreator,payload.sourceType].filter(Boolean).join(' · ');
+ $('collectImportSource').textContent=[source,payload.sourceUrl].filter(Boolean).join(' | ')||'출처 정보 없음';
+ $('collectImportModal').classList.add('open');
+}
+function collectImportContext(payload){return [payload.context||'',payload.sourceTitle?'출처: '+payload.sourceTitle:'',payload.sourceUrl||''].filter(Boolean).join('\n');}
+$('collectImportSentence').onclick=()=>{
+ let p;try{p=JSON.parse(localStorage.getItem('collect-to-wordloop-pending')||'null');}catch(e){}
+ if(!p||!p.text)return;
+ const duplicate=sentenceWords().some(x=>String(x.example||'').trim().toLowerCase()===String(p.text).trim().toLowerCase());
+ $('collectImportModal').classList.remove('open');
+ editingSentence=null;$('sentenceFormTitle').textContent='Collect에서 가져온 문장';$('saveStandaloneSentence').textContent='문장 저장하기';
+ $('newSentenceEn').value=p.text;$('newSentenceKo').value=p.translation||'';sentenceExpressionLinks=[];
+ $('sentenceExpressionSearch').value='';$('newExpression').value='';$('newExpressionMeaning').value='';renderSentenceExpressionTags();activateTab('sentenceAdd');
+ if(duplicate)showToast('같은 문장이 이미 있어요. 중복 여부를 확인해 주세요.');else showToast('문장을 불러왔어요. 내용을 확인하고 저장하세요.');
+};
+$('collectImportWord').onclick=()=>{
+ let p;try{p=JSON.parse(localStorage.getItem('collect-to-wordloop-pending')||'null');}catch(e){}
+ if(!p||!p.text)return;
+ const duplicate=words.some(w=>String(w.word||'').trim().toLowerCase()===String(p.text).trim().toLowerCase());
+ $('collectImportModal').classList.remove('open');clearForm();$('word').value=p.text;$('meaning').value=p.translation||'';$('note').value=collectImportContext(p);activateTab('add');
+ if(duplicate)showToast('같은 단어가 이미 있어요. 기존 단어와 중복 여부를 확인해 주세요.');else showToast('단어를 불러왔어요. 뜻을 확인하고 저장하세요.');
+};
+$('collectImportCancel').onclick=()=>{$('collectImportModal').classList.remove('open');};
+
 function addWord(data){if(!data.word||!data.meaning){showToast('영어 단어와 뜻을 입력해 주세요.');return false;}if(words.some(w=>w.word.toLowerCase()===data.word.toLowerCase())){if(!confirm('이미 등록된 단어예요. 그래도 추가할까요?'))return false;}words.unshift({id:uid(),...data,aiReview:data.aiReview||null,relatedIds:Array.isArray(data.relatedIds)?data.relatedIds:[],created:Date.now(),interval:0,reps:0,next:Date.now(),sentenceInterval:0,sentenceReps:0,sentenceNext:Date.now(),masteryStreak:0,lastGrade:null,masteredAt:null,reviewLog:[],sentenceLog:[],testLog:[]});save();return true;}
 function showToast(message){const el=$('appToast');if(!el)return;el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);}
 function renderRelatedChoices(){
