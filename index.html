@@ -78,7 +78,7 @@ main{margin-top:8px}
 .dashboard-side{display:grid;gap:14px}
 .calendar-panel{min-width:0}
 .month-nav{display:flex;align-items:center;gap:7px;flex:0 0 auto}
-.month-nav{position:relative;z-index:100;isolation:isolate;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.month-nav button{position:relative;z-index:101;display:inline-flex;align-items:center;justify-content:center;pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;padding:7px 11px;min-width:48px;min-height:48px}.month-label{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.month-nav{position:relative;z-index:100;isolation:isolate;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.month-nav button{position:relative;z-index:101;display:inline-flex;align-items:center;justify-content:center;pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;padding:7px 11px;min-width:48px;min-height:48px}.month-label{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.month-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:12px;padding:7px 11px;min-width:48px;min-height:48px;font-weight:650;color:var(--ink);border:1px solid var(--line);background:#f0f0eb;touch-action:manipulation}
 .month-label{font-weight:750;min-width:92px;text-align:center;font-size:14px}
 .calendar-weekdays,.activity-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
 .calendar-weekdays{margin:19px 0 7px;text-align:center;color:var(--muted);font-size:11px;font-weight:700}
@@ -366,7 +366,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 44</span></div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 45</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -411,7 +411,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
       </div>
       <div class="section-head">
         <div><h2>학습 캘린더</h2><p class="muted">등록한 날과 복습한 날을 기록해요.</p></div>
-        <div class="month-nav"><button type="button" class="secondary" id="calendarPrev" aria-label="이전 달" onclick="window.wordloopChangeMonth(-1)">‹</button><span class="month-label" id="calendarMonthLabel"></span><button type="button" class="secondary" id="calendarNext" aria-label="다음 달" onclick="window.wordloopChangeMonth(1)">›</button></div>
+        <div class="month-nav"><a class="secondary month-link" id="calendarPrev" aria-label="이전 달" href="#calendar-prev">‹</a><span class="month-label" id="calendarMonthLabel"></span><a class="secondary month-link" id="calendarNext" aria-label="다음 달" href="#calendar-next">›</a></div>
       </div>
       <div class="calendar-weekdays"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span></div>
       <div class="activity-calendar" id="activityCalendar"></div>
@@ -516,7 +516,7 @@ const AUTH_STORAGE_KEY='sb-jmjfhvlrwwfuyurbxlsy-auth-token';
 const AUTH_BACKUP_KEY='wordloop-auth-refresh-backup-v1';
 function backupAuthSession(session){try{if(session?.refresh_token)localStorage.setItem(AUTH_BACKUP_KEY,JSON.stringify({refresh_token:session.refresh_token,updated_at:Date.now()}));}catch(e){console.error('Wordloop auth backup failed:',e);}}
 const supabaseClient=window.supabase?.createClient?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{storage:window.localStorage,storageKey:AUTH_STORAGE_KEY,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
-function authStorageDiagnostic(){try{const raw=window.localStorage.getItem(AUTH_STORAGE_KEY);if(!raw)return '저장된 로그인 정보가 Safari에 없어요. 로그인할 때 저장이 안 된 상태예요.';let parsed;try{parsed=JSON.parse(raw);}catch(e){return 'Safari에 로그인 데이터는 있지만 읽을 수 없는 형식이에요.';}return parsed?.refresh_token?'Safari에 로그인 데이터가 저장돼 있지만 세션 복원에 실패했어요. 토큰 또는 Supabase 인증 상태를 확인해야 해요.':'Safari에 로그인 데이터가 있지만 갱신 토큰이 없어요.';}catch(e){return 'Safari가 웹사이트 저장 공간에 접근하지 못하고 있어요. 개인정보 보호 설정이나 콘텐츠 차단 설정을 확인해야 해요.';}}
+function authStorageDiagnostic(){try{const raw=localStorage.getItem(AUTH_STORAGE_KEY),backupRaw=localStorage.getItem(AUTH_BACKUP_KEY);const primary=raw?JSON.parse(raw):null,backup=backupRaw?JSON.parse(backupRaw):null;const p=!!primary?.refresh_token,b=!!backup?.refresh_token;if(p&&b)return '진단: Safari에 기본 로그인 토큰과 백업 토큰이 모두 저장돼 있어요. Supabase 세션 복원 단계에서 실패한 상태예요.';if(p)return '진단: 기본 로그인 토큰은 저장돼 있지만 백업 토큰은 없어요. Supabase 세션 복원 오류를 확인해야 해요.';if(b)return '진단: 백업 로그인 토큰은 저장돼 있지만 기본 토큰이 없어요. 백업 토큰으로 복원을 시도했어요.';return '진단: Safari 저장 공간에 로그인 토큰이 없어요. 로그인 시 토큰 저장이 되지 않았거나 다른 웹사이트 주소로 저장됐을 수 있어요.';}catch(e){return '진단: Safari 웹사이트 저장 공간에 접근하지 못했어요. 개인정보 보호 설정 또는 저장 공간 오류를 확인해야 해요.';}}
 let words=[];
 let standaloneSentences=[];
 const SENTENCE_STORE_ID='__wordloop_sentence_store__';
@@ -744,12 +744,15 @@ function activityForDate(key){
   });
   return result;
 }
-let calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+const initialCalendarParam=location.hash.match(/calendar-(\d{4})-(\d{2})/);
+let calendarMonth=initialCalendarParam?new Date(Number(initialCalendarParam[1]),Number(initialCalendarParam[2])-1,1):new Date(new Date().getFullYear(),new Date().getMonth(),1);
 let selectedCalendarDate=dateKey(new Date());
 function renderCalendar(){
   if(!$('activityCalendar')||!$('calendarMonthLabel')||!$('calendarDayDetail')||!$('todayDate')||!$('todayAdded')||!$('todayReviewed')||!$('monthlyTestStatus'))return;
   const year=calendarMonth.getFullYear(),month=calendarMonth.getMonth();
   $('calendarMonthLabel').textContent=calendarMonth.toLocaleDateString('ko-KR',{year:'numeric',month:'long'});
+  $('calendarPrev').href='#calendar-'+dateKey(new Date(year,month-1,1)).slice(0,7);
+  $('calendarNext').href='#calendar-'+dateKey(new Date(year,month+1,1)).slice(0,7);
   const firstOffset=(new Date(year,month,1).getDay()+6)%7;
   const totalDays=new Date(year,month+1,0).getDate();
   const cells=Math.ceil((firstOffset+totalDays)/7)*7;
@@ -1106,18 +1109,13 @@ function changeCalendarMonth(delta){
   selectedCalendarDate=dateKey(calendarMonth);
   renderCalendar();
 }
-window.wordloopChangeMonth=function(delta){
-  const amount=Number(delta);
-  if(amount!==-1&&amount!==1)return;
-  changeCalendarMonth(amount);
-};
-document.addEventListener('click',function(e){
-  const button=e.target.closest('#calendarPrev,#calendarNext');
-  if(!button)return;
-  e.preventDefault();
-  e.stopPropagation();
-  window.wordloopChangeMonth(button.id==='calendarPrev'?-1:1);
-},true);
+window.addEventListener('hashchange',function(){
+  const match=location.hash.match(/calendar-(\d{4})-(\d{2})/);
+  if(!match)return;
+  calendarMonth=new Date(Number(match[1]),Number(match[2])-1,1);
+  selectedCalendarDate=dateKey(calendarMonth);
+  renderCalendar();
+});
 $('activityCalendar').addEventListener('click',e=>{
   const button=e.target.closest('[data-calendar-date]');
   if(!button)return;
