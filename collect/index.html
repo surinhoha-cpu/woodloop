@@ -15,7 +15,7 @@
 <div class="shell">
 <header class="top">
   <div class="brand"><div class="brand-mark">c.</div><div><div class="brand-name">Collect</div><div class="brand-sub">A PART OF LOOP</div></div></div>
-  <div class="top-right">DISCOVER · KEEP · RETURN <span class="revision">수정본 1</span></div>
+  <div class="top-right">DISCOVER · KEEP · RETURN <span class="revision">수정본 2</span></div>
 </header>
 <section class="intro">
   <div><div class="eyebrow">Your personal archive</div><h1>Keep what<br>speaks to you.</h1><p>Collect sentences, ideas and expressions from everything you read and watch.</p></div>
@@ -53,7 +53,7 @@
           <div class="field"><label for="sourceType">Content type</label><select id="sourceType"><option>YouTube</option><option>Podcast</option><option>Article</option><option>Book</option><option>Other</option></select></div>
           <div class="field"><label for="sourceCreator">Creator / author</label><input id="sourceCreator" placeholder="e.g. Emma Chamberlain"></div>
           <div class="field full"><label for="sourceTitle">Title *</label><input id="sourceTitle" required placeholder="Video, episode, article or book title"></div>
-          <div class="field full"><label for="sourceUrl">Link</label><input id="sourceUrl" type="url" placeholder="https://…"></div>
+          <div class="field full"><label for="sourceUrl">Link</label><input id="sourceUrl" type="url" placeholder="https://…"><div style="display:flex;align-items:center;gap:10px;margin-top:7px"><button type="button" class="secondary" id="fetchSourceMeta">↳ Get details from link</button><span class="hint" id="metaStatus">Paste a link and fetch its title and creator automatically.</span></div></div>
           <div class="field full"><label for="sourceTranscript">Transcript / excerpt</label><textarea class="tall" id="sourceTranscript" placeholder="Paste a transcript or an excerpt here. You can save individual sentences from it afterwards."></textarea><div class="hint">Collect stores the text you provide. Automatic transcript extraction is not included in this first version.</div></div>
           <div class="field full"><label for="sourceNotes">Source notes</label><textarea id="sourceNotes" placeholder="Optional notes about this content…"></textarea></div>
         </div><div class="form-actions"><button type="button" class="secondary" id="cancelSource">Cancel</button><button class="primary" type="submit">Save source</button></div></form></div>
@@ -90,6 +90,37 @@ const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 const toast=msg=>{const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900)};
 function switchView(name){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(name+'View').classList.add('active');document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));if(name==='library')renderQuotes();if(name==='sources')renderSources();window.scrollTo({top:0,behavior:'smooth'});}
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
+
+function inferSourceType(url){try{const u=new URL(url),h=u.hostname.replace(/^www\\./,'');if(h==='youtube.com'||h==='youtu.be'||h==='m.youtube.com')return 'YouTube';if(/spotify|podcasts|podbean|buzzsprout|anchor\.fm|overcast|pocketcasts/i.test(h))return 'Podcast';if(/medium\.com|substack\.com|theguardian\.com|nytimes\.com|bbc\./i.test(h))return 'Article';return ''}catch{return ''}}
+async function fetchSourceMetadata(){
+ const raw=$('sourceUrl').value.trim(),status=$('metaStatus'),btn=$('fetchSourceMeta');
+ if(!raw){toast('먼저 링크를 입력해 주세요');return}
+ let url;try{url=new URL(raw);if(!/^https?:$/.test(url.protocol))throw 0}catch{toast('올바른 http(s) 링크를 입력해 주세요');return}
+ btn.disabled=true;status.textContent='Fetching page details…';
+ try{
+  let data=null;
+  if(/(^|\\.)((youtube\\.com)|(youtu\\.be))$/i.test(url.hostname)){
+   const r=await fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent(url.href));
+   if(r.ok){const d=await r.json();data={title:d.title,creator:d.author_name,type:'YouTube'}}
+  }
+  if(!data){
+   const r=await fetch('https://api.microlink.io/?url='+encodeURIComponent(url.href)+'&data.title&data.author&data.publisher');
+   if(!r.ok)throw new Error('metadata unavailable');
+   const j=await r.json();if(j.status!=='success'||!j.data)throw new Error('metadata unavailable');
+   data={title:j.data.title,creator:j.data.author||j.data.publisher||'',type:inferSourceType(url.href)}
+  }
+  if(data.title&&!$('sourceTitle').value.trim())$('sourceTitle').value=data.title;
+  if(data.creator&&!$('sourceCreator').value.trim())$('sourceCreator').value=data.creator;
+  if(data.type)$('sourceType').value=data.type;
+  const changed=!!(data.title||data.creator);
+  status.textContent=changed?'Details found. Please check and edit before saving.':'No usable details found for this link.';
+  if(changed)toast('링크 정보를 가져왔어요');
+ }catch(err){status.textContent='Could not retrieve details automatically. Enter them manually.';toast('이 링크에서는 정보를 가져오지 못했어요')}
+ finally{btn.disabled=false}
+}
+$('fetchSourceMeta').addEventListener('click',fetchSourceMetadata);
+$('sourceUrl').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();fetchSourceMetadata()}});
+
 function sourceById(id){return state.sources.find(s=>s.id===id)}
 function renderStats(){const tags=[...new Set(state.quotes.flatMap(q=>q.tags||[]))];$('quoteTotal').textContent=state.quotes.length;$('sourceTotal').textContent=state.sources.length;$('tagTotal').textContent=tags.length;$('sideQuoteCount').textContent=state.quotes.length;$('sideSourceCount').textContent=state.sources.length}
 function renderSourceOptions(selected=''){$('quoteSource').innerHTML='<option value="">No source linked</option>'+state.sources.map(s=>'<option value="'+esc(s.id)+'" '+(s.id===selected?'selected':'')+'>'+esc(s.title)+'</option>').join('')}
