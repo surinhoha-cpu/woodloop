@@ -1167,7 +1167,7 @@ $('quizMonth').value=monthKey(new Date());
 $('homeWordStudy').onclick=()=>activateTab('study');
 $('homeSentenceStudy').onclick=()=>activateTab('sentences');
 $('homeQuizStart').onclick=()=>activateTab('quiz');
-$('wordQuizMode').onclick=()=>activateTab('quiz');
+// 월별 테스트는 상단 테스트 탭에서만 열어요.
 if($('backToWordReview'))$('backToWordReview').onclick=()=>activateTab('study');
 
 function changeCalendarMonth(delta){
