@@ -401,6 +401,16 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 
 /* Month-end test-day text remains separate from activity dots; no star icon */
 .calendar-day .day-events .month-test-day{color:#9b8050;font-size:9px;font-weight:700}
+
+/* Calendar: green plus for additions, blue circle/diamond for separate review types */
+.calendar-day .day-events .calendar-event-dot{display:inline-block;width:7px;height:7px;min-height:0;vertical-align:middle;margin:0 3px 1px 0;background:#667e9a}
+.calendar-day .day-events .review-dot{border-radius:50%}
+.calendar-day .day-events .sentence-dot{width:6px;height:6px;border-radius:1px;transform:rotate(45deg);margin-left:1px;margin-right:4px}
+.calendar-day .day-events .add-count{color:#4f8060}
+.calendar-day .day-events .review-count,.calendar-day .day-events .sentence-review-count{color:#667e9a}
+.calendar-day .day-events .month-test-day{color:#9b8050;font-size:9px;font-weight:700}
+.calendar-day .day-events{grid-template-rows:repeat(4,minmax(1.35em,auto));min-height:5.4em}
+@media(max-width:740px){.calendar-day .day-events{grid-template-rows:repeat(4,minmax(1.35em,auto));min-height:5.4em}}
 </style>
 </head>
 <body>
@@ -850,10 +860,9 @@ function renderCalendar(){
     const key=[year,String(month+1).padStart(2,'0'),String(day).padStart(2,'0')].join('-');
     const a=activityForDate(key);
     const events=[];
-    events.push(a.added?'<i class="add-count" title="단어 등록 '+a.added+'개"><span class="calendar-event-dot add-dot" aria-hidden="true"></span> '+a.added+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
-    const reviewTotal=a.word+a.sentence;
-    events.push(reviewTotal?'<i class="review-count" title="단어·문장 복습 '+reviewTotal+'회"><span class="calendar-event-dot review-dot" aria-hidden="true"></span> '+reviewTotal+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
-    events.push(a.test?'<i class="test-count" title="테스트 '+a.test+'회"><span class="calendar-event-dot test-dot" aria-hidden="true"></span> '+a.test+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.added?'<i class="add-count" title="단어 등록 '+a.added+'개">+'+a.added+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.word?'<i class="review-count" title="단어 복습 '+a.word+'회"><span class="calendar-event-dot review-dot" aria-hidden="true"></span> '+a.word+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.sentence?'<i class="sentence-review-count" title="문장 복습 '+a.sentence+'회"><span class="calendar-event-dot sentence-dot" aria-hidden="true"></span> '+a.sentence+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
     if(day===totalDays){
       const monthId=key.slice(0,7),monthTest=monthlyTestLog.find(x=>x.month===monthId);
       const testLabel=monthTest?'테스트 완료':(monthId<monthKey(new Date())?'테스트 미완':'테스트일');
