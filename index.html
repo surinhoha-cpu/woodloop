@@ -403,9 +403,9 @@ button.secondary,button.ghost,button.danger{font-size:13px}
         <div class="today-metrics">
           <div class="today-metric"><b id="todayAdded">0</b><span>오늘 등록</span></div>
           <div class="today-metric"><b id="todayReviewed">0</b><span>오늘 복습</span></div>
-          <div class="today-metric"><b id="todayTested">0</b><span>오늘 테스트</span></div>
           <div class="today-metric"><b id="due">0</b><span>복습 대기 단어</span></div>
-          <div class="today-metric"><b id="sentenceDue">0</b><span>복습 대기 문장</span></div><div class="today-metric mascot-metric"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="currentColor"/><circle cx="30" cy="25" r="1.7" fill="currentColor"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="currentColor"/></svg><span>오늘도 차근차근!</span></div>
+          <div class="today-metric"><b id="sentenceDue">0</b><span>복습 대기 문장</span></div>
+          <div class="today-metric"><b id="monthlyTestStatus">○</b><span>이번 달 테스트</span></div><div class="today-metric mascot-metric"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="currentColor"/><circle cx="30" cy="25" r="1.7" fill="currentColor"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="currentColor"/></svg><span>오늘도 차근차근!</span></div>
         </div>
         <div class="quick-actions">
           <button id="homeWordStudy">단어 복습</button>
@@ -453,29 +453,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
   </div>
 </section>
 
-<section id="quiz" class="hidden">
-  <div class="panel card-panel" style="min-height:390px">
-    <div class="section-head" style="width:100%;max-width:650px"><h2 id="quizTitle">월별 테스트</h2></div><div class="field" style="width:100%;max-width:650px;text-align:left"><label for="quizType">테스트 종류</label><select id="quizType"><option value="words">단어 테스트</option><option value="sentences">예문 테스트</option></select></div>
-    <div class="quiz-filters">
-      <div class="field"><label for="quizMonth">기준 월</label><input type="month" id="quizMonth"></div>
-      <div class="field"><label for="quizScope">테스트할 단어</label><select id="quizScope">
-          <option value="monthAll">선택한 달에 등록한 단어 전체</option>
-          <option value="monthMastered">선택한 달에 완벽 암기한 단어</option>
-          <option value="allMastered">전체 완벽 암기 단어</option>
-          <option value="monthLearning">선택한 달에 등록한 단어 중 익히는 중</option>
-          <option value="monthReview">선택한 달에 등록한 단어 중 복습 필요</option>
-        </select></div>
-    </div>
-    <div class="section-head" style="width:100%;max-width:650px;margin-top:12px"><div class="field" style="min-width:210px;margin:0"><label for="quizMode">문제 방식</label><select id="quizMode" aria-label="테스트 방향"><option value="meaningToWord">뜻 보고 영어 단어 쓰기</option><option value="wordToMeaning">영어 보고 뜻 고르기</option></select></div><div class="muted" id="quizCount">테스트 준비</div></div>
-    <div class="progress-track"><div class="progress-fill" id="quizProgress"></div></div>
-    <div class="card-big" id="quizPrompt">테스트할 단어를 선택해 주세요.</div>
-    <div class="field" id="quizInputWrap" style="width:100%;max-width:520px"><input id="quizAnswer" placeholder="영어 단어를 입력하세요" autocomplete="off"></div>
-    <div class="quiz-options hidden" id="quizOptions"></div>
-    <div id="quizFeedback" class="feedback hidden"></div>
-    <div class="quiz-footer"><button class="secondary hidden" id="backToWordReview">단어 복습으로 이동</button><button id="checkQuiz">정답 확인</button><button class="secondary hidden" id="nextQuiz">다음 문제</button><button class="secondary hidden" id="retryWrong">오답 다시 풀기</button><button class="ghost hidden" id="restartQuiz">다시 시작</button><button class="ghost hidden" id="goAddFromQuiz">단어 등록하기</button></div>
-    <p class="notice" id="quizHint">정답 여부는 테스트 기록에 저장되며, 플래시카드 암기 단계와는 별도로 집계돼요.</p>
-  </div>
-</section>
+<section id="quiz" class="hidden"><div class="panel card-panel" style="min-height:390px"><div class="section-head" style="width:100%;max-width:650px"><h2 id="quizTitle">월간 테스트</h2></div><div class="quiz-filters"><div class="field"><label for="quizMonth">테스트 월</label><input type="month" id="quizMonth"></div><div class="muted">총 30문제 · 네 가지 유형 무작위 출제</div></div><div class="section-head" style="width:100%;max-width:650px;margin-top:12px"><div class="muted">객관식 월간 종합 테스트</div><div class="muted" id="quizCount">테스트 준비</div></div><div class="progress-track"><div class="progress-fill" id="quizProgress"></div></div><div class="card-big" id="quizPrompt">월간 테스트를 시작해 보세요.</div><div class="quiz-options" id="quizOptions"></div><div id="quizFeedback" class="feedback hidden"></div><div class="quiz-footer"><button class="secondary hidden" id="nextQuiz">다음 문제</button><button class="secondary hidden" id="retryWrong">오답 다시 풀기</button><button class="ghost hidden" id="restartQuiz">다시 시작</button><button class="ghost hidden" id="goAddFromQuiz">항목 등록하기</button></div><p class="notice" id="quizHint">단어 뜻, 단어 표현, 예문 해석, 한국어에서 영어 예문 찾기 네 유형이 섞여 나와요.</p></div></section>
 
 <section id="sentenceAdd" class="hidden"><div class="panel"><h2 id="sentenceFormTitle">새 문장 등록</h2><div class="field"><label for="newSentenceEn">영어 문장 *</label><textarea id="newSentenceEn" placeholder="I was reluctant to ask for help."></textarea></div><div class="field"><div class="section-head"><label for="newSentenceKo">한국어 해석 *</label><button type="button" class="secondary" id="translateSentence">자동 번역</button></div><textarea id="newSentenceKo" placeholder="나는 도움을 요청하는 것이 내키지 않았다."></textarea></div><div class="field"><label>기존 단어와 연결하기 (선택)</label><div id="sentenceExpressionRecommendations" class="related-picker-list"></div><input id="sentenceExpressionSearch" placeholder="기존 단어 직접 검색"><div id="sentenceExpressionResults" class="related-picker-list"></div><div id="sentenceExpressionSelected" class="muted">선택한 표현 없음</div></div><div class="field"><label>새 표현 추가</label><div class="row"><input id="newExpression" placeholder="reluctant"><input id="newExpressionMeaning" placeholder="꺼리는, 내키지 않는"></div><button type="button" class="secondary" id="addSentenceExpression">＋ 표현 추가</button></div><div id="newSentenceExpressionTags"></div><button id="saveStandaloneSentence">문장 저장하기</button></div></section>
 <section id="words" class="hidden">
@@ -498,7 +476,9 @@ const SENTENCE_STORE_ID='__wordloop_sentence_store__';
 let deletedIds=new Set();
 try{words=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(words))words=[];}catch(e){words=[];}
 try{deletedIds=new Set(JSON.parse(localStorage.getItem(KEY+'-deleted')||'[]').map(String));}catch(e){deletedIds=new Set();}
-standaloneSentences=words.find(w=>w&&w.id===SENTENCE_STORE_ID)?.items||[];
+const sentenceStoreAtLoad=words.find(w=>w&&w.id===SENTENCE_STORE_ID)||{};
+standaloneSentences=sentenceStoreAtLoad.items||[];
+let monthlyTestLog=Array.isArray(sentenceStoreAtLoad.monthlyTests)?sentenceStoreAtLoad.monthlyTests:[];
 words=words.filter(w=>w&&w.id&&w.id!==SENTENCE_STORE_ID&&!deletedIds.has(String(w.id)));
 let currentUser=null,cloudReady=false,activatingUserId=null,saveTimer=null,syncChannel=null;
 let selectedRelatedIds=[],selectedSentenceIds=[],toastTimer=null,deletingWord=false,latestAIReview=null;
@@ -508,11 +488,11 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 const setSyncStatus=(message)=>{const el=$('syncStatus');if(el)el.textContent=message;};
-const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify([...words,{id:SENTENCE_STORE_ID,items:standaloneSentences}]));localStorage.setItem(KEY+'-deleted',JSON.stringify([...deletedIds]));renderStats();renderList();};
+const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify([...words,{id:SENTENCE_STORE_ID,items:standaloneSentences,monthlyTests:monthlyTestLog}]));localStorage.setItem(KEY+'-deleted',JSON.stringify([...deletedIds]));renderStats();renderList();};
 const save=()=>{saveLocal();if(currentUser&&cloudReady){setSyncStatus('저장 중…');clearTimeout(saveTimer);saveTimer=setTimeout(writeCloud,450);}};
 async function writeCloud(){
   if(!currentUser)return;
-  const snapshot=[...JSON.parse(JSON.stringify(words)),{id:SENTENCE_STORE_ID,items:JSON.parse(JSON.stringify(standaloneSentences))},...[...deletedIds].map(id=>({id,_deleted:true,deletedAt:Date.now()}))];
+  const snapshot=[...JSON.parse(JSON.stringify(words)),{id:SENTENCE_STORE_ID,items:JSON.parse(JSON.stringify(standaloneSentences)),monthlyTests:JSON.parse(JSON.stringify(monthlyTestLog))},...[...deletedIds].map(id=>({id,_deleted:true,deletedAt:Date.now()}))];
   const {error}=await supabaseClient.from('wordloop_data').upsert(
     {user_id:currentUser.id,words:snapshot,updated_at:new Date().toISOString()},
     {onConflict:'user_id'}
@@ -524,7 +504,7 @@ function mergeCloudWords(remoteWords){
   const remote=Array.isArray(remoteWords)?remoteWords:[];
   let cloudNeedsUpdate=false;
   remote.filter(w=>w&&w.id&&w._deleted).forEach(w=>deletedIds.add(String(w.id)));
-  const sentenceStore=remote.find(w=>w&&w.id===SENTENCE_STORE_ID);const remoteSentences=Array.isArray(sentenceStore?.items)?sentenceStore.items:[];const sentenceMap=new Map(remoteSentences.filter(x=>x&&x.id).map(x=>[String(x.id),x]));for(const item of standaloneSentences){if(item&&item.id&&!sentenceMap.has(String(item.id))){sentenceMap.set(String(item.id),item);cloudNeedsUpdate=true;}}standaloneSentences=Array.from(sentenceMap.values());
+  const sentenceStore=remote.find(w=>w&&w.id===SENTENCE_STORE_ID);const remoteTests=Array.isArray(sentenceStore?.monthlyTests)?sentenceStore.monthlyTests:[];const testMap=new Map(remoteTests.filter(x=>x&&x.month).map(x=>[x.month,x]));for(const item of monthlyTestLog){if(item&&item.month){const prior=testMap.get(item.month);if(!prior||Number(item.completedAt)>Number(prior.completedAt))testMap.set(item.month,item);}}monthlyTestLog=Array.from(testMap.values());const remoteSentences=Array.isArray(sentenceStore?.items)?sentenceStore.items:[];const sentenceMap=new Map(remoteSentences.filter(x=>x&&x.id).map(x=>[String(x.id),x]));for(const item of standaloneSentences){if(item&&item.id&&!sentenceMap.has(String(item.id))){sentenceMap.set(String(item.id),item);cloudNeedsUpdate=true;}}standaloneSentences=Array.from(sentenceMap.values());
   const map=new Map(remote.filter(w=>w&&w.id&&w.id!==SENTENCE_STORE_ID&&!w._deleted&&!deletedIds.has(String(w.id))).map(w=>[String(w.id),w]));
   for(const w of words){
     if(!w||!w.id||deletedIds.has(String(w.id)))continue;
@@ -718,6 +698,8 @@ function renderCalendar(){
     const key=[year,String(month+1).padStart(2,'0'),String(day).padStart(2,'0')].join('-');
     const a=activityForDate(key);
     const events=[];
+    const monthId=key.slice(0,7),monthTest=monthlyTestLog.find(x=>x.month===monthId);
+    if(day===totalDays)events.push('<i class="test-count">테스트 '+(monthTest?'✓':'○')+'</i>');
     if(a.added)events.push('<i class="add-count">+'+a.added+' 등록</i>');
     if(a.word+a.sentence)events.push('<i class="review-count">↻'+(a.word+a.sentence)+' 복습</i>');
     if(a.test)events.push('<i class="test-count">T'+a.test+'</i>');
@@ -728,12 +710,12 @@ function renderCalendar(){
   }
   $('activityCalendar').innerHTML=parts.join('');
   const a=activityForDate(selectedCalendarDate);
-  $('calendarDayDetail').innerHTML='<div class="calendar-detail-date"><strong>'+selectedCalendarDate+'</strong></div><div class="calendar-detail-counts">등록 '+a.added+'개 · 단어 복습 '+a.word+'회 · 문장 복습 '+a.sentence+'회 · 테스트 '+a.test+'회</div>';
+  $('calendarDayDetail').innerHTML='<div class="calendar-detail-date"><strong>'+selectedCalendarDate+'</strong></div><div class="calendar-detail-counts">등록 '+a.added+'개 · 단어 복습 '+a.word+'회 · 문장 복습 '+a.sentence+'회 · 테스트 '+a.test+'회'+(monthlyTestLog.find(x=>x.month===selectedCalendarDate.slice(0,7))?' · 월간 테스트 완료':' · 월간 테스트 예정')+'</div>';
   const todayActivity=activityForDate(today);
   $('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
   $('todayAdded').textContent=todayActivity.added;
   $('todayReviewed').textContent=todayActivity.word+todayActivity.sentence;
-  $('todayTested').textContent=todayActivity.test;
+  $('monthlyTestStatus').textContent=monthlyTestLog.some(x=>x.month===monthKey(new Date()))?'✓':'○';
 }
 function renderStats(){
   const counts={mastered:0,learning:0,'needs-review':0};
@@ -985,39 +967,26 @@ document.querySelectorAll('[data-sentence-grade]').forEach(b=>b.onclick=()=>{
 
 // 테스트: 자동 출제 / 두 방향 / 점수 / 오답 재시험
 function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]];}return x;}
-function getQuizSource(){
-  const selectedMonth=$('quizMonth').value||monthKey(new Date());
-  const registeredInMonth=w=>monthKey(w.created)===selectedMonth;
-  if($('quizType').value==='sentences')return sentenceWords().filter(x=>registeredInMonth(x)).map(x=>({...x,word:x.example,meaning:x.translation,example:'',translation:'',_sentence:true}));
-  const scope=$('quizScope').value;
-  if(scope==='monthMastered')return words.filter(w=>wordStatus(w)==='mastered'&&monthKey(w.masteredAt)===selectedMonth);
-  if(scope==='allMastered')return words.filter(w=>wordStatus(w)==='mastered');
-  if(scope==='monthLearning')return words.filter(w=>registeredInMonth(w)&&wordStatus(w)==='learning');
-  if(scope==='monthReview')return words.filter(w=>registeredInMonth(w)&&wordStatus(w)==='needs-review');
-  return words.filter(registeredInMonth);
+function quizQuestionsForMonth(m){
+ const allS=sentenceWords().filter(x=>x.example&&x.translation),rw=words.filter(x=>monthKey(x.created)===m),ow=words.filter(x=>monthKey(x.created)!==m&&wordStatus(x)==='needs-review'),rs=allS.filter(x=>monthKey(x.created)===m),os=allS.filter(x=>monthKey(x.created)!==m&&(!x.sentenceNext||x.sentenceNext<=Date.now()));
+ const pick=(r,o)=>{r=shuffle(r);o=shuffle(o);let z=r.slice(0,21);if(z.length<21)z.push(...o.slice(0,21-z.length));if(z.length<30){const ids=new Set(z.map(x=>x.id));z.push(...shuffle([...r,...o].filter(x=>!ids.has(x.id))).slice(0,30-z.length));}return z;};
+ const wp=pick(rw,ow),sp=pick(rs,os),q=[];
+ const add=(src,sent,type,prompt,answer,pool)=>{const d=shuffle([...new Set(pool.filter(x=>x&&x!==answer))]).slice(0,3);if(prompt&&answer&&d.length===3)q.push({source:src,isSentence:sent,type,prompt,answer,choices:shuffle([answer,...d])});};
+ wp.forEach(w=>{add(w,false,'word-en-ko',w.word,w.meaning,words.filter(x=>x.id!==w.id).map(x=>x.meaning));add(w,false,'word-ko-en',w.meaning,w.word,words.filter(x=>x.id!==w.id).map(x=>x.word));});
+ sp.forEach(x=>{add(x,true,'sentence-en-ko',x.example,x.translation,allS.filter(y=>y.id!==x.id).map(y=>y.translation));add(x,true,'sentence-ko-en',x.translation,x.example,allS.filter(y=>y.id!==x.id).map(y=>y.example));});
+ const types=['word-en-ko','word-ko-en','sentence-en-ko','sentence-ko-en'],by={};types.forEach(t=>by[t]=shuffle(q.filter(x=>x.type===t)));const out=[];for(let i=0;i<8;i++)types.forEach(t=>{if(by[t][i])out.push(by[t][i]);});return shuffle(out).slice(0,30);
 }
-
-function startQuiz(onlyWrong=false){
-  const previousWrong=quizState.wrong||[];
-  const source=onlyWrong?previousWrong:getQuizSource();
-  const sentenceMode=$('quizType').value==='sentences';$('quizTitle').textContent=sentenceMode?'월별 예문 테스트':'월별 단어 테스트';$('quizScope').parentElement.classList.toggle('hidden',sentenceMode);$('quizMode').innerHTML=sentenceMode?'<option value="meaningToWord">해석 보고 영어 문장 쓰기</option><option value="wordToMeaning">영어 문장 보고 해석 고르기</option>':'<option value="meaningToWord">뜻 보고 영어 단어 쓰기</option><option value="wordToMeaning">영어 보고 뜻 고르기</option>';
-  quizState={queue:shuffle(source),current:null,index:0,score:0,wrong:[],answered:false,mode:$('quizMode').value,onlyWrong};$('quizInputWrap').classList.toggle('hidden',quizState.mode!=='meaningToWord');$('quizOptions').classList.toggle('hidden',quizState.mode!=='wordToMeaning');$('quizPrompt').textContent='';$('quizFeedback').classList.add('hidden');$('retryWrong').classList.add('hidden');$('restartQuiz').classList.add('hidden');$('goAddFromQuiz').classList.add('hidden');$('nextQuiz').classList.add('hidden');$('checkQuiz').classList.remove('hidden');if(!source.length){$('quizPrompt').textContent=onlyWrong?'다시 풀 오답이 없어요.':'선택한 조건에 해당하는 단어가 없어요.';$('quizCount').textContent='테스트할 단어 없음';$('quizInputWrap').classList.add('hidden');$('quizOptions').classList.add('hidden');$('checkQuiz').classList.add('hidden');$('quizProgress').style.width='0%';$('quizHint').textContent='단어를 등록하면 두 가지 방식으로 테스트할 수 있어요.';$('goAddFromQuiz').classList.remove('hidden');return;}$('quizHint').textContent=onlyWrong?'틀렸던 문제를 다시 풀어 보세요.':'선택한 단어를 무작위로 출제해요.';nextQuestion();}
-function nextQuestion(){quizState.current=quizState.queue[quizState.index]||null;quizState.answered=false;$('quizFeedback').classList.add('hidden');$('nextQuiz').classList.add('hidden');$('checkQuiz').classList.remove('hidden');$('quizAnswer').value='';$('quizAnswer').disabled=false;if(!quizState.current){finishQuiz();return;}const w=quizState.current;$('quizCount').textContent=`문제 ${quizState.index+1} / ${quizState.queue.length} · 정답 ${quizState.score}`;$('quizProgress').style.width=`${(quizState.index/quizState.queue.length)*100}%`;if(quizState.mode==='meaningToWord'){$('quizPrompt').textContent=w.meaning;$('quizInputWrap').classList.remove('hidden');$('quizOptions').classList.add('hidden');$('quizAnswer').placeholder=w._sentence?'영어 문장을 입력하세요':'영어 단어를 입력하세요';$('quizHint').textContent=w._sentence?'해석에 해당하는 영어 문장을 입력하세요.':'뜻에 해당하는 영어 단어를 입력하고 정답 확인을 누르세요.';}else{$('quizPrompt').textContent=w.word;$('quizInputWrap').classList.add('hidden');$('quizOptions').classList.remove('hidden');$('quizHint').textContent=w._sentence?'영어 문장의 해석으로 가장 알맞은 답을 고르세요.':'영어 단어의 뜻으로 가장 알맞은 답을 고르세요.';renderChoices(w);}}
-function renderChoices(w){const pool=w._sentence?sentenceWords().filter(x=>x.id!==w.id&&x.translation&&x.translation!==w.meaning).map(x=>({meaning:x.translation})):words.filter(x=>x.id!==w.id&&x.meaning&&x.meaning!==w.meaning);const distractors=shuffle(pool).slice(0,3).map(x=>x.meaning);const opts=shuffle([w.meaning,...distractors]);$('quizOptions').innerHTML=opts.map((m,i)=>`<button type="button" data-choice="${i}">${esc(m)}</button>`).join('');$('quizOptions').dataset.correct=w.meaning;$('quizOptions').dataset.selected='';$('quizOptions').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(quizState.answered)return;$('quizOptions').dataset.selected=b.textContent;checkAnswer(b.textContent);});}
-function checkAnswer(given){if(!quizState.current||quizState.answered)return;const w=quizState.current;const correct=quizState.mode==='meaningToWord'?String(given||$('quizAnswer').value).trim().toLowerCase()===w.word.trim().toLowerCase():String(given||'').trim()===w.meaning.trim();quizState.answered=true;if(correct)quizState.score++;else quizState.wrong.push(w);if(!w._sentence){recordEvent(w,'testLog',{at:Date.now(),correct,mode:quizState.mode});save();}$('quizAnswer').disabled=true;$('quizOptions').querySelectorAll('button').forEach(b=>{b.disabled=true;if(b.textContent===w.meaning)b.classList.add('chosen-correct');else if(b.textContent===given&&!correct)b.classList.add('chosen-wrong');});$('quizFeedback').classList.remove('hidden');$('quizFeedback').classList.toggle('wrong',!correct);$('quizFeedback').innerHTML=`<strong>${correct?'정답이에요!':'아쉬워요. 정답은 '+esc(quizState.mode==='meaningToWord'?w.word:w.meaning)}</strong>${w.example?`<div style="margin-top:8px">${esc(w.example)}</div><div class="muted">${esc(w.translation||'')}</div>`:''}`;$('quizCount').textContent=`문제 ${quizState.index+1} / ${quizState.queue.length} · 정답 ${quizState.score}`;$('quizProgress').style.width=`${((quizState.index+1)/quizState.queue.length)*100}%`;$('checkQuiz').classList.add('hidden');$('nextQuiz').classList.remove('hidden');$('nextQuiz').textContent=quizState.index+1>=quizState.queue.length?'결과 보기':'다음 문제';}
-function finishQuiz(){$('quizProgress').style.width='100%';$('quizPrompt').textContent=`${quizState.score} / ${quizState.queue.length}개 정답`;$('quizCount').textContent=quizState.onlyWrong?'오답 재시험 완료':'테스트 완료';$('quizInputWrap').classList.add('hidden');$('quizOptions').classList.add('hidden');$('checkQuiz').classList.add('hidden');$('nextQuiz').classList.add('hidden');$('quizFeedback').classList.remove('hidden');$('quizFeedback').classList.remove('wrong');$('quizFeedback').innerHTML=`정답률 <strong>${quizState.queue.length?Math.round(quizState.score/quizState.queue.length*100):0}%</strong><br>틀린 단어 ${quizState.wrong.length}개`;$('restartQuiz').classList.remove('hidden');if(quizState.wrong.length){$('retryWrong').classList.remove('hidden');$('retryWrong').textContent=`오답 ${quizState.wrong.length}개 다시 풀기`;}else{$('retryWrong').classList.add('hidden');}$('quizHint').textContent='오답은 다시 풀면서 확실히 익혀 보세요.';}
-$('quizType').onchange=()=>{ $('quizMode').value='meaningToWord';startQuiz(false);};
-$('checkQuiz').onclick=()=>checkAnswer();$('quizAnswer').addEventListener('keydown',e=>{if(e.key==='Enter'&&!quizState.answered)checkAnswer();});$('nextQuiz').onclick=()=>{quizState.index++;nextQuestion();};$('retryWrong').onclick=()=>{const wrong=[...quizState.wrong];quizState.wrong=wrong;startQuiz(true);};$('restartQuiz').onclick=()=>startQuiz(false);$('quizMode').onchange=()=>startQuiz(false);$('goAddFromQuiz').onclick=()=>activateTab('add');
-
+function startQuiz(onlyWrong=false){const m=$('quizMonth').value||monthKey(new Date()),src=onlyWrong?(quizState.wrong||[]):quizQuestionsForMonth(m);quizState={queue:shuffle(src),current:null,index:0,score:0,wrong:[],answered:false,onlyWrong,month:m};$('quizFeedback').classList.add('hidden');$('retryWrong').classList.add('hidden');$('restartQuiz').classList.add('hidden');$('goAddFromQuiz').classList.add('hidden');$('nextQuiz').classList.add('hidden');if(!src.length){$('quizPrompt').textContent='출제할 문제가 부족해요. 단어와 예문을 더 등록해 주세요.';$('quizCount').textContent='출제 가능한 문제 없음';$('quizOptions').innerHTML='';$('goAddFromQuiz').classList.remove('hidden');return;}nextQuestion();}
+function nextQuestion(){quizState.current=quizState.queue[quizState.index]||null;quizState.answered=false;$('quizFeedback').classList.add('hidden');$('nextQuiz').classList.add('hidden');if(!quizState.current){finishQuiz();return;}const q=quizState.current,labels={'word-en-ko':'영어 단어의 뜻을 고르세요','word-ko-en':'한국어 뜻에 맞는 영어 단어·표현을 고르세요','sentence-en-ko':'영어 예문의 자연스러운 한국어 해석을 고르세요','sentence-ko-en':'한국어 해석에 맞는 영어 예문을 고르세요'};$('quizCount').textContent='문제 '+(quizState.index+1)+' / '+quizState.queue.length+' · 정답 '+quizState.score;$('quizProgress').style.width=(quizState.index/quizState.queue.length*100)+'%';$('quizHint').textContent=labels[q.type];$('quizPrompt').textContent=q.prompt;$('quizOptions').innerHTML=q.choices.map((x,i)=>'<button type="button">'+esc(x)+'</button>').join('');$('quizOptions').querySelectorAll('button').forEach(btn=>btn.onclick=()=>{if(!quizState.answered)checkAnswer(btn.textContent);});}
+function checkAnswer(given){if(!quizState.current||quizState.answered)return;const q=quizState.current,ok=String(given).trim()===String(q.answer).trim();quizState.answered=true;if(ok)quizState.score++;else quizState.wrong.push(q);if(!q.isSentence)recordEvent(q.source,'testLog',{at:Date.now(),correct:ok,mode:q.type});$('quizOptions').querySelectorAll('button').forEach(btn=>{btn.disabled=true;if(btn.textContent===q.answer)btn.classList.add('chosen-correct');else if(btn.textContent===given&&!ok)btn.classList.add('chosen-wrong');});$('quizFeedback').classList.remove('hidden');$('quizFeedback').classList.toggle('wrong',!ok);$('quizFeedback').innerHTML='<strong>'+(ok?'정답이에요!':'아쉬워요. 정답은 '+esc(q.answer))+'</strong>';$('quizCount').textContent='문제 '+(quizState.index+1)+' / '+quizState.queue.length+' · 정답 '+quizState.score;$('quizProgress').style.width=((quizState.index+1)/quizState.queue.length*100)+'%';$('nextQuiz').classList.remove('hidden');$('nextQuiz').textContent=quizState.index+1>=quizState.queue.length?'결과 보기':'다음 문제';}
+function finishQuiz(){$('quizProgress').style.width='100%';$('quizPrompt').textContent=quizState.score+' / '+quizState.queue.length+'개 정답';$('quizCount').textContent='테스트 완료';$('quizOptions').innerHTML='';$('nextQuiz').classList.add('hidden');$('quizFeedback').classList.remove('hidden');$('quizFeedback').classList.remove('wrong');const p=Math.round(quizState.score/quizState.queue.length*100);$('quizFeedback').innerHTML='정답률 <strong>'+p+'%</strong><br>틀린 문제 '+quizState.wrong.length+'개';$('restartQuiz').classList.remove('hidden');if(quizState.wrong.length){$('retryWrong').classList.remove('hidden');$('retryWrong').textContent='오답 '+quizState.wrong.length+'개 다시 풀기';}if(!quizState.onlyWrong&&quizState.queue.length){const e={month:quizState.month,completedAt:Date.now(),score:quizState.score,total:quizState.queue.length,percent:p},i=monthlyTestLog.findIndex(x=>x.month===e.month);if(i>=0)monthlyTestLog[i]=e;else monthlyTestLog.push(e);save();}$('quizHint').textContent='이번 달 테스트 완료! 달력 마지막 날에 완료 표시가 남아요.';}
+$('nextQuiz').onclick=()=>{quizState.index++;nextQuestion();};$('retryWrong').onclick=()=>startQuiz(true);$('restartQuiz').onclick=()=>startQuiz(false);$('goAddFromQuiz').onclick=()=>activateTab('add');$('quizMonth').value=monthKey(new Date());$('quizMonth').onchange=()=>startQuiz(false);
 $('homeWordStudy').onclick=()=>activateTab('study');
 $('homeSentenceStudy').onclick=()=>activateTab('sentences');
 $('homeQuizStart').onclick=()=>activateTab('quiz');
 $('wordQuizMode').onclick=()=>activateTab('quiz');
 $('backToWordReview').onclick=()=>activateTab('study');
-$('quizMonth').value=monthKey(new Date());
-$('quizMonth').onchange=()=>startQuiz(false);
-$('quizScope').onchange=()=>startQuiz(false);
-$('quizMode').onchange=()=>startQuiz(false);
+
 $('calendarPrev').onclick=()=>{
   calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()-1,1);
   selectedCalendarDate=dateKey(calendarMonth);
