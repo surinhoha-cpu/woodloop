@@ -415,6 +415,14 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 .calendar-legend .legend-plus{display:inline-block;margin-right:5px;color:#4f8060;font-size:14px;line-height:1;font-weight:800}
 .calendar-legend .legend-dot.sentence{border-radius:1px;transform:rotate(45deg);background:#667e9a}
 .calendar-legend .legend-test{color:#9b8050;font-weight:650}
+
+/* Compact three-row activity stack; separate sentence color and month-end label */
+.calendar-day .day-events{grid-template-rows:repeat(3,minmax(1.35em,auto));min-height:4.05em}
+.calendar-day .day-events .sentence-dot{border-radius:50%;transform:none;background:#9a78ad}
+.calendar-day .day-events .sentence-review-count{color:#9a78ad}
+.calendar-day .month-test-day{display:block;margin-top:3px;color:#9b8050;font-size:9px;line-height:1.2;font-weight:700;white-space:nowrap}
+.calendar-legend .legend-dot.sentence{border-radius:50%;transform:none;background:#9a78ad}
+@media(max-width:740px){.calendar-day .day-events{grid-template-rows:repeat(3,minmax(1.35em,auto));min-height:4.05em}}
 </style>
 </head>
 <body>
@@ -867,17 +875,16 @@ function renderCalendar(){
     events.push(a.added?'<i class="add-count" title="단어 등록 '+a.added+'개">+'+a.added+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
     events.push(a.word?'<i class="review-count" title="단어 복습 '+a.word+'회"><span class="calendar-event-dot review-dot" aria-hidden="true"></span> '+a.word+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
     events.push(a.sentence?'<i class="sentence-review-count" title="문장 복습 '+a.sentence+'회"><span class="calendar-event-dot sentence-dot" aria-hidden="true"></span> '+a.sentence+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    let monthTestHtml='';
     if(day===totalDays){
       const monthId=key.slice(0,7),monthTest=monthlyTestLog.find(x=>x.month===monthId);
       const testLabel=monthTest?'테스트 완료':(monthId<monthKey(new Date())?'테스트 미완':'테스트일');
-      events.push('<i class="month-test-day" title="'+testLabel+'">'+testLabel+'</i>');
-    }else{
-      events.push('<i class="event-empty" aria-hidden="true"></i>');
+      monthTestHtml='<span class="month-test-day" title="'+testLabel+'">'+testLabel+'</span>';
     }
     const classes=['calendar-day'];
     if(key===today)classes.push('today');
     if(key===selectedCalendarDate)classes.push('selected');
-    parts.push('<button type="button" class="'+classes.join(' ')+'" data-calendar-date="'+key+'" title="'+key+' 등록 '+a.added+' · 복습 '+(a.word+a.sentence)+' · 테스트 '+a.test+'"><span class="day-number">'+day+'</span><span class="day-events">'+events.join('')+'</span></button>');
+    parts.push('<button type="button" class="'+classes.join(' ')+'" data-calendar-date="'+key+'" title="'+key+' 등록 '+a.added+' · 복습 '+(a.word+a.sentence)+' · 테스트 '+a.test+'"><span class="day-number">'+day+'</span><span class="day-events">'+events.join('')+'</span>'+monthTestHtml+'</button>');
   }
   $('activityCalendar').innerHTML=parts.join('');
   const a=activityForDate(selectedCalendarDate);
