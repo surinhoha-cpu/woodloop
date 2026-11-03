@@ -1044,7 +1044,7 @@ function nextQuestion(){
  $('quizAnswer').placeholder=q.isSentence?'영어 문장 전체를 입력하세요':'영어 단어를 입력하세요';
  $('quizAnswer').focus();
 }
-function normalizeQuizAnswer(value){return String(value||'').toLowerCase().trim().replace(/[.,!?;:'"“”‘’]/g,'').replace(/\\s+/g,' ');}
+function normalizeQuizAnswer(value){return String(value||'').toLowerCase().trim().replace(/[.,!?;:'"“”‘’]/g,'').replace(/\s+/g,' ');}
 function checkAnswer(given){
  if(!quizState.current||quizState.answered)return;
  const q=quizState.current,ok=normalizeQuizAnswer(given)===normalizeQuizAnswer(q.answer);
