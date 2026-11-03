@@ -411,6 +411,10 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 .calendar-day .day-events .month-test-day{color:#9b8050;font-size:9px;font-weight:700}
 .calendar-day .day-events{grid-template-rows:repeat(4,minmax(1.35em,auto));min-height:5.4em}
 @media(max-width:740px){.calendar-day .day-events{grid-template-rows:repeat(4,minmax(1.35em,auto));min-height:5.4em}}
+
+.calendar-legend .legend-plus{display:inline-block;margin-right:5px;color:#4f8060;font-size:14px;line-height:1;font-weight:800}
+.calendar-legend .legend-dot.sentence{border-radius:1px;transform:rotate(45deg);background:#667e9a}
+.calendar-legend .legend-test{color:#9b8050;font-weight:650}
 </style>
 </head>
 <body>
@@ -468,7 +472,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
       </div>
       <div class="calendar-weekdays"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span></div>
       <div class="activity-calendar" id="activityCalendar"></div>
-      <div class="calendar-legend"><span><i class="legend-dot"></i>등록</span><span><i class="legend-dot review"></i>복습</span><span><i class="legend-dot test"></i>테스트</span></div>
+      <div class="calendar-legend"><span><b class="legend-plus">+</b>등록</span><span><i class="legend-dot review"></i>단어 복습</span><span><i class="legend-dot sentence"></i>문장 복습</span><span class="legend-test">테스트일</span></div>
       <div class="calendar-detail" id="calendarDayDetail"></div>
     </div>
     <div class="dashboard-side">
