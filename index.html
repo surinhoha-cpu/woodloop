@@ -345,7 +345,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 22</span></div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 23</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -783,23 +783,6 @@ function savedAIReviewHTML(r){
  '</div>';
 }
 function refreshAIReviewStatus(){const stale=!!latestAIReview&&latestAIReview.fingerprint!==reviewFingerprint($("word").value.trim(),$("meaning").value.trim(),getExamplesFromForm());$("aiReviewStale").classList.toggle("hidden",!stale);}
-function renderAIReview(r){
- $('aiReviewResult').dataset.savedReview=JSON.stringify(r);
- const status=r.overall==='good'?'검수 완료':r.overall==='incorrect'?'수정이 필요해요':'확인해 보세요';
- const statusClass=r.overall==='good'?'':r.overall==='incorrect'?'bad':'warn';
- const uses=Array.isArray(r.verbUses)?r.verbUses:[];
- const examples=Array.isArray(r.examples)?r.examples:[];
- const tips=Array.isArray(r.tips)?r.tips:[];
- $('aiReviewResult').innerHTML=`
-  <h3>✦ AI 검수 결과</h3><span class="ai-status ${statusClass}">${esc(status)}</span>
-  <p><span class="ai-label">품사</span><br>${esc(r.partOfSpeech||'분석 정보 없음')}</p>
-  ${uses.length?`<h4>자동사 · 타동사 구분</h4><ul>${uses.map(x=>'<li><strong>'+esc(x.type)+'</strong> · '+esc(x.meaning)+'<br><span class="muted">'+esc(x.pattern||'')+'</span></li>').join('')}</ul>`:''}
-  <h4>뜻 검수 · ${esc(r.meaningStatus||'')}</h4><p><strong>추천 뜻:</strong> ${esc(r.suggestedMeaning||'')}</p><p>${esc(r.meaningExplanation||'')}</p>
-  ${examples.length?`<h4>예문 검수</h4>${examples.map(x=>'<div class="ai-example"><span class="ai-label">'+esc(x.status||'')+'</span><p>'+esc(x.original||'')+'</p><p class="ai-corrected">'+esc(x.corrected||'')+'</p><p>'+esc(x.translation||'')+'</p><p class="muted">'+esc(x.explanation||'')+'</p></div>').join('')}`:''}
-  ${tips.length?`<h4>추가 참고</h4><ul>${tips.map(x=>'<li>'+esc(x)+'</li>').join('')}</ul>`:''}
-  <p class="muted">AI 검수는 참고 의견이에요. 최종 뜻과 예문은 직접 확인한 뒤 저장해 주세요.</p>`;
- $('aiReviewResult').classList.remove('hidden');
-}
 function renderAIReview(r){
  $('aiReviewResult').dataset.savedReview=JSON.stringify(r);
  const status=r.overall==='good'?'검수 완료':r.overall==='incorrect'?'수정이 필요해요':'확인해 보세요';
