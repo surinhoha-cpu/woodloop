@@ -384,6 +384,9 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 }
 
 .collect-import-backdrop{display:none;position:fixed;inset:0;z-index:1200;background:#17231dcc;padding:18px;align-items:center;justify-content:center}.collect-import-backdrop.open{display:flex}.collect-import-card{width:min(520px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 60px #0003}.collect-import-card h2{margin:0 0 7px;font-size:20px}.collect-import-preview{background:#f7f9f6;border:1px solid var(--line);border-radius:13px;padding:13px;margin:14px 0;white-space:pre-wrap;overflow-wrap:anywhere}.collect-import-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.collect-import-actions button{min-height:46px}.collect-import-source{font-size:12px;color:var(--muted);margin-top:8px}.collect-import-foot{display:flex;justify-content:flex-end;margin-top:12px}
+
+/* Use a controlled small marker instead of an oversized text bullet */
+.calendar-day .day-events .word-event-dot{display:inline-block;width:7px;height:7px;min-height:0;border-radius:50%;background:#667e9a;vertical-align:middle;margin:0 2px 1px 0;flex:none}
 </style>
 </head>
 <body>
@@ -835,7 +838,7 @@ function renderCalendar(){
     const events=[];
     const monthId=key.slice(0,7),monthTest=monthlyTestLog.find(x=>x.month===monthId);
     events.push(a.added?'<i class="add-count">+'+a.added+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
-    events.push(a.word?'<i class="review-count" title="단어 복습 '+a.word+'회">● '+a.word+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    events.push(a.word?'<i class="review-count" title="단어 복습 '+a.word+'회"><span class="word-event-dot" aria-hidden="true"></span> '+a.word+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
     events.push(a.sentence?'<i class="sentence-review-count" title="문장 복습 '+a.sentence+'회">◆ '+a.sentence+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
     if(day===totalDays){
       const testLabel=monthTest?'테스트 완료':(monthId<monthKey(new Date())?'테스트 미완':'테스트일');
