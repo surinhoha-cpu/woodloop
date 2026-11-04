@@ -497,7 +497,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 90</span></div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 91</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -716,7 +716,7 @@ function mergeCloudWords(remoteWords){
   const remote=Array.isArray(remoteWords)?remoteWords:[];
   let cloudNeedsUpdate=false;
   remote.filter(w=>w&&w.id&&w._deleted).forEach(w=>deletedIds.add(String(w.id)));
-  const sentenceStore=remote.find(w=>w&&w.id===SENTENCE_STORE_ID);const remoteTests=Array.isArray(sentenceStore?.monthlyTests)?sentenceStore.monthlyTests:[];const testMap=new Map(remoteTests.filter(x=>x&&x.month).map(x=>[x.month,x]));for(const item of monthlyTestLog){if(item&&item.month){const prior=testMap.get(item.month);if(!prior||Number(item.completedAt)>Number(prior.completedAt))testMap.set(item.month,item);}}monthlyTestLog=Array.from(testMap.values());const remoteSentences=Array.isArray(sentenceStore?.items)?sentenceStore.items:[];const sentenceMap=new Map(remoteSentences.filter(x=>x&&x.id).map(x=>[String(x.id),x]));for(const item of standaloneSentences){if(item&&item.id&&!sentenceMap.has(String(item.id))){sentenceMap.set(String(item.id),item);cloudNeedsUpdate=true;}}standaloneSentences=Array.from(sentenceMap.values());
+  const sentenceStore=remote.find(w=>w&&w.id===SENTENCE_STORE_ID);const remoteTests=Array.isArray(sentenceStore?.monthlyTests)?sentenceStore.monthlyTests:[];const testMap=new Map(remoteTests.filter(x=>x&&x.month).map(x=>[x.month,x]));for(const item of monthlyTestLog){if(!item||!item.month)continue;const prior=testMap.get(item.month);if(!prior){testMap.set(item.month,item);continue;}const sessions=new Map((Array.isArray(prior.sessions)?prior.sessions:[]).map(x=>[x.id,x]));for(const localSession of (Array.isArray(item.sessions)?item.sessions:[])){const cloudSession=sessions.get(localSession.id);if(!cloudSession||Number(localSession.updatedAt||localSession.completedAt||0)>=Number(cloudSession.updatedAt||cloudSession.completedAt||0))sessions.set(localSession.id,localSession);}testMap.set(item.month,{...prior,...item,sessions:Array.from(sessions.values()),updatedAt:Math.max(Number(prior.updatedAt)||0,Number(item.updatedAt)||0)});}monthlyTestLog=Array.from(testMap.values());const remoteSentences=Array.isArray(sentenceStore?.items)?sentenceStore.items:[];const sentenceMap=new Map(remoteSentences.filter(x=>x&&x.id).map(x=>[String(x.id),x]));for(const item of standaloneSentences){if(item&&item.id&&!sentenceMap.has(String(item.id))){sentenceMap.set(String(item.id),item);cloudNeedsUpdate=true;}}standaloneSentences=Array.from(sentenceMap.values());
   const map=new Map(remote.filter(w=>w&&w.id&&w.id!==SENTENCE_STORE_ID&&!w._deleted&&!deletedIds.has(String(w.id))).map(w=>[String(w.id),w]));
   for(const w of words){
     if(!w||!w.id||deletedIds.has(String(w.id)))continue;
@@ -1336,6 +1336,7 @@ function renderMonthlySessions(){
  }).join('');
 }
 function startMonthlySession(id){
+ $('quizAnswer').classList.remove('hidden');$('submitQuizAnswer').classList.remove('hidden');$('quizIntentWrap').classList.remove('hidden');
  const m=$('quizMonth').value||monthKey(new Date()),r=monthlyRecord(m);
  let ss=r.sessions.find(x=>x.id===id);
  if(ss?.completed)return;
@@ -1391,7 +1392,10 @@ function submitNormalMonthlyAnswer(){
  $('nextQuiz').classList.remove('hidden');$('nextQuiz').textContent=i===29?'세션 결과':'다음 문제';
 }
 async function gradeMonthlyWriting(){
- const ss=activeMonthlySession;if(!ss||ss.id!==4||ss.answers.some(x=>!x))return;
+ const ss=activeMonthlySession;if(!ss||ss.id!==4)return;
+ ss.answers=ss.questions.map((q,i)=>{const d=ss.drafts[i]||{};return d.sentence?.trim()&&d.intendedMeaning?.trim()?{given:d.sentence.trim(),intendedMeaning:d.intendedMeaning.trim(),at:Date.now()}:null;});
+ if(ss.answers.some(x=>!x)){showToast('30문항 모두 영어 문장과 한국어 의도를 입력해 주세요.');return;}
+ persistMonthlySession();
  const btn=$('completeQuizSession');btn.disabled=true;btn.textContent='AI 채점 중…';
  try{
   const submissions=ss.questions.map((q,i)=>({word:q.word,meaning:q.meaning,sentence:ss.answers[i].given,intendedMeaning:ss.answers[i].intendedMeaning}));
@@ -1435,11 +1439,13 @@ $('quizAnswerForm').addEventListener('submit',e=>{e.preventDefault();submitNorma
 $('quizAnswer').addEventListener('input',()=>{
  const ss=activeMonthlySession;if(!ss||ss.id!==4)return;
  ss.drafts[ss.index]={sentence:$('quizAnswer').value,intendedMeaning:$('quizIntent').value};
+ $('completeQuizSession').classList.toggle('hidden',ss.drafts.filter(d=>d?.sentence?.trim()&&d?.intendedMeaning?.trim()).length!==30);
  persistMonthlySession();
 });
 $('quizIntent').addEventListener('input',()=>{
  const ss=activeMonthlySession;if(!ss||ss.id!==4)return;
  ss.drafts[ss.index]={sentence:$('quizAnswer').value,intendedMeaning:$('quizIntent').value};
+ $('completeQuizSession').classList.toggle('hidden',ss.drafts.filter(d=>d?.sentence?.trim()&&d?.intendedMeaning?.trim()).length!==30);
  persistMonthlySession();
 });
 $('nextQuiz').onclick=()=>{
