@@ -964,11 +964,15 @@ function renderCalendar(){
     const plannedTotal=plan?(Number(plan.word)||0)+(Number(plan.sentence)||0):0;
     const completedTotal=a.word+a.sentence;
     let reviewMark='';
-    if(plan&&plannedTotal>0){
+    if(key===today){
+      // 오늘은 저장된 계획 스냅샷이 아니라 실제 남은 복습 항목을 기준으로 표시해요.
+      const pendingNow=dueWords().length+dueSentences().length;
+      if(pendingNow>0)reviewMark='<i class="review-status-mark review-status-partial" title="복습 대기 항목 있음">△</i>';
+    }else if(plan&&plannedTotal>0){
       if(completedTotal<=0)reviewMark='<i class="review-status-mark review-status-x" title="복습 미완료">×</i>';
       else if(completedTotal<plannedTotal)reviewMark='<i class="review-status-mark review-status-partial" title="복습 일부 완료">△</i>';
       else reviewMark='<i class="review-status-mark review-status-done" title="복습 완료">○</i>';
-    }else if(key<dateKey(new Date())&&completedTotal>0){
+    }else if(key<today&&completedTotal>0){
       reviewMark='<i class="review-status-mark review-status-done" title="이 날짜에 복습 기록이 있어요">○</i>';
     }
     events.push(reviewMark||'<i class="event-empty" aria-hidden="true"></i>');
