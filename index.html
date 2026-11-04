@@ -508,7 +508,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 120</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 121</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -1313,8 +1313,8 @@ function renderDailyWritingPractice(){
  if(!p||p.date!==dateKey(new Date())){area.classList.add('hidden');return;}
  area.classList.remove('hidden');
  area.innerHTML='<div class="section-head"><strong>오늘의 영작 3문제</strong><span class="muted">'+(p.completed?'채점 완료':'미완료')+'</span></div>'+
- (p.questions||[]).map((q,i)=>'<div class="writing-question"><strong>문제 '+(i+1)+' · '+esc(q.word)+'</strong><div class="muted">'+esc(q.meaning)+'</div>'+(p.completed?'<p>'+esc(q.sentence||'')+'</p><div class="writing-result"><strong>'+esc(q.result?.score??'')+'점 · '+(q.result?.status==='good'?'잘했어요':'수정해 봐요')+'</strong><div>'+esc(q.result?.feedback||'')+'</div>'+(q.result?.correctedSentence&&q.result.correctedSentence!==q.sentence?'<p><b>추천 문장:</b> '+esc(q.result.correctedSentence)+'</p>':'')+(q.result?.translation?'<p><b>해석:</b> '+esc(q.result.translation)+'</p>':'')+'</div>':'<textarea data-writing-answer="'+i+'" placeholder="주어진 단어를 사용해 영어 문장을 만들어 보세요">'+esc(q.sentence||'')+'</textarea>')+'</div>').join('')+
- (p.completed?'<p class="muted">오늘의 영작은 별도 기록으로 저장되며 단어 복습 횟수나 예문 복습 일정에는 영향을 주지 않아요.</p>':'<button type="button" id="gradeDailyWriting" style="width:100%;margin-top:12px">AI 채점하기</button><p class="muted" id="writingGradeStatus">세 문항을 모두 작성한 뒤 채점해 주세요.</p>');
+ (p.questions||[]).map((q,i)=>'<div class="writing-question"><strong>문제 '+(i+1)+' · '+esc(q.word)+'</strong><div class="muted">'+esc(q.meaning)+'</div>'+(p.completed?'<p><b>내 영어 문장</b><br>'+esc(q.sentence||'')+'</p><p><b>내가 의도한 의미</b><br>'+esc(q.intendedMeaning||'')+'</p><div class="writing-result"><strong>'+esc(q.result?.score??'')+'점 · '+(q.result?.status==='good'?'잘했어요':'수정해 봐요')+'</strong><div>'+esc(q.result?.feedback||'')+'</div>'+(q.result?.correctedSentence&&q.result.correctedSentence!==q.sentence?'<p><b>추천 문장:</b> '+esc(q.result.correctedSentence)+'</p>':'')+(q.result?.translation?'<p><b>AI가 이해한 문장 뜻:</b> '+esc(q.result.translation)+'</p>':'')+'</div>':'<label class="muted" style="display:block;margin-top:10px">영어로 문장 만들기</label><textarea data-writing-answer="'+i+'" placeholder="목표 단어를 사용해 영어 문장을 만들어 보세요">'+esc(q.sentence||'')+'</textarea><label class="muted" style="display:block;margin-top:8px">내가 의도한 의미</label><textarea data-writing-intent="'+i+'" placeholder="이 문장으로 어떤 의미를 전달하고 싶었나요? 한국어로 적어 주세요">'+esc(q.intendedMeaning||'')+'</textarea>')+'</div>').join('')+
+ (p.completed?'<p class="muted">오늘의 영작 기록은 별도로 저장되며 단어 복습 횟수나 예문 복습 일정에는 영향을 주지 않아요.</p>':'<button type="button" id="gradeDailyWriting" style="width:100%;margin-top:12px">AI 채점하기</button><p class="muted" id="writingGradeStatus">영어 문장과 의도한 한국어 의미를 세 문항 모두 작성해 주세요.</p>');
 }
 function openDailyWritingPractice(){
  const today=dateKey(new Date());
@@ -1329,16 +1329,16 @@ function openDailyWritingPractice(){
 }
 $('openDailyWriting').onclick=openDailyWritingPractice;
 $('dailyWritingArea').addEventListener('input',e=>{
- const field=e.target.closest('[data-writing-answer]');if(!field||!dailyWritingPractice||dailyWritingPractice.completed)return;
- const i=Number(field.dataset.writingAnswer);if(dailyWritingPractice.questions[i]){dailyWritingPractice.questions[i].sentence=field.value;dailyWritingPractice.updatedAt=Date.now();save();}
+ const field=e.target.closest('[data-writing-answer],[data-writing-intent]');if(!field||!dailyWritingPractice||dailyWritingPractice.completed)return;
+ const i=Number(field.dataset.writingAnswer??field.dataset.writingIntent);if(dailyWritingPractice.questions[i]){if(field.matches('[data-writing-answer]'))dailyWritingPractice.questions[i].sentence=field.value;else dailyWritingPractice.questions[i].intendedMeaning=field.value;dailyWritingPractice.updatedAt=Date.now();save();}
 });
 $('dailyWritingArea').addEventListener('click',async e=>{
  const btn=e.target.closest('#gradeDailyWriting');if(!btn)return;
  const p=dailyWritingPractice;if(!p||p.completed)return;
- const submissions=p.questions.map(q=>({word:q.word,meaning:q.meaning,sentence:q.sentence.trim()}));
- if(submissions.some(x=>!x.sentence)){ $('writingGradeStatus').textContent='세 문항을 모두 작성해 주세요.';return;}
+ const submissions=p.questions.map(q=>({word:q.word,meaning:q.meaning,sentence:q.sentence.trim(),intendedMeaning:(q.intendedMeaning||'').trim()}));
+ if(submissions.some(x=>!x.sentence||!x.intendedMeaning)){ $('writingGradeStatus').textContent='세 문항 모두 영어 문장과 한국어 의도를 작성해 주세요.';return;}
  if(!supabaseClient){$('writingGradeStatus').textContent='AI 서버에 연결할 수 없어요.';return;}
- btn.disabled=true;btn.textContent='AI 채점 중…';$('writingGradeStatus').textContent='문장별로 단어 사용과 문법을 확인하고 있어요.';
+ btn.disabled=true;btn.textContent='AI 채점 중…';$('writingGradeStatus').textContent='문법, 단어 사용, 자연스러움과 의도한 의미의 일치 여부를 확인하고 있어요.';
  try{
   const {data,error}=await supabaseClient.functions.invoke('word-check',{body:{action:'grade-word-writing',submissions}});
   if(error)throw error;if(data?.error)throw new Error(data.error);
