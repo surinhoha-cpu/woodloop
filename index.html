@@ -230,6 +230,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 
 /* Compact study and test screens */
 #study.card-panel,#sentences.card-panel,#quiz.card-panel{min-height:0;padding:24px 22px;gap:16px}
+.review-card-top{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px}.extra-review-btn{font-size:12px!important;padding:7px 11px;min-height:34px;white-space:nowrap}
 #sentences #sentenceWriteArea{width:100%;max-width:100%;align-self:stretch}#sentences #sentenceAnswerInput{display:block;width:100%;min-height:110px;box-sizing:border-box}#sentences #checkSentenceAnswer{display:block;width:100%;box-sizing:border-box}
 #study #front,#sentences #sentenceFront{font-size:25px;line-height:1.4;letter-spacing:-.45px}
 #study .study-direction button,#sentences button,#quiz button{font-size:14px}
@@ -506,7 +507,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 117</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 118</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -575,8 +576,6 @@ button.secondary,button.ghost,button.danger{font-size:13px}
         <div class="quick-actions">
           <button id="homeWordStudy">단어 복습</button>
           <button class="secondary" id="homeSentenceStudy">문장 복습</button>
-          <button class="secondary" id="homeExtraWordStudy">단어 더 복습</button>
-          <button class="secondary" id="homeExtraSentenceStudy">문장 더 복습</button>
           <button class="secondary" id="homeQuizStart">테스트</button>
         </div>
       </div>
@@ -603,7 +602,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 
 <section id="study" class="hidden">
   <div class="panel card-panel">
-    <div class="muted" id="studyCount">단어 복습</div><div class="card-big" id="front">복습을 시작해 보세요.</div>
+    <div class="review-card-top"><div class="muted" id="studyCount">단어 복습</div><button type="button" class="secondary extra-review-btn" id="extraWordStudy">추가 복습</button></div><div class="card-big" id="front">복습을 시작해 보세요.</div>
     <button id="revealWord">뜻 확인하기</button>
     <div class="card-answer hidden" id="wordBack"><h2 id="backMeaning"></h2><div id="backPartOfSpeechWrap" class="muted hidden" style="margin:4px 0 12px"><span id="backPartOfSpeech"></span></div><div id="backExample" class="example-en"></div><div id="backTranslation" class="example-ko"></div><div id="backRelatedWrap" class="hidden" style="margin-top:12px;text-align:left"><div class="detail-label">연결된 단어</div><div id="backRelated"></div></div>
       <div class="grade"><button class="again" data-word-grade="again">다시</button><button class="hard" data-word-grade="hard">어려움</button><button class="good" data-word-grade="good">알겠음</button><button class="easy" data-word-grade="easy">쉬움</button></div>
@@ -613,7 +612,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 
 <section id="sentences" class="hidden">
   <div class="panel card-panel">
-    <div class="muted" id="sentenceCount">문장 복습</div><div class="pill">한국어 해석을 보고 영어 문장 떠올리기</div>
+    <div class="review-card-top"><div class="muted" id="sentenceCount">문장 복습</div><button type="button" class="secondary extra-review-btn" id="extraSentenceStudy">추가 복습</button></div><div class="pill">한국어 해석을 보고 영어 문장 떠올리기</div>
     <div class="card-big" id="sentenceFront">문장 복습을 시작해 보세요.</div>
     <div id="sentenceWriteArea" class="field" style="margin:16px 0 10px"><textarea id="sentenceAnswerInput" rows="3" placeholder="영어 문장을 입력하세요" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea><button type="button" id="checkSentenceAnswer" style="width:100%;margin-top:8px">정답 확인</button></div>
     <div class="card-answer hidden" id="sentenceBack"><div id="sentenceCheckFeedback" class="notice" style="margin-bottom:10px"></div><h2 class="example-en" id="sentenceEnglish"></h2><p class="muted" id="sentenceWord"></p>
@@ -1546,8 +1545,8 @@ $('quizMonth').value=monthKey(new Date());
 renderMonthlySessions();
 $('homeWordStudy').onclick=()=>activateTab('study');
 $('homeSentenceStudy').onclick=()=>activateTab('sentences');
-$('homeExtraWordStudy').onclick=()=>{activateTab('study');startWordStudy(null,true);};
-$('homeExtraSentenceStudy').onclick=()=>{activateTab('sentences');startSentenceStudy(null,true);};
+$('extraWordStudy').onclick=()=>startWordStudy(null,true);
+$('extraSentenceStudy').onclick=()=>startSentenceStudy(null,true);
 $('homeQuizStart').onclick=()=>activateTab('quiz');
 // 월별 테스트는 상단 테스트 탭에서만 열어요.
 if($('backToWordReview'))$('backToWordReview').onclick=()=>activateTab('study');
