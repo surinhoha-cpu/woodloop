@@ -482,11 +482,15 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 .calendar-day .day-header{display:flex;align-items:baseline;justify-content:flex-start;gap:8px;min-width:0}
 .calendar-day .day-header .day-number{display:inline-block;flex:none}
 .calendar-day .day-header .month-test-day{display:inline-block;margin:0;color:#9b8050;font-size:clamp(8px,.72em,11px);line-height:1.2;font-weight:700;white-space:nowrap}
+.calendar-day .review-status-mark{display:block;font-style:normal;font-weight:800;font-size:13px;line-height:1.2;letter-spacing:0}
+.calendar-day .review-status-x{color:#d94a4a}
+.calendar-day .review-status-partial{color:#d69a35}
+.calendar-day .review-status-done{color:#4f8060}
 </style>
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 83</span></div></div>
+  <div><div class="logo-lockup"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 84</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -673,6 +677,7 @@ try{words=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(words))w
 try{deletedIds=new Set(JSON.parse(localStorage.getItem(KEY+'-deleted')||'[]').map(String));}catch(e){deletedIds=new Set();}
 const sentenceStoreAtLoad=words.find(w=>w&&w.id===SENTENCE_STORE_ID)||{};
 standaloneSentences=sentenceStoreAtLoad.items||[];
+let dailyReviewPlans=Array.isArray(sentenceStoreAtLoad.dailyReviewPlans)?sentenceStoreAtLoad.dailyReviewPlans:[];
 let monthlyTestLog=Array.isArray(sentenceStoreAtLoad.monthlyTests)?sentenceStoreAtLoad.monthlyTests:[];
 words=words.filter(w=>w&&w.id&&w.id!==SENTENCE_STORE_ID&&!deletedIds.has(String(w.id)));
 let currentUser=null,cloudReady=false,activatingUserId=null,saveTimer=null,syncChannel=null;
@@ -683,7 +688,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 const setSyncStatus=(message)=>{const el=$('syncStatus');if(el)el.textContent=message;};
-const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify([...words,{id:SENTENCE_STORE_ID,items:standaloneSentences,monthlyTests:monthlyTestLog}]));localStorage.setItem(KEY+'-deleted',JSON.stringify([...deletedIds]));renderStats();renderList();};
+const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify([...words,{id:SENTENCE_STORE_ID,items:standaloneSentences,monthlyTests:monthlyTestLog,dailyReviewPlans}]));localStorage.setItem(KEY+'-deleted',JSON.stringify([...deletedIds]));renderStats();renderList();};
 const save=()=>{saveLocal();if(currentUser&&cloudReady){setSyncStatus('저장 중…');clearTimeout(saveTimer);saveTimer=setTimeout(writeCloud,450);}};
 async function writeCloud(){
   if(!currentUser)return;
@@ -896,6 +901,12 @@ function recordEvent(w,key,event){
   list.push(event);
   w[key]=list.slice(-240);
 }
+function ensureDailyReviewPlan(key){
+  if(dailyReviewPlans.some(x=>x.date===key))return;
+  dailyReviewPlans.push({date:key,word:dueWords().length,sentence:dueSentences().length,capturedAt:Date.now()});
+  dailyReviewPlans=dailyReviewPlans.slice(-400);
+  saveLocal();
+}
 function activityForDate(key){
   const result={added:0,word:0,sentence:0,test:0};
   words.forEach(w=>{
@@ -930,10 +941,19 @@ function renderCalendar(){
     }
     const key=[year,String(month+1).padStart(2,'0'),String(day).padStart(2,'0')].join('-');
     const a=activityForDate(key);
+    ensureDailyReviewPlan(key);
+    const plan=dailyReviewPlans.find(x=>x.date===key);
     const events=[];
     events.push(a.added?'<i class="add-count" title="단어 등록 '+a.added+'개"><span class="calendar-event-plus" aria-hidden="true">+</span>'+a.added+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
-    events.push(a.word?'<i class="review-count" title="단어 복습 '+a.word+'회"><span class="calendar-event-dot review-dot" aria-hidden="true"></span>'+a.word+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
-    events.push(a.sentence?'<i class="sentence-review-count" title="문장 복습 '+a.sentence+'회"><span class="calendar-event-dot sentence-dot" aria-hidden="true"></span>'+a.sentence+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    const plannedTotal=plan?(Number(plan.word)||0)+(Number(plan.sentence)||0):0;
+    const completedTotal=a.word+a.sentence;
+    let reviewMark='';
+    if(plan&&plannedTotal>0){
+      if(completedTotal<=0)reviewMark='<i class="review-status-mark review-status-x" title="복습 미완료">×</i>';
+      else if(completedTotal<plannedTotal)reviewMark='<i class="review-status-mark review-status-partial" title="복습 일부 완료">△</i>';
+      else reviewMark='<i class="review-status-mark review-status-done" title="복습 완료">○</i>';
+    }
+    events.push(reviewMark||'<i class="event-empty" aria-hidden="true"></i>');
     let monthTestHtml='';
     if(day===totalDays){
       const monthId=key.slice(0,7),monthTest=monthlyTestLog.find(x=>x.month===monthId);
