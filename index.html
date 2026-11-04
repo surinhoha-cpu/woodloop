@@ -505,7 +505,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 113</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 114</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -612,10 +612,10 @@ button.secondary,button.ghost,button.danger{font-size:13px}
   <div class="panel card-panel">
     <div class="muted" id="sentenceCount">문장 복습</div><div class="pill">한국어 해석을 보고 영어 문장 떠올리기</div>
     <div class="card-big" id="sentenceFront">문장 복습을 시작해 보세요.</div>
-    <button id="revealSentence">영어 문장 확인하기</button>
-    <div class="card-answer hidden" id="sentenceBack"><h2 class="example-en" id="sentenceEnglish"></h2><p class="muted" id="sentenceWord"></p>
-      <div class="grade"><button class="again" data-sentence-grade="again">다시</button><button class="hard" data-sentence-grade="hard">어려움</button><button class="good" data-sentence-grade="good">알겠음</button><button class="easy" data-sentence-grade="easy">쉬움</button></div>
-    </div><p class="notice" id="sentenceHint">등록한 예문의 해석을 보고 영어 문장을 떠올려 보세요.</p>
+    <div id="sentenceWriteArea" class="field" style="margin:16px 0 10px"><textarea id="sentenceAnswerInput" rows="3" placeholder="영어 문장을 입력하세요" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea><button type="button" id="checkSentenceAnswer" style="width:100%;margin-top:8px">정답 확인</button></div>
+    <div class="card-answer hidden" id="sentenceBack"><div id="sentenceCheckFeedback" class="notice" style="margin-bottom:10px"></div><h2 class="example-en" id="sentenceEnglish"></h2><p class="muted" id="sentenceWord"></p>
+      <div class="grade" id="sentenceGradeOptions"><button class="again" data-sentence-grade="again">다시</button><button class="hard" data-sentence-grade="hard">어려움</button><button class="good" data-sentence-grade="good">알겠음</button><button class="easy" data-sentence-grade="easy">쉬움</button></div>
+    </div><p class="notice" id="sentenceHint">한국어 뜻을 보고 영어 문장을 직접 입력해 보세요.</p>
   </div>
 </section>
 
@@ -1313,23 +1313,51 @@ document.querySelectorAll('[data-word-grade]').forEach(b=>b.onclick=()=>{
   showWordCard();
 });
 
-// 예문 복습: 한국어 해석을 보고 영어 원문 회상
+// 예문 복습: 한국어 뜻을 보고 영어 문장을 직접 작성
+let sentenceAnswerCorrect=false;
+function normalizeSentenceAnswer(value){return String(value||'').toLowerCase().replace(/[\\p{P}\\p{S}]/gu,' ').replace(/\\s+/g,' ').trim();}
 function startSentenceStudy(onlyId=null){sentenceQueue=onlyId?sentenceWords().filter(w=>w.wordId===onlyId||w.id===onlyId):dueSentences();currentSentence=null;showSentenceCard();}
-function showSentenceCard(){currentSentence=sentenceQueue.shift()||null;if(!currentSentence){$('sentenceFront').textContent=sentenceWords().length?'오늘 복습할 문장이 없어요.':'복습할 예문이 없어요.';$('sentenceCount').textContent='문장 복습';$('revealSentence').classList.add('hidden');$('sentenceBack').classList.add('hidden');$('sentenceHint').textContent=sentenceWords().length?'예문 복습 예정일이 되면 다시 표시돼요.':'단어 등록할 때 영어 예문과 예문 해석을 함께 입력해 주세요.';return;}$('sentenceFront').textContent=currentSentence.translation;$('sentenceCount').textContent=`남은 문장 ${sentenceQueue.length+1}개`;$('sentenceBack').classList.add('hidden');$('revealSentence').classList.remove('hidden');$('sentenceHint').textContent='한국어 해석을 보고 영어 문장을 소리 내어 떠올려 보세요.';}
-$('revealSentence').onclick=()=>{if(!currentSentence)return;$('sentenceEnglish').textContent=currentSentence.example;const linked=Array.isArray(currentSentence.expressions)?currentSentence.expressions:[];const details=linked.map(e=>{const linkedWord=words.find(w=>String(w.id)===String(e.wordId))||words.find(w=>String(w.word||'').toLowerCase()===String(e.expression||'').toLowerCase());const expression=e.expression||linkedWord?.word||'';const meaning=e.meaning||linkedWord?.meaning||'';return expression?'<span class="related-chip">'+esc(expression)+(meaning?' · '+esc(meaning):'')+'</span>':'';}).filter(Boolean);$('sentenceWord').innerHTML=details.length?'<span class="muted">연결 표현</span><div class="word-meta" style="justify-content:center;margin-top:8px">'+details.join('')+'</div>':'<span class="muted">연결된 표현 없음</span>';$('sentenceBack').classList.remove('hidden');$('revealSentence').classList.add('hidden');};
+function showSentenceCard(){
+ currentSentence=sentenceQueue.shift()||null;
+ $('sentenceBack').classList.add('hidden');
+ $('sentenceAnswerInput').value='';
+ $('sentenceAnswerInput').disabled=false;
+ $('checkSentenceAnswer').disabled=false;
+ $('sentenceWriteArea').classList.toggle('hidden',!currentSentence);
+ $('sentenceGradeOptions').querySelectorAll('[data-sentence-grade]').forEach(b=>b.classList.remove('hidden'));
+ if(!currentSentence){$('sentenceFront').textContent=sentenceWords().length?'오늘 복습할 문장이 없어요.':'복습할 예문이 없어요.';$('sentenceCount').textContent='문장 복습';$('sentenceHint').textContent=sentenceWords().length?'예문 복습 예정일이 되면 다시 표시돼요.':'단어 등록할 때 영어 예문과 예문 해석을 함께 입력해 주세요.';return;}
+ $('sentenceFront').textContent=currentSentence.translation;
+ $('sentenceCount').textContent='남은 문장 '+(sentenceQueue.length+1)+'개';
+ $('sentenceHint').textContent='한국어 뜻을 보고 영어 문장을 직접 입력해 보세요.';
+}
+$('checkSentenceAnswer').onclick=()=>{
+ if(!currentSentence)return;
+ const typed=normalizeSentenceAnswer($('sentenceAnswerInput').value);
+ if(!typed){$('sentenceHint').textContent='영어 문장을 입력해 주세요.';return;}
+ sentenceAnswerCorrect=typed===normalizeSentenceAnswer(currentSentence.example);
+ $('sentenceEnglish').textContent=currentSentence.example;
+ const linked=Array.isArray(currentSentence.expressions)?currentSentence.expressions:[];
+ const details=linked.map(e=>{const linkedWord=words.find(w=>String(w.id)===String(e.wordId))||words.find(w=>String(w.word||'').toLowerCase()===String(e.expression||'').toLowerCase());const expression=e.expression||linkedWord?.word||'';const meaning=e.meaning||linkedWord?.meaning||'';return expression?'<span class="related-chip">'+esc(expression)+(meaning?' · '+esc(meaning):'')+'</span>':'';}).filter(Boolean);
+ $('sentenceWord').innerHTML=details.length?'<span class="muted">연결 표현</span><div class="word-meta" style="justify-content:center;margin-top:8px">'+details.join('')+'</div>':'<span class="muted">연결된 표현 없음</span>';
+ $('sentenceCheckFeedback').textContent=sentenceAnswerCorrect?'정답이에요! 기억한 정도를 선택해 주세요.':'정답과 일치하지 않아요. 정답을 확인하고 다시 복습해요.';
+ $('sentenceCheckFeedback').style.color=sentenceAnswerCorrect?'var(--accent)':'var(--red)';
+ $('sentenceGradeOptions').querySelectorAll('[data-sentence-grade]').forEach(b=>b.classList.toggle('hidden',!sentenceAnswerCorrect&&b.dataset.sentenceGrade!=='again'));
+ $('sentenceBack').classList.remove('hidden');
+ $('sentenceAnswerInput').disabled=true;
+ $('checkSentenceAnswer').disabled=true;
+};
 document.querySelectorAll('[data-sentence-grade]').forEach(b=>b.onclick=()=>{
-  if(!currentSentence)return;
-  const grade=b.dataset.sentenceGrade,now=Date.now();
-  const days={again:0.007,hard:1,good:3,easy:7}[grade];
-  currentSentence.sentenceReps=(currentSentence.sentenceReps||0)+1;
-  currentSentence.sentenceInterval=days;
-  currentSentence.sentenceNext=now+days*86400000;
-  recordEvent(currentSentence,'sentenceLog',{at:now,grade});
-  if(currentSentence.standalone){const item=standaloneSentences.find(x=>x.id===currentSentence.id);if(item){item.sentenceReps=currentSentence.sentenceReps;item.sentenceInterval=days;item.sentenceNext=currentSentence.sentenceNext;item.sentenceLog=currentSentence.sentenceLog;}}else{const parent=words.find(w=>w.id===currentSentence.wordId);if(parent){const entries=Array.isArray(parent.examples)?parent.examples:[];const entry=entries.find(x=>currentSentence.id.endsWith('::'+(x.id||'')));if(entry){entry.sentenceReps=currentSentence.sentenceReps;entry.sentenceInterval=days;entry.sentenceNext=currentSentence.sentenceNext;entry.sentenceLog=currentSentence.sentenceLog;}else{parent.sentenceReps=currentSentence.sentenceReps;parent.sentenceInterval=days;parent.sentenceNext=currentSentence.sentenceNext;parent.sentenceLog=currentSentence.sentenceLog;}}}
-  save();
-  showSentenceCard();
+ if(!currentSentence)return;
+ const grade=b.dataset.sentenceGrade;
+ if(!sentenceAnswerCorrect&&grade!=='again')return;
+ const now=Date.now(),days={again:0.007,hard:1,good:3,easy:7}[grade];
+ currentSentence.sentenceReps=(currentSentence.sentenceReps||0)+1;
+ currentSentence.sentenceInterval=days;currentSentence.sentenceNext=now+days*86400000;
+ recordEvent(currentSentence,'sentenceLog',{at:now,grade,correct:sentenceAnswerCorrect});
+ if(currentSentence.standalone){const item=standaloneSentences.find(x=>x.id===currentSentence.id);if(item){item.sentenceReps=currentSentence.sentenceReps;item.sentenceInterval=days;item.sentenceNext=currentSentence.sentenceNext;item.sentenceLog=currentSentence.sentenceLog;}}
+ else{const parent=words.find(w=>w.id===currentSentence.wordId);if(parent){const entries=Array.isArray(parent.examples)?parent.examples:[];const entry=entries.find(x=>currentSentence.id.endsWith('::'+(x.id||'')));if(entry){entry.sentenceReps=currentSentence.sentenceReps;entry.sentenceInterval=days;entry.sentenceNext=currentSentence.sentenceNext;entry.sentenceLog=currentSentence.sentenceLog;}else{parent.sentenceReps=currentSentence.sentenceReps;parent.sentenceInterval=days;parent.sentenceNext=currentSentence.sentenceNext;parent.sentenceLog=currentSentence.sentenceLog;}}}
+ save();showSentenceCard();
 });
-
 // Monthly tests: four independent 30-question sessions with resumable progress.
 function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]];}return x;}
 let activeMonthlySession=null;
