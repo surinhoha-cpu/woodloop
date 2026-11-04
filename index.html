@@ -508,7 +508,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 119</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 120</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -1215,10 +1215,10 @@ $('examplesList').addEventListener('click',async e=>{
  try{
   const {data,error}=await supabaseClient.functions.invoke('word-check',{body:{action:'generate-example',word,meaning}});
   if(error)throw error;if(data?.error)throw new Error(data.error);
-  if(!data?.result?.example||!data?.result?.translation)throw new Error('예문 생성 결과가 올바르지 않아요.');
-  en.value=data.result.example;ko.value=data.result.translation;
+  if(!data?.result?.example)throw new Error('예문 생성 결과가 올바르지 않아요.');
+  en.value=data.result.example;ko.value='';
   en.dispatchEvent(new Event('input',{bubbles:true}));ko.dispatchEvent(new Event('input',{bubbles:true}));
-  const status=entry.querySelector('[data-translate-status]');if(status)status.textContent='AI가 예문과 해석을 생성했어요. 자연스러운지 확인해 주세요.';
+  const status=entry.querySelector('[data-translate-status]');if(status)status.textContent='영어 예문만 생성했어요. 먼저 문장의 의미를 직접 생각해 보세요.';
  }catch(err){const status=entry?.querySelector('[data-translate-status]');if(status)status.textContent=err?.message||'AI 예문 생성에 실패했어요.';}
  finally{btn.disabled=false;btn.textContent='✦ AI 예문 생성';}
 });
