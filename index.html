@@ -497,7 +497,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 94</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 95</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -1329,17 +1329,20 @@ function createMonthlySession(m,id){
  return {id,month:m,questions,answers:Array(30).fill(null),drafts:Array(30).fill(null),index:0,score:0,completed:false,createdAt:Date.now()};
 }
 function renderMonthlySessions(){
- const m=$('quizMonth').value||monthKey(new Date()),r=monthlyRecord(m);
+ const m=$('quizMonth').value||monthKey(new Date()),current=monthKey(new Date()),available=m<current;
+ const r=monthlyTestLog.find(x=>x.month===m)||{sessions:[]};
  $('quizSessions').innerHTML=sessionTitles.map((title,i)=>{
   const id=i+1,ss=r.sessions.find(x=>x.id===id),done=!!ss?.completed,started=!!ss&&!done;
   const count=ss?.answers?.filter(x=>x!==null&&x!==undefined).length||0;
   const score=ss?.score;
-  return '<div class="monthly-session-card"><h3>'+title+'</h3><p>'+(id===4?'단어를 활용해 새 영어 문장을 만들고 한국어 의도를 적어요.':'학습한 예문과 과거 미숙달 문장을 영어로 떠올려요.')+'</p><div class="monthly-session-meta"><span>'+(done?'완료':started?'진행 중':'시작 전')+'</span><span>'+(done?(score+'/30'):(count+'/30'))+'</span></div><button type="button" data-monthly-session="'+id+'" '+(done?'disabled':'')+'>'+(done?'완료됨':started?'이어서 풀기':'시작하기')+'</button></div>';
+  return '<div class="monthly-session-card"><h3>'+title+'</h3><p>'+(id===4?'단어를 활용해 새 영어 문장을 만들고 한국어 의도를 적어요.':'학습한 예문과 과거 미숙달 문장을 영어로 떠올려요.')+'</p><div class="monthly-session-meta"><span>'+(done?'완료':started?'진행 중':'시작 전')+'</span><span>'+(done?(score+'/30'):(count+'/30'))+'</span></div><button type="button" data-monthly-session="'+id+'" '+(done||!available?'disabled':'')+'>'+(done?'완료됨':started?'이어서 풀기':!available?'월 종료 후 이용 가능':'시작하기')+'</button></div>';
  }).join('');
 }
 function startMonthlySession(id){
  $('quizAnswer').classList.remove('hidden');$('submitQuizAnswer').classList.remove('hidden');$('quizIntentWrap').classList.remove('hidden');
- const m=$('quizMonth').value||monthKey(new Date()),r=monthlyRecord(m);
+ const m=$('quizMonth').value||monthKey(new Date());
+ if(m>=monthKey(new Date())){showToast('현재 진행 중인 달의 테스트는 미리 만들 수 없습니다.');return;}
+ const r=monthlyRecord(m);
  let ss=r.sessions.find(x=>x.id===id);
  if(ss?.completed)return;
  if(!ss){ss=createMonthlySession(m,id);if(!ss){showToast('출제할 학습 항목이 없어요.');return;}r.sessions.push(ss);}
@@ -1460,7 +1463,7 @@ $('nextQuiz').onclick=()=>{
 $('completeQuizSession').onclick=gradeMonthlyWriting;
 $('saveQuizExit').onclick=leaveMonthlySession;
 $('quizSessions').addEventListener('click',e=>{const b=e.target.closest('[data-monthly-session]');if(b)startMonthlySession(Number(b.dataset.monthlySession));});
-$('startQuizBtn').onclick=()=>{const m=$('quizMonth').value||monthKey(new Date()),r=monthlyRecord(m);renderMonthlySessions();const hasSaved=r.sessions.some(x=>x&&Array.isArray(x.questions)&&x.questions.length>0);const hasQuestions=sentenceQuestionPool(m).length>0||wordQuestionPool(m).length>0;showToast(hasSaved||hasQuestions?'테스트 목록을 불러왔어요.':'불러올 테스트가 없어요.');$('quizSessions').scrollIntoView({behavior:'smooth',block:'nearest'});};
+$('startQuizBtn').onclick=()=>{const m=$('quizMonth').value||monthKey(new Date()),current=monthKey(new Date());renderMonthlySessions();if(m>=current){showToast('현재 진행 중인 달의 테스트는 미리 만들 수 없습니다.');return;}const r=monthlyTestLog.find(x=>x.month===m);const hasSaved=!!r?.sessions?.some(x=>x&&Array.isArray(x.questions)&&x.questions.length>0);const hasQuestions=sentenceQuestionPool(m).length>0||wordQuestionPool(m).length>0;showToast(hasSaved||hasQuestions?'테스트를 불러왔습니다.':'불러올 테스트가 없습니다.');$('quizSessions').scrollIntoView({behavior:'smooth',block:'nearest'});};
 $('quizMonth').value=monthKey(new Date());
 renderMonthlySessions();
 $('homeWordStudy').onclick=()=>activateTab('study');
