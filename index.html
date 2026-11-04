@@ -508,7 +508,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 121</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 122</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -1393,9 +1393,10 @@ $('checkSentenceAnswer').onclick=()=>{
  const linked=Array.isArray(currentSentence.expressions)?currentSentence.expressions:[];
  const details=linked.map(e=>{const linkedWord=words.find(w=>String(w.id)===String(e.wordId))||words.find(w=>String(w.word||'').toLowerCase()===String(e.expression||'').toLowerCase());const expression=e.expression||linkedWord?.word||'';const meaning=e.meaning||linkedWord?.meaning||'';return expression?'<span class="related-chip">'+esc(expression)+(meaning?' · '+esc(meaning):'')+'</span>':'';}).filter(Boolean);
  $('sentenceWord').innerHTML=details.length?'<span class="muted">연결 표현</span><div class="word-meta" style="justify-content:center;margin-top:8px">'+details.join('')+'</div>':'<span class="muted">연결된 표현 없음</span>';
- $('sentenceCheckFeedback').textContent=sentenceAnswerCorrect?'정답이에요! 기억한 정도를 선택해 주세요.':'정답과 일치하지 않아요. 정답을 확인하고 다시 복습해요.';
+ $('sentenceCheckFeedback').textContent=sentenceAnswerCorrect?'정답이에요! 기억한 정도를 선택해 주세요.':'정답과 달라도 스펠링 한두 글자 정도의 실수라면 ‘거의 맞음’을 선택해도 돼요.';
  $('sentenceCheckFeedback').style.color=sentenceAnswerCorrect?'var(--accent)':'var(--red)';
- $('sentenceGradeOptions').querySelectorAll('[data-sentence-grade]').forEach(b=>b.classList.toggle('hidden',!sentenceAnswerCorrect&&b.dataset.sentenceGrade!=='again'));
+ $('sentenceGradeOptions').querySelectorAll('[data-sentence-grade]').forEach(b=>b.classList.toggle('hidden',!sentenceAnswerCorrect&&!['again','hard'].includes(b.dataset.sentenceGrade)));
+ if(!sentenceAnswerCorrect){const hard=$('sentenceGradeOptions').querySelector('[data-sentence-grade="hard"]');if(hard)hard.textContent='거의 맞음';const again=$('sentenceGradeOptions').querySelector('[data-sentence-grade="again"]');if(again)again.textContent='다시';}else{$('sentenceGradeOptions').querySelectorAll('[data-sentence-grade]').forEach(b=>{b.textContent=({again:'다시',hard:'어려움',good:'알겠음',easy:'쉬움'})[b.dataset.sentenceGrade]||b.textContent;});}
  $('sentenceBack').classList.remove('hidden');
  $('sentenceAnswerInput').disabled=true;
  $('checkSentenceAnswer').disabled=true;
@@ -1403,7 +1404,7 @@ $('checkSentenceAnswer').onclick=()=>{
 document.querySelectorAll('[data-sentence-grade]').forEach(b=>b.onclick=()=>{
  if(!currentSentence)return;
  const grade=b.dataset.sentenceGrade;
- if(!sentenceAnswerCorrect&&grade!=='again')return;
+ if(!sentenceAnswerCorrect&&!['again','hard'].includes(grade))return;
  const now=Date.now(),days={again:0.007,hard:1,good:3,easy:7}[grade];
  currentSentence.sentenceReps=(currentSentence.sentenceReps||0)+1;
  currentSentence.sentenceInterval=days;currentSentence.sentenceNext=now+days*86400000;
