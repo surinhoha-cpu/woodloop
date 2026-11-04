@@ -116,6 +116,7 @@ main{margin-top:8px}
 .today-metric{padding:12px;border-radius:15px;background:#f7f9f6}
 .today-metric b{display:block;font-size:23px;letter-spacing:-.7px}
 .today-metric span{font-size:11px;color:var(--muted)}
+.monthly-test-caption{display:block;margin-top:3px;font-size:10px;color:var(--muted)}
 .word-category{display:inline-flex;margin-top:5px;padding:2px 8px;border-radius:99px;background:#edf2ed;color:#526e59;font-size:10px;font-weight:650;width:max-content}
 .calendar-detail-date{font-weight:650;margin-bottom:5px}.calendar-detail-counts{line-height:1.55;overflow-wrap:anywhere}
 .mascot-metric{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:#edf3ed;color:#52735a;min-height:78px}.mascot-metric svg{width:37px;height:37px}.mascot-metric span{font-size:11px;font-weight:650;color:#52735a}
@@ -497,7 +498,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 95</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 96</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -561,7 +562,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
           <div class="today-metric"><b id="todayReviewed">0</b><span>오늘 복습</span></div>
           <div class="today-metric"><b id="due">0</b><span>복습 대기 단어</span></div>
           <div class="today-metric"><b id="sentenceDue">0</b><span>복습 대기 문장</span></div>
-          <div class="today-metric"><b id="monthlyTestStatus">○</b><span>이번 달 테스트</span></div><div class="today-metric mascot-metric"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="currentColor"/><circle cx="30" cy="25" r="1.7" fill="currentColor"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="currentColor"/></svg><span>오늘도 차근차근!</span></div>
+          <div class="today-metric"><b id="monthlyTestStatus">0/4</b><span>이번 달 테스트</span><small id="monthlyTestLabel" class="monthly-test-caption">전월 학습 내용</small></div><div class="today-metric mascot-metric"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="currentColor"/><circle cx="30" cy="25" r="1.7" fill="currentColor"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="currentColor"/></svg><span>오늘도 차근차근!</span></div>
         </div>
         <div class="quick-actions">
           <button id="homeWordStudy">단어 복습</button>
@@ -983,7 +984,11 @@ function renderCalendar(){
   $('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
   $('todayAdded').textContent=todayActivity.added;
   $('todayReviewed').textContent=todayActivity.word+todayActivity.sentence;
-  $('monthlyTestStatus').textContent=monthlyTestLog.some(x=>x.month===monthKey(new Date()))?'O':'X';
+  const testMonthDate=new Date(new Date().getFullYear(),new Date().getMonth()-1,1);
+  const testMonth=monthKey(testMonthDate),testRecord=monthlyTestLog.find(x=>x.month===testMonth);
+  const completedSessions=(testRecord?.sessions||[]).filter(x=>x&&x.completed).length;
+  $('monthlyTestStatus').textContent=completedSessions+'/4';
+  if($('monthlyTestLabel'))$('monthlyTestLabel').textContent=testMonthDate.toLocaleDateString('ko-KR',{month:'long'})+' 학습 내용';
 }
 function renderStats(){
   const counts={mastered:0,learning:0,'needs-review':0};
