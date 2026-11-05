@@ -513,7 +513,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 145</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 146</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -1164,6 +1164,7 @@ function renderAIReview(r){
  `;
  $('aiReviewResult').classList.remove('hidden');
 }
+async function getEdgeFunctionErrorMessage(err,fallback='AI 요청에 실패했어요. 잠시 후 다시 시도해 주세요.'){try{const response=err?.context;if(response&&typeof response.clone==='function'){const payload=await response.clone().json();if(payload?.error)return String(payload.error);if(payload?.message)return String(payload.message);}}catch(parseError){console.warn('Could not read Edge Function error response:',parseError);}return err?.message||fallback;}
 async function runAIReview(){
  const word=$('word').value.trim(),meaning=$('meaning').value.trim();
  const examples=getExamplesFromForm().map(x=>({example:x.example,translation:x.translation}));
@@ -1182,7 +1183,7 @@ async function runAIReview(){
   renderAIReview(data.result);refreshAIReviewStatus();
  }catch(err){
   console.error('AI review failed',err);
-  const message=err?.message||'알 수 없는 오류';
+  const message=await getEdgeFunctionErrorMessage(err,'알 수 없는 오류');
   $('aiReviewResult').innerHTML='<p>'+esc(message.includes('Failed to fetch')?'AI 서버에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.':message)+'</p>';
   $('aiReviewResult').classList.remove('hidden');
  }finally{btn.disabled=false;btn.innerHTML='<span aria-hidden="true">✦</span> AI로 단어·예문 검수';}
@@ -1265,7 +1266,7 @@ $('examplesList').addEventListener('click',async e=>{
   en.value=data.result.example;ko.value='';
   en.dispatchEvent(new Event('input',{bubbles:true}));ko.dispatchEvent(new Event('input',{bubbles:true}));
   const status=entry.querySelector('[data-translate-status]');if(status)status.textContent='영어 예문만 생성했어요. 먼저 문장의 의미를 직접 생각해 보세요.';
- }catch(err){const status=entry?.querySelector('[data-translate-status]');if(status)status.textContent=err?.message||'AI 예문 생성에 실패했어요.';}
+ }catch(err){const status=entry?.querySelector('[data-translate-status]');if(status)status.textContent=await getEdgeFunctionErrorMessage(err,'AI 예문 생성에 실패했어요.');}
  finally{btn.disabled=false;btn.textContent='✦ AI 예문 생성';}
 });
 $('saveWord').onclick=()=>{const d=collectForm();if(editingId){const i=words.findIndex(w=>w.id===editingId);if(i>=0){words[i]={...words[i],...d};syncRelatedLinks(editingId,d.relatedIds);syncWordSentenceLinks(editingId,selectedSentenceIds);save();clearForm();showToast('단어 정보가 수정되었어요.');window.scrollTo({top:0,behavior:'smooth'});}}else if(addWord(d)){syncRelatedLinks(words[0].id,d.relatedIds);syncWordSentenceLinks(words[0].id,selectedSentenceIds);save();clearForm();showToast('단어가 등록되었어요.');window.scrollTo({top:0,behavior:'smooth'});}};
