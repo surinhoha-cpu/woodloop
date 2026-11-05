@@ -513,7 +513,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 133</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 134</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -1119,7 +1119,7 @@ function renderAIReview(r){
  const similar=Array.isArray(r.similarExpressions)?r.similarExpressions:[];
  $('aiReviewResult').innerHTML=`
   <h3>✦ AI 검수 결과</h3><span class="ai-status ${statusClass}">${esc(status)}</span>
-  ${r.partOfSpeech?'<h4>품사 및 용법</h4><p>'+esc(r.partOfSpeech)+'</p>':''}
+  ${r.englishMeaning?'<h4>영문 뜻</h4><p>'+esc(r.englishMeaning)+'</p>':''}\n  ${r.partOfSpeech?'<h4>품사 및 용법</h4><p>'+esc(r.partOfSpeech)+'</p>':''}
   ${uses.length?'<ul>'+uses.map(x=>'<li><strong>'+esc(x.type||'')+'</strong> · '+esc(x.meaning||'')+(x.pattern?'<br><span class="muted">주요 패턴: '+esc(x.pattern)+'</span>':'')+'</li>').join('')+'</ul>':''}
   <h4>뜻 검수</h4><div class="ai-example"><span class="ai-label">${esc(r.meaningStatus||'확인 필요')}</span><p><strong>추천 뜻:</strong> ${esc(r.suggestedMeaning||'')}</p>${r.meaningExplanation?'<p class="muted">'+esc(r.meaningExplanation)+'</p>':''}</div>
   ${examples.length?`<h4>예문 검수</h4>${examples.map(x=>'<div class="ai-example"><span class="ai-label">'+esc(x.status||'')+'</span><p>'+esc(x.original||'')+'</p>'+(x.corrected&&x.corrected!==x.original?'<p class="ai-corrected">'+esc(x.corrected)+'</p>':'')+'<p>'+esc(x.translation||'')+'</p>'+(x.explanation?'<p class="muted">'+esc(x.explanation)+'</p>':'')+'</div>').join('')}`:''}
@@ -1141,8 +1141,8 @@ async function runAIReview(){
   if(error)throw error;
   if(data?.error)throw new Error(data.error);
   if(!data?.result)throw new Error('검수 결과를 받지 못했어요.');
-  latestAIReview={fingerprint:reviewFingerprint(word,meaning,getExamplesFromForm()),result:data.result};
-  if(editingId){const existing=words.find(w=>String(w.id)===String(editingId));if(existing){existing.aiReview=data.result;save();}}
+  latestAIReview={fingerprint:reviewFingerprint(word,meaning,getExamplesFromForm()),result:data.result};\n  if(data.result.englishMeaning){$('englishMeaning').value=data.result.englishMeaning;}
+  if(editingId){const existing=words.find(w=>String(w.id)===String(editingId));if(existing){existing.aiReview=data.result;if(data.result.englishMeaning)existing.englishMeaning=data.result.englishMeaning;save();}}
   renderAIReview(data.result);refreshAIReviewStatus();
  }catch(err){
   console.error('AI review failed',err);
