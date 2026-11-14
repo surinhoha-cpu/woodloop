@@ -1641,7 +1641,7 @@ function wordQuestionPool(m){
 }
 function uniqueMonthlyQuestions(pool){
  const unique=new Map();
- const norm=v=>String(v||'').toLowerCase().replace(/[\\p{P}\\p{S}]/gu,' ').replace(/\\s+/g,' ').trim();
+ const norm=v=>String(v||'').toLowerCase().replace(/[\p{P}\p{S}]/gu,' ').replace(/\s+/g,' ').trim();
  pool.forEach(q=>{
   const key=q.kind==='word'?'word:'+norm(q.word):'sentence:'+norm(q.prompt)+'|'+norm(q.answer);
   if(!unique.has(key))unique.set(key,q);
@@ -1665,7 +1665,7 @@ function renderMonthlySessions(){
  $('quizSessions').innerHTML=sessionTitles.map((title,i)=>{
   const id=i+1,ss=r.sessions.find(x=>x.id===id),done=!!ss?.completed,started=!!ss&&!done;
   const poolAvailable=id===4?wordAvailable:sentenceAvailable;
-  const total=ss?.questions?.length||(id===4?uniqueMonthlyQuestions(wordPool).length:uniqueMonthlyQuestions(sentencePool).length);
+  const total=ss?.questions?.length||Math.min(30,id===4?uniqueMonthlyQuestions(wordPool).length:uniqueMonthlyQuestions(sentencePool).length);
   const count=ss?.answers?.filter(x=>x!==null&&x!==undefined).length||0;
   const score=ss?.score;
   const disabled=done||!available||!poolAvailable;
@@ -1684,6 +1684,7 @@ function startMonthlySession(id){
  activeMonthlySession=ss;
  $('quizSessions').classList.add('hidden');$('quizStage').classList.remove('hidden');
  $('quizTypeLabel').textContent='세션 '+id+' · '+sessionTitles[id-1];
+ $('completeQuizSession').textContent=ss.questions.length+'문제 제출하고 AI 채점';
  $('quizIntentWrap').classList.toggle('hidden',id!==4);
  $('quizAnswer').placeholder=id===4?'이 단어를 활용해 영어 문장을 만들어 보세요':'영어 문장 전체를 입력하세요';
  $('quizQuestionLabel').textContent=id===4?'목표 단어와 뜻':'한국어 해석';
