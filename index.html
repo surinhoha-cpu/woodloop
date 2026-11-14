@@ -1394,6 +1394,7 @@ function activateTab(name){
  if(location.hash!=='#'+name)history.replaceState(null,'','#'+name);
  document.querySelectorAll('main>section').forEach(section=>section.classList.toggle('hidden',section.id!==contentId));
  $('learningSwitcher').classList.toggle('hidden',!isLearning);
+ const passageChoice=document.querySelector('[data-learning-type="passage"]');if(passageChoice)passageChoice.classList.toggle('hidden',name==='reviewGroup');
  document.querySelectorAll('.tab').forEach(button=>button.classList.toggle('active',button.dataset.tab===name));
  document.querySelectorAll('[data-learning-type]').forEach(button=>button.classList.toggle('active',button.dataset.learningType===learningType));
  if(name==='words'){if(!['words','sentences','passages','writing'].includes(wordbookView))wordbookView='words';$('wordbookViewSelect').value=wordbookView;renderList();}
