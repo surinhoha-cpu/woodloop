@@ -358,7 +358,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 #wordbookViewSelect{flex:0 0 78px;width:78px;min-width:78px;height:32px;min-height:32px;padding:4px 22px 4px 9px;border:1px solid var(--line);border-radius:9px;background-color:#f7f9f6;color:var(--accent);font-size:12px;font-weight:650;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,#718077 50%),linear-gradient(135deg,#718077 50%,transparent 50%);background-position:calc(100% - 12px) 13px,calc(100% - 8px) 13px;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
 
 /* Wordbook header alignment */
- .passage-editor{margin-top:18px;padding:17px;border:1px solid var(--line);border-radius:16px;background:#f9fbf8}.passage-editor h2{margin:0}.passage-add-actions{display:none!important}.passage-detail-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7}.passage-source-line{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:13px;color:var(--muted)}.passage-source-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-size:20px;line-height:1;padding:3px 5px;border-radius:7px}.passage-source-link:hover{background:var(--soft)}.passage-linked-item{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:7px}.passage-linked-item strong{display:block;font-size:13px}.passage-linked-item small{display:block;color:var(--muted);margin-top:3px}.passage-list{display:grid;gap:10px}.passage-card{border:1px solid var(--line);border-radius:15px;background:#fff;overflow:hidden}.passage-card-head{display:flex;align-items:flex-start;gap:10px;padding:14px}.passage-card-main{flex:1;min-width:0;text-align:left;background:transparent;color:var(--ink);padding:0}.passage-card-main strong{display:block;font-size:16px;line-height:1.4}.passage-card-main small{display:block;color:var(--muted);margin-top:5px}.passage-card-tools{display:flex;gap:6px}.passage-card-tools button{padding:7px 9px}.passage-card-detail{border-top:1px solid var(--line);padding:14px;background:#fcfdfa}.passage-card-detail .detail-label{margin-top:12px}.passage-selection{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:12px}.passage-selection input{margin-top:3px;accent-color:var(--accent)}.passage-selection span{min-width:0;overflow-wrap:anywhere}.passage-selection small{display:block;color:var(--muted);margin-top:2px}@media(max-width:740px){.passage-card-head{padding:12px}.passage-card-tools{flex-direction:column}.passage-editor{padding:13px}}
+ .passage-editor{margin-top:18px;padding:17px;border:1px solid var(--line);border-radius:16px;background:#f9fbf8}.passage-editor h2{margin:0}.passage-add-actions{display:none!important}.passage-split-editor{padding:12px;border:1px solid var(--line);border-radius:12px;background:#f8faf7}.passage-split-editor>.notice{margin:7px 0}.passage-extract-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:10px;font-size:12px;color:var(--muted)}.passage-detail-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7}.passage-source-line{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:13px;color:var(--muted)}.passage-source-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-size:20px;line-height:1;padding:3px 5px;border-radius:7px}.passage-source-link:hover{background:var(--soft)}.passage-linked-item{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:7px}.passage-linked-item strong{display:block;font-size:13px}.passage-linked-item small{display:block;color:var(--muted);margin-top:3px}.passage-list{display:grid;gap:10px}.passage-card{border:1px solid var(--line);border-radius:15px;background:#fff;overflow:hidden}.passage-card-head{display:flex;align-items:flex-start;gap:10px;padding:14px}.passage-card-main{flex:1;min-width:0;text-align:left;background:transparent;color:var(--ink);padding:0}.passage-card-main strong{display:block;font-size:16px;line-height:1.4}.passage-card-main small{display:block;color:var(--muted);margin-top:5px}.passage-card-tools{display:flex;gap:6px}.passage-card-tools button{padding:7px 9px}.passage-card-detail{border-top:1px solid var(--line);padding:14px;background:#fcfdfa}.passage-card-detail .detail-label{margin-top:12px}.passage-selection{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:12px}.passage-selection input{margin-top:3px;accent-color:var(--accent)}.passage-selection span{min-width:0;overflow-wrap:anywhere}.passage-selection small{display:block;color:var(--muted);margin-top:2px}@media(max-width:740px){.passage-card-head{padding:12px}.passage-card-tools{flex-direction:column}.passage-editor{padding:13px}}
 #words .wordbook-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,300px);align-items:center;column-gap:16px;row-gap:12px;width:100%}
 #words .wordbook-title-group{display:flex;align-items:center;justify-content:flex-start;gap:12px;min-width:0;white-space:nowrap}
 #words .wordbook-title-group h2{margin:0;line-height:1.25;white-space:nowrap}
@@ -535,7 +535,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 174</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 175</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost refresh-app-btn" id="refreshAppBtn" type="button" aria-label="앱 새로고침" title="최신 화면으로 새로고침">↻</button><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -683,6 +683,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </section>
 
 <section id="sentenceAdd" class="hidden"><div class="panel"><h2 id="sentenceFormTitle">새 문장 등록</h2><div class="field"><label for="newSentenceEn">영어 문장 *</label><textarea id="newSentenceEn" placeholder="I was reluctant to ask for help."></textarea></div><div class="field"><div class="section-head"><label for="newSentenceKo">한국어 해석 *</label><button type="button" class="secondary" id="translateSentence">자동 번역</button></div><textarea id="newSentenceKo" placeholder="나는 도움을 요청하는 것이 내키지 않았다."></textarea></div><div class="ai-review-actions"><button type="button" class="secondary" id="explainNewSentence">✦ AI 문장 설명</button><p class="notice">문장의 구조, 문법, 동사 용법과 자연스러운 의미를 설명해요.</p></div><div id="sentenceAIExplanation" class="ai-review-result hidden"></div><div class="field"><label>기존 단어와 연결하기 (선택)</label><div id="sentenceExpressionRecommendations" class="related-picker-list"></div><input id="sentenceExpressionSearch" placeholder="기존 단어 직접 검색"><div id="sentenceExpressionResults" class="related-picker-list"></div><div id="sentenceExpressionSelected" class="muted">선택한 표현 없음</div></div><div class="field"><label>새 표현 추가</label><div class="row"><input id="newExpression" placeholder="reluctant"><input id="newExpressionMeaning" placeholder="꺼리는, 내키지 않는"></div><button type="button" class="secondary" id="addSentenceExpression">＋ 표현 추가</button></div><div id="newSentenceExpressionTags"></div><button id="saveStandaloneSentence">문장 저장하기</button><div class="bulk-sentence-import"><h3>본문에서 문장 나누어 등록</h3><p class="notice">본문을 붙여넣고 문장별로 나눈 뒤, 등록할 문장을 선택하세요. 문장과 해석은 저장 전에 수정할 수 있어요.</p><div class="field"><label for="bulkPassageTitle">본문 제목 (선택)</label><input id="bulkPassageTitle" placeholder="본문 제목"></div><div class="field"><label for="bulkPassageSource">출처명 (선택)</label><input id="bulkPassageSource" placeholder="예: BBC News, The Guardian, TED"></div><div class="field"><label for="bulkPassageUrl">원문 URL (선택)</label><input id="bulkPassageUrl" type="url" inputmode="url" placeholder="https://"></div><div class="field"><label for="bulkPassageText">영어 본문</label><textarea id="bulkPassageText" rows="6" placeholder="영어 본문 전체를 붙여넣으세요."></textarea></div><div class="row"><button type="button" class="secondary" id="splitBulkPassage">문장별로 나누기</button><button type="button" class="ghost" id="clearBulkPassage">초기화</button></div><div id="bulkSentencePreview" class="bulk-sentence-preview hidden"></div><div class="row bulk-save-row"><button type="button" id="saveBulkSentences" disabled>선택한 문장 등록</button><span id="bulkSentenceCount" class="muted">0개 선택</span></div></div></div></section>
+<section id="passageAdd" class="hidden"><div class="panel" id="passageAddHost"></div></section>
 <section id="words" class="hidden">
   <div class="panel"><div class="section-head wordbook-head"><div class="wordbook-title-group"><h2>내 단어장</h2><select id="wordbookViewSelect" aria-label="단어장 보기"><option value="all">전체</option><option value="words">단어</option><option value="sentences">문장</option><option value="passages">본문</option><option value="writing">작문기록</option></select></div><input class="search" id="search" placeholder="단어·뜻 검색..."></div>
     <p class="notice" id="wordbookNotice">단어를 누르면 뜻과 예문이 펼쳐져요.</p>
@@ -693,7 +694,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
       <div class="field"><label for="passageTitle">본문 제목 *</label><input id="passageTitle" placeholder="Falling Wine Sales Reflect a Societal Shift"></div>
       <div class="field"><label for="passageSource">출처명 (선택)</label><input id="passageSource" placeholder="예: BBC News, The Guardian, TED"></div>
       <div class="field"><label for="passageUrl">원문 URL (선택)</label><input id="passageUrl" type="url" inputmode="url" placeholder="https://"></div>
-      <div class="field"><label for="passageText">영어 본문 *</label><textarea id="passageText" rows="7" placeholder="본문 전체를 입력하세요. 문단과 문장 순서를 유지할 수 있어요."></textarea></div>
+      <div class="field"><label for="passageText">영어 본문 *</label><textarea id="passageText" rows="7" placeholder="본문 전체를 입력하세요. 문단과 문장 순서를 유지할 수 있어요."></textarea></div><div class="field passage-split-editor"><button type="button" class="secondary" id="splitPassageInEditor">문장별로 나누기</button><p class="notice">문장 경계를 확인하고 기존 문장은 연결, 새 문장만 추가할 수 있어요.</p><div id="passageExtractPreview" class="passage-extract-panel hidden"></div><div class="passage-extract-footer hidden" id="passageExtractActions"><span id="passageExtractCount">0개 선택</span><button type="button" id="savePassageExtractFromEditor">선택한 문장 연결 및 추가</button></div></div>
       <div class="field"><label for="passageTranslation">한국어 해석 (선택)</label><textarea id="passageTranslation" rows="5" placeholder="본문 전체 해석을 입력하세요."></textarea></div>
       <div class="field"><label>기존 단어 연결</label><input id="passageWordSearch" placeholder="단어 검색"><div id="passageWordChoices" class="related-picker-list"></div></div>
       <div class="field"><label>기존 문장 연결</label><input id="passageSentenceSearch" placeholder="문장 또는 해석 검색"><div id="passageSentenceChoices" class="related-picker-list"></div></div>
@@ -805,6 +806,7 @@ let selectedRelatedIds=[],selectedSentenceIds=[],toastTimer=null,deletingWord=fa
 let expandedId=null,editingId=null,wordQueue=[],currentWord=null,sentenceQueue=[],currentSentence=null;
 let quizState={queue:[],current:null,index:0,score:0,wrong:[],answered:false,mode:'meaningToWord',onlyWrong:false};
 const $=id=>document.getElementById(id);
+const passageEditorNode=document.getElementById('passageEditor');if(passageEditorNode&&document.getElementById('passageAddHost'))document.getElementById('passageAddHost').appendChild(passageEditorNode);
 function renderCategoryOptions(selected=$('category')?.value||''){const el=$('category');if(!el)return;el.innerHTML='<option value="">선택 안 함</option>'+wordCategories.map(name=>'<option value="'+esc(name)+'">'+esc(name)+'</option>').join('');el.value=wordCategories.includes(selected)?selected:'';}
 function renderCategoryManager(){const el=$('categoryManagerList');if(!el)return;el.innerHTML=wordCategories.map((name,index)=>'<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#fff"><span style="font-size:13px;flex:1">'+esc(name)+'</span><div style="display:flex;gap:4px;flex:0 0 auto"><button type="button" class="secondary" data-move-category="'+index+'" data-delta="-1" aria-label="'+esc(name)+' 위로 이동" '+(index===0?'disabled':'')+' style="padding:5px 9px;min-height:32px;font-size:13px">↑</button><button type="button" class="secondary" data-move-category="'+index+'" data-delta="1" aria-label="'+esc(name)+' 아래로 이동" '+(index===wordCategories.length-1?'disabled':'')+' style="padding:5px 9px;min-height:32px;font-size:13px">↓</button><button type="button" class="danger" data-delete-category="'+esc(name)+'" style="padding:5px 9px;min-height:32px;font-size:11px">삭제</button></div></div>').join('')||'<span class="muted">등록된 카테고리가 없어요.</span>';}
 function moveWordCategory(index,delta){const next=index+delta;if(next<0||next>=wordCategories.length)return;const selected=$('category')?.value||'';[wordCategories[index],wordCategories[next]]=[wordCategories[next],wordCategories[index]];renderCategoryOptions(selected);renderCategoryManager();save();}
@@ -1343,6 +1345,7 @@ function renderPassageChoices(){
 }
 function openPassageEditor(id=null){
  const p=id?passages.find(x=>String(x.id)===String(id)):null;
+ learningType='passage';localStorage.setItem('wordloop-learning-type','passage');activateTab('addGroup');
  editingPassageId=p?.id||null;passageWordIds=Array.isArray(p?.wordIds)?p.wordIds.map(String):[];passageSentenceIds=Array.isArray(p?.sentenceIds)?p.sentenceIds.map(String):[];
  $('passageEditorTitle').textContent=p?'본문 수정':'새 본문 등록';$('passageTitle').value=p?.title||'';$('passageSource').value=p?.sourceName||'';$('passageUrl').value=p?.sourceUrl||'';$('passageText').value=p?.text||'';$('passageTranslation').value=p?.translation||'';
  $('deletePassageFromEditor').classList.toggle('hidden',!p);$('savePassage').textContent=p?'수정 내용 저장':'본문 저장하기';
@@ -1371,13 +1374,14 @@ function renderPassageExtract(){
  host.classList.toggle('hidden',!passageExtractItems.length);
  const count=passageExtractItems.filter(x=>x.checked&&!x.duplicateInBatch).length;
  $('passageExtractCount').textContent=count+'개 선택';
+ if($('passageExtractActions'))$('passageExtractActions').classList.toggle('hidden',!passageExtractItems.length);
 }
 function beginPassageExtraction(id){
  const p=passages.find(x=>String(x.id)===String(id));if(!p)return;
  passageExtractTargetId=String(id);
- passageExtractItems=splitPassageIntoSentences(p.text).map(example=>({example,translation:'',checked:true}));
- renderPassageList();
+ passageExtractItems=splitPassageIntoSentences($('passageText').value||p.text).map(example=>({example,translation:'',checked:true}));
  renderPassageExtract();
+ $('passageExtractActions').classList.remove('hidden');
 }
 function savePassageExtraction(){
  const p=passages.find(x=>String(x.id)===String(passageExtractTargetId));if(!p)return;
@@ -1393,7 +1397,7 @@ function savePassageExtraction(){
   ids.add(String(id));added++;
  });
  p.sentenceIds=[...ids];p.updatedAt=now;
- save();passageExtractItems=[];passageExtractTargetId=null;renderPassageList();
+ save();passageExtractItems=[];passageExtractTargetId=null;$('passageExtractActions').classList.add('hidden');renderPassageList();
  showToast('새 문장 '+added+'개 추가 · 기존 문장 '+linked+'개 연결');
 }
 function renderPassageList(){
@@ -1404,11 +1408,13 @@ function renderPassageList(){
  $('wordList').innerHTML='<div class="passage-list">'+list.map(p=>{
   const open=String(expandedPassageId)===String(p.id),wordLinks=(p.wordIds||[]).map(id=>words.find(w=>String(w.id)===String(id))).filter(Boolean),sentenceLinks=(p.sentenceIds||[]).map(id=>sentenceWords().find(x=>String(x.id)===String(id))).filter(Boolean);
   const preview=String(p.text||'').replace(/\s+/g,' ').trim();
-  return '<article class="passage-card"><div class="passage-card-head"><button type="button" class="passage-card-main" data-passage-open="'+esc(p.id)+'" aria-expanded="'+open+'"><strong>'+esc(p.title)+'</strong>'+(p.sourceName?'<small class="passage-card-source">'+esc(p.sourceName)+'</small>':'')+'<small class="passage-card-count">문장 '+sentenceLinks.length+'개 연결</small><small class="passage-card-preview">'+esc(preview.slice(0,105))+(preview.length>105?'…':'')+'</small></button><div class="passage-card-tools"><button type="button" class="secondary" data-passage-edit="'+esc(p.id)+'">수정</button><button type="button" class="danger" data-passage-delete="'+esc(p.id)+'">삭제</button></div></div>'+(open?'<div class="passage-card-detail">'+(p.sourceName||p.sourceUrl?'<div class="passage-meta-row">'+(p.sourceName?'<span>'+esc(p.sourceName)+'</span>':'')+(p.sourceUrl?'<a class="passage-source-link" href="'+esc(p.sourceUrl)+'" target="_blank" rel="noopener noreferrer" aria-label="원문 열기" title="원문 열기">📎 원문</a>':'')+'</div>':'')+'<div class="passage-action-row"><button type="button" class="secondary" data-passage-extract="'+esc(p.id)+'">문장별로 나누기</button></div>'+(passageExtractTargetId===String(p.id)&&passageExtractItems.length?'<div class="passage-extract-panel"><div class="passage-extract-heading">문장 추출 결과 <small>기존 문장은 연결하고 새 문장만 추가합니다.</small></div><div id="passageExtractPreview"></div><div class="passage-extract-footer"><span id="passageExtractCount">0개 선택</span><button type="button" data-passage-extract-save="'+esc(p.id)+'">선택한 문장 연결 및 추가</button></div></div>':'')+'<details class="passage-full-text"><summary>영어 본문 전체 보기</summary><div class="passage-detail-text">'+esc(p.text)+'</div></details>'+(p.translation?'<details class="passage-full-text"><summary>한국어 해석 보기</summary><div class="passage-detail-text">'+esc(p.translation)+'</div></details>':'')+'<section class="passage-content-section"><div class="detail-label">연결된 문장 · '+sentenceLinks.length+'</div>'+(sentenceLinks.length?sentenceLinks.map(v=>'<div class="passage-linked-item"><strong>'+esc(v.example)+'</strong><small>'+esc(v.translation)+'</small></div>').join(''):'<span class="muted">아직 연결된 문장이 없어요.</span>')+'</section><section class="passage-content-section"><div class="detail-label">연결된 단어 · '+wordLinks.length+'</div>'+(wordLinks.length?wordLinks.map(w=>'<div class="passage-linked-item"><strong>'+esc(w.word)+'</strong><small>'+esc(w.meaning)+'</small></div>').join(''):'<span class="muted">연결된 단어가 없어요.</span>')+'</section></div>':'')+'</article>';
+  return '<article class="passage-card"><div class="passage-card-head"><button type="button" class="passage-card-main" data-passage-open="'+esc(p.id)+'" aria-expanded="'+open+'"><strong>'+esc(p.title)+'</strong>'+(p.sourceName?'<small class="passage-card-source">'+esc(p.sourceName)+'</small>':'')+'<small class="passage-card-count">문장 '+sentenceLinks.length+'개 연결</small><small class="passage-card-preview">'+esc(preview.slice(0,105))+(preview.length>105?'…':'')+'</small></button><div class="passage-card-tools"><button type="button" class="secondary" data-passage-edit="'+esc(p.id)+'">수정</button><button type="button" class="danger" data-passage-delete="'+esc(p.id)+'">삭제</button></div></div>'+(open?'<div class="passage-card-detail">'+(p.sourceName||p.sourceUrl?'<div class="passage-meta-row">'+(p.sourceName?'<span>'+esc(p.sourceName)+'</span>':'')+(p.sourceUrl?'<a class="passage-source-link" href="'+esc(p.sourceUrl)+'" target="_blank" rel="noopener noreferrer" aria-label="원문 열기" title="원문 열기">📎 원문</a>':'')+'</div>':'')+'<details class="passage-full-text"><summary>영어 본문 전체 보기</summary><div class="passage-detail-text">'+esc(p.text)+'</div></details>'+(p.translation?'<details class="passage-full-text"><summary>한국어 해석 보기</summary><div class="passage-detail-text">'+esc(p.translation)+'</div></details>':'')+'<section class="passage-content-section"><div class="detail-label">연결된 문장 · '+sentenceLinks.length+'</div>'+(sentenceLinks.length?sentenceLinks.map(v=>'<div class="passage-linked-item"><strong>'+esc(v.example)+'</strong><small>'+esc(v.translation)+'</small></div>').join(''):'<span class="muted">아직 연결된 문장이 없어요.</span>')+'</section><section class="passage-content-section"><div class="detail-label">연결된 단어 · '+wordLinks.length+'</div>'+(wordLinks.length?wordLinks.map(w=>'<div class="passage-linked-item"><strong>'+esc(w.word)+'</strong><small>'+esc(w.meaning)+'</small></div>').join(''):'<span class="muted">연결된 단어가 없어요.</span>')+'</section></div>':'')+'</article>';
  }).join('')+'</div>';
- if(passageExtractTargetId&&passageExtractItems.length){const p=list.find(x=>String(x.id)===String(passageExtractTargetId));if(p){const host=$('passageExtractPreview');if(host)renderPassageExtract();}}
+
 }
 $('addPassageBtn').onclick=()=>openPassageEditor();
+$('splitPassageInEditor').onclick=()=>{if(!editingPassageId){showToast('본문을 먼저 저장한 뒤 문장을 나눠 주세요.');return;}beginPassageExtraction(editingPassageId);};
+$('savePassageExtractFromEditor').onclick=savePassageExtraction;
 $('cancelPassageEdit').onclick=closePassageEditor;
 $('passageWordSearch').oninput=renderPassageChoices;$('passageSentenceSearch').oninput=renderPassageChoices;
 $('passageWordChoices').addEventListener('change',e=>{const c=e.target.closest('[data-passage-word]');if(!c)return;const id=String(c.dataset.passageWord);passageWordIds=c.checked?[...new Set([...passageWordIds,id])]:passageWordIds.filter(x=>x!==id);});
@@ -1420,17 +1426,14 @@ $('savePassage').onclick=()=>{
  const now=Date.now();
  if(editingPassageId){const p=passages.find(x=>String(x.id)===String(editingPassageId));if(!p){showToast('수정할 본문을 찾지 못했어요.');return;}Object.assign(p,{title,sourceName,sourceUrl,text:textValue,translation,wordIds:[...passageWordIds],sentenceIds:[...passageSentenceIds],updatedAt:now});}
  else passages.unshift({id:uid(),title,sourceName,sourceUrl,text:textValue,translation,wordIds:[...passageWordIds],sentenceIds:[...passageSentenceIds],created:now,updatedAt:now});
- expandedPassageId=editingPassageId||passages[0]?.id;closePassageEditor();save();showToast('본문이 저장되었어요.');
+ expandedPassageId=editingPassageId||passages[0]?.id;closePassageEditor();save();activateTab('words');wordbookView='passages';localStorage.setItem('wordloop-wordbook-view','passages');$('wordbookViewSelect').value='passages';renderList();showToast('본문이 저장되었어요.');
 };
 $('deletePassageFromEditor').onclick=()=>{
  if(!editingPassageId||!confirm('이 본문을 삭제할까요? 연결된 단어와 문장은 삭제되지 않아요.'))return;
- deletedPassageIds.add(String(editingPassageId));passages=passages.filter(p=>String(p.id)!==String(editingPassageId));expandedPassageId=null;closePassageEditor();save();showToast('본문을 삭제했어요.');
+ deletedPassageIds.add(String(editingPassageId));passages=passages.filter(p=>String(p.id)!==String(editingPassageId));expandedPassageId=null;closePassageEditor();save();activateTab('words');wordbookView='passages';localStorage.setItem('wordloop-wordbook-view','passages');$('wordbookViewSelect').value='passages';renderList();showToast('본문을 삭제했어요.');
 };
 $('wordList').addEventListener('click',e=>{
  const open=e.target.closest('[data-passage-open]'),edit=e.target.closest('[data-passage-edit]'),del=e.target.closest('[data-passage-delete]');
- const extract=e.target.closest('[data-passage-extract]'),extractSave=e.target.closest('[data-passage-extract-save]');
- if(extract){beginPassageExtraction(extract.dataset.passageExtract);return;}
- if(extractSave){savePassageExtraction();return;}
  if(open){expandedPassageId=String(expandedPassageId)===String(open.dataset.passageOpen)?null:open.dataset.passageOpen;if(expandedPassageId)localStorage.setItem('wordloop-expanded-passage-id',String(expandedPassageId));else localStorage.removeItem('wordloop-expanded-passage-id');renderList();return;}
  if(edit){openPassageEditor(edit.dataset.passageEdit);return;}
  if(del){const id=String(del.dataset.passageDelete);if(!confirm('이 본문을 삭제할까요? 연결된 단어와 문장은 삭제되지 않아요.'))return;deletedPassageIds.add(id);passages=passages.filter(p=>String(p.id)!==id);if(String(expandedPassageId)===id)expandedPassageId=null;save();showToast('본문을 삭제했어요.');}
@@ -1447,7 +1450,7 @@ function setupWordloopHighlighting(){const root=document.getElementById('wordLis
 function applyAllWordloopHighlights(){document.querySelectorAll('.saved-ai-review-wrap').forEach(root=>{const word=words.find(w=>String(w.id)===String(root.dataset.highlightWordId));applyWordHighlights(root,word?.aiHighlights||[]);});setupWordloopHighlighting();}
 function renderWordList(){const q=($('search')?.value||'').trim().toLowerCase();const list=words.filter(w=>(`${w.word} ${w.meaning} ${w.category||''}`).toLowerCase().includes(q));if(!list.length){$('wordList').innerHTML='<div class="empty">'+(words.length?'검색 결과가 없어요.':'아직 등록된 단어가 없어요.')+'</div>';return;}
 $('wordList').innerHTML=list.map(w=>`<article class="word-item"><div class="word-head"><button class="word-open" data-open="${esc(w.id)}" aria-expanded="${expandedId===w.id}"><strong>${esc(w.word)} <span class="muted">${expandedId===w.id?'▴':'▾'}</span></strong><small>${w.partOfSpeech?'<span class="pos-inline">'+esc(partOfSpeechAbbr(w.partOfSpeech,w.verbType))+'</span> ':''}${esc(w.englishMeaning||w.meaning)}</small><div class="word-meta"><span>${formatDate(w.created)} 등록</span> · <span class="word-status ${wordStatus(w)}">${statusLabel(w)}</span><div>${nextReviewText(w)}</div>${w.category?'<span class="word-category">'+esc(w.category)+'</span>':''}</div></button><div class="word-tools"><button class="secondary" data-edit="${esc(w.id)}">수정</button><button class="danger" data-delete="${esc(w.id)}">삭제</button></div></div>${expandedId===w.id?`<div class="word-detail"><div class="detail-meta"><span>등록일: ${formatDate(w.created)}</span><span>연속 정답: ${Number(w.masteryStreak||0)}/5회</span><span class="word-status ${wordStatus(w)}">${statusLabel(w)}</span><span>${nextReviewText(w)}</span>${wordAIReviewIsStale(w)?'<span class="ai-stale">AI 재검수 필요</span>':''}</div>${w.englishMeaning?`<div class="detail-label">영문 뜻</div><div class="detail-text">${esc(w.englishMeaning)}</div>`:''}<div class="detail-label">뜻</div><div class="detail-text">${esc(w.meaning)}</div>${relatedWordsFor(w).length?'<div class="detail-label">연결된 단어</div><div>'+relatedWordsFor(w).map(r=>'<button type="button" class="related-chip related-word-link" data-open="'+esc(r.id)+'" aria-label="'+esc(r.word)+' 열기">'+esc(r.word)+'</button>').join('')+'</div>':''}<div class="detail-label">예문</div>${(()=>{const own=(Array.isArray(w.examples)&&w.examples.length?w.examples:[{example:w.example,translation:w.translation}]).filter(x=>x.example||x.translation);const matches=e=>String(e.wordId||'')===String(w.id)||String(e.expression||'').trim().toLowerCase()===String(w.word||'').trim().toLowerCase();const linkedStandalone=standaloneSentences.filter(x=>(x.expressions||[]).some(matches)).map(x=>({...x,linked:true}));const linkedLegacy=legacySentenceWords().filter(x=>String(x.wordId)!==String(w.id)&&(x.expressions||[]).some(matches)).map(x=>({...x,linked:true}));const linked=[...linkedStandalone,...linkedLegacy];const all=[...own.map(x=>({...x,linked:false})),...linked];return all.map((x,i)=>'<div class="example-box"><div class="muted" style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span>예문 '+(i+1)+'</span>'+(x.linked?'<span style="font-size:10px;color:#718477;border:1px solid #d7e2d8;border-radius:10px;padding:2px 7px;white-space:nowrap">연결</span>':'')+'</div><div class="example-en">'+esc(x.example||'')+'</div><div class="example-ko">'+esc(x.translation||'')+'</div></div>').join('')||'<div class="muted">등록된 예문이 없어요.</div>';})()}${w.note?`<div class="detail-label">메모</div><div style="white-space:pre-wrap;line-height:1.35">${esc(w.note)}</div>`:''}${w.aiReview?`<div class="saved-ai-review-wrap" data-highlight-word-id="${esc(w.id)}">${savedAIReviewHTML(w.aiReview)}</div>`:'' }<div class="row" style="margin-top:12px"><button class="secondary" data-study-sentence="${esc(w.id)}" ${!((Array.isArray(w.examples)?w.examples.some(x=>x.example&&x.translation):w.example&&w.translation))?'disabled':''}>이 문장 복습하기</button><button class="secondary" data-study-word="${esc(w.id)}">이 단어 복습하기</button></div></div>`:''}</article>`).join('');applyAllWordloopHighlights();}
-let learningType=localStorage.getItem('wordloop-learning-type')==='sentence'?'sentence':'word';
+let learningType=['word','sentence','passage'].includes(localStorage.getItem('wordloop-learning-type'))?localStorage.getItem('wordloop-learning-type'):'word';
 function activateTab(name){
  const legacyMap={add:'addGroup',sentenceAdd:'addGroup',study:'reviewGroup',sentences:'reviewGroup'};
  if(legacyMap[name]){
@@ -1456,7 +1459,7 @@ function activateTab(name){
   name=legacyMap[name];
  }
  const isLearning=name==='addGroup'||name==='reviewGroup';
- const contentId=isLearning?(name==='addGroup'?(learningType==='word'?'add':'sentenceAdd'):(learningType==='word'?'study':'sentences')):name;
+ const contentId=isLearning?(name==='addGroup'?(learningType==='word'?'add':learningType==='sentence'?'sentenceAdd':'passageAdd'):(learningType==='word'?'study':'sentences')):name;
  localStorage.setItem('wordloop-active-tab',name);
  if(location.hash!=='#'+name)history.replaceState(null,'','#'+name);
  document.querySelectorAll('main>section').forEach(section=>section.classList.toggle('hidden',section.id!==contentId));
@@ -1472,17 +1475,7 @@ function activateTab(name){
 document.querySelectorAll('[data-learning-type]').forEach(button=>button.addEventListener('click',()=>{
  const type=button.dataset.learningType;
  if(type==='passage'){
-  activateTab('words');
-  wordbookView='passages';
-  localStorage.setItem('wordloop-wordbook-view','passages');
-  $('wordbookViewSelect').value='passages';
-  $('search').placeholder='본문·제목·연결 항목 검색...';
-  $('wordbookNotice').textContent='본문을 열어 원문과 연결된 단어·문장을 함께 확인하세요.';
-  renderPassageList();
   openPassageEditor();
-  $('learningSwitcher').classList.remove('hidden');
-  document.querySelectorAll('.tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.tab==='addGroup'));
-  document.querySelectorAll('[data-learning-type]').forEach(item=>item.classList.toggle('active',item.dataset.learningType==='passage'));
   return;
  }
  learningType=type;
@@ -1634,8 +1627,18 @@ $('saveStandaloneSentence').onclick=()=>{const example=$('newSentenceEn').value.
 
 let bulkSplitItems=[];
 function splitPassageIntoSentences(value){
- const paragraphs=String(value||'').replace(/\r/g,'').trim().split(/\n+/);
- return paragraphs.flatMap(p=>p.split(/(?<=[.!?])\s+(?=[A-Z0-9“"'])/).map(x=>x.trim()).filter(Boolean));
+ const paragraphs=String(value||'').replace(/\r/g,'').trim().split(/\n\s*\n+/).map(p=>p.replace(/\n+/g,' ').replace(/[ \t]+/g,' ').trim()).filter(Boolean);
+ const output=[];
+ paragraphs.forEach(paragraph=>{
+  if(typeof Intl!=='undefined'&&Intl.Segmenter){
+   const segmenter=new Intl.Segmenter('en',{granularity:'sentence'});
+   for(const part of segmenter.segment(paragraph)){const sentence=part.segment.trim();if(sentence)output.push(sentence);}
+  }else{
+   const protectedText=paragraph.replace(/\b(Mr|Mrs|Ms|Dr|Prof|St|e\.g|i\.e|vs|etc)\./gi,'$1<DOT>');
+   protectedText.split(/(?<=[.!?])["')\]]*\s+(?=[A-Z“"'(\[])/).forEach(x=>{const sentence=x.replace(/<DOT>/g,'.').trim();if(sentence)output.push(sentence);});
+  }
+ });
+ return output;
 }
 function renderBulkSentencePreview(){
  const host=$('bulkSentencePreview');if(!host)return;
