@@ -533,7 +533,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 157</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 158</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -1244,6 +1244,7 @@ function savedSentenceAIExplanationHTML(r){
  (grammar.length?'<h4>핵심 문법</h4>'+grammar.map(x=>'<div class="ai-example"><strong>'+esc(x.title||'')+'</strong><p>'+esc(x.explanation||'')+'</p></div>').join(''):'')+
  (verbs.length?'<h4>동사 용법</h4>'+verbs.map(x=>'<div class="ai-example"><strong>'+esc(x.verb||'')+'</strong> · '+esc(x.type||'')+'<p>'+esc(x.meaning||'')+'</p>'+(x.pattern?'<p class="muted">주요 구조: '+esc(x.pattern)+'</p>':'')+'</div>').join(''):'')+
  (chunks.length?'<h4>유용한 표현</h4>'+chunks.map(x=>'<div class="ai-example"><strong>'+esc(x.expression||'')+'</strong><p>'+esc(x.meaning||'')+'</p>'+(x.usage?'<p class="muted">'+esc(x.usage)+'</p>':'')+'</div>').join(''):'')+
+ sentenceConversationHTML(r)+
  (notes.length?'<h4>추가 참고</h4><ul>'+notes.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'')+'</div>';
 }
 function renderSentenceList(){const q=($('search')?.value||'').trim().toLowerCase();const list=sentenceWords().filter(x=>(x.example+' '+x.translation+' '+(x.expressions||[]).map(e=>e.expression+' '+e.meaning).join(' ')+' '+(x.word||'')).toLowerCase().includes(q));if(!list.length){$('wordList').innerHTML='<div class="empty">등록된 예문이 없어요.</div>';return;}$('wordList').innerHTML=list.map(x=>{const tags=(x.expressions||[]).length?x.expressions.map(e=>e.expression):[x.word];const open=expandedSentenceId===x.id;return '<article class="word-item"><div class="word-head"><button class="word-open" data-sentence-detail="'+esc(x.id)+'" aria-expanded="'+open+'"><strong>'+esc(x.example)+'</strong><small>'+esc(x.translation)+'</small><div class="word-meta">'+tags.filter(Boolean).map(v=>'<span class="related-chip">'+esc(v)+'</span>').join('')+'</div></button><div class="word-tools"><button class="secondary" data-sentence-edit="'+esc(x.id)+'">수정</button><button class="danger" data-sentence-delete="'+esc(x.id)+'">삭제</button></div></div>'+(open?'<div class="word-detail"><div class="detail-label">영어 문장</div><div class="detail-text">'+esc(x.example)+'</div><div class="detail-label">해석</div><div class="detail-text">'+esc(x.translation)+'</div>'+(x.aiExplanation?'<div class="detail-label">AI 문장 설명</div>'+savedSentenceAIExplanationHTML(x.aiExplanation):'')+'<div class="detail-label">연결 표현</div><div>'+(tags.filter(Boolean).map(v=>'<span class="related-chip">'+esc(v)+'</span>').join('')||'없음')+'</div>'+(x.sourceNote?'<div class="detail-label">출처 및 메모</div><div class="detail-text">'+esc(x.sourceNote)+'</div>':'')+'</div>':'')+'</article>';}).join('');}
@@ -1370,6 +1371,19 @@ $('translateSentence').onclick=async()=>{const v=$('newSentenceEn').value.trim()
 
 function sentenceExplanationFingerprint(sentence,translation){return JSON.stringify({sentence:String(sentence||'').trim(),translation:String(translation||'').trim()});}
 let latestSentenceAIExplanation=null;
+function sentenceConversationHTML(result){
+ const uses=Array.isArray(result.conversationUses)?result.conversationUses:[];
+ if(!uses.length)return '';
+ return '<h4>실제 대화에서 쓰는 상황</h4>'+uses.map((x,i)=>{
+  const replies=Array.isArray(x.possibleReplies)?x.possibleReplies:[];
+  return '<div class="ai-example"><strong>'+(i+1)+'. '+esc(x.situation||'')+'</strong>'+
+   (x.context?'<p>'+esc(x.context)+'</p>':'')+
+   (x.tone?'<p class="muted">말투·뉘앙스: '+esc(x.tone)+'</p>':'')+
+   (replies.length?'<div class="detail-label">상대방이 할 수 있는 답변</div>'+replies.map(r=>'<div class="example-box"><div class="example-en">'+esc(r.reply||'')+'</div><div class="example-ko">'+esc(r.meaning||'')+'</div>'+(r.tone?'<p class="muted">'+esc(r.tone)+'</p>':'')+'</div>').join(''):'')+
+   (x.miniDialogue?'<div class="detail-label">짧은 대화 예시</div><p>'+esc(x.miniDialogue)+'</p>':'')+
+  '</div>';
+ }).join('');
+}
 function renderSentenceAIExplanation(result){
  const grammar=Array.isArray(result.grammarPoints)?result.grammarPoints:[],verbs=Array.isArray(result.verbUsage)?result.verbUsage:[],chunks=Array.isArray(result.chunks)?result.chunks:[],notes=Array.isArray(result.notes)?result.notes:[];
  $('sentenceAIExplanation').innerHTML='<h3>✦ AI 문장 설명</h3>'+
@@ -1378,6 +1392,7 @@ function renderSentenceAIExplanation(result){
  (grammar.length?'<h4>핵심 문법</h4>'+grammar.map(x=>'<div class="ai-example"><strong>'+esc(x.title||'')+'</strong><p>'+esc(x.explanation||'')+'</p></div>').join(''):'')+
  (verbs.length?'<h4>동사 용법</h4>'+verbs.map(x=>'<div class="ai-example"><strong>'+esc(x.verb||'')+'</strong> · '+esc(x.type||'')+'<p>'+esc(x.meaning||'')+'</p>'+(x.pattern?'<p class="muted">주요 구조: '+esc(x.pattern)+'</p>':'')+'</div>').join(''):'')+
  (chunks.length?'<h4>유용한 표현</h4>'+chunks.map(x=>'<div class="ai-example"><strong>'+esc(x.expression||'')+'</strong><p>'+esc(x.meaning||'')+'</p>'+(x.usage?'<p class="muted">'+esc(x.usage)+'</p>':'')+'</div>').join(''):'')+
+ sentenceConversationHTML(result)+
  (notes.length?'<h4>추가 참고</h4><ul>'+notes.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'');
  $('sentenceAIExplanation').classList.remove('hidden');
 }
