@@ -533,7 +533,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 164</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 165</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -1605,10 +1605,10 @@ document.querySelectorAll('[data-sentence-grade]').forEach(b=>b.onclick=()=>{
  if(!currentSentence)return;
  const grade=b.dataset.sentenceGrade;
  if(!sentenceAnswerCorrect&&!['again','hard'].includes(grade))return;
- const now=Date.now(),days={again:0,hard:1,good:3,easy:7}[grade];
+ const now=Date.now(),wasDue=!currentSentence.sentenceNext||Number(currentSentence.sentenceNext)<=now,days={again:0,hard:1,good:3,easy:7}[grade];
  currentSentence.sentenceReps=(currentSentence.sentenceReps||0)+1;
  currentSentence.sentenceInterval=days;currentSentence.sentenceNext=now+days*86400000;
- recordEvent(currentSentence,'sentenceLog',{at:now,grade,correct:sentenceAnswerCorrect,extra:extraSentenceStudyMode,wasDue:!currentSentence.sentenceNext||currentSentence.sentenceNext<=now});
+ recordEvent(currentSentence,'sentenceLog',{at:now,grade,correct:sentenceAnswerCorrect,extra:extraSentenceStudyMode,wasDue});
  if(currentSentence.standalone){const item=standaloneSentences.find(x=>x.id===currentSentence.id);if(item){item.sentenceReps=currentSentence.sentenceReps;item.sentenceInterval=days;item.sentenceNext=currentSentence.sentenceNext;item.sentenceLog=currentSentence.sentenceLog;}}
  else{const parent=words.find(w=>w.id===currentSentence.wordId);if(parent){const entries=Array.isArray(parent.examples)?parent.examples:[];const entry=entries.find(x=>currentSentence.id.endsWith('::'+(x.id||'')));if(entry){entry.sentenceReps=currentSentence.sentenceReps;entry.sentenceInterval=days;entry.sentenceNext=currentSentence.sentenceNext;entry.sentenceLog=currentSentence.sentenceLog;}else{parent.sentenceReps=currentSentence.sentenceReps;parent.sentenceInterval=days;parent.sentenceNext=currentSentence.sentenceNext;parent.sentenceLog=currentSentence.sentenceLog;}}}
  if(grade==='again'&&!extraSentenceStudyMode){
@@ -1639,31 +1639,38 @@ function wordQuestionPool(m){
  return words.filter(w=>w.word&&w.meaning&&(monthKey(w.created)===m||(monthKey(w.created)<m&&wordStatus(w)!=='mastered')))
  .map(w=>({kind:'word',sourceId:w.id,wordId:w.id,word:w.word,meaning:w.meaning}));
 }
+function uniqueMonthlyQuestions(pool){
+ const unique=new Map();
+ const norm=v=>String(v||'').toLowerCase().replace(/[\\p{P}\\p{S}]/gu,' ').replace(/\\s+/g,' ').trim();
+ pool.forEach(q=>{
+  const key=q.kind==='word'?'word:'+norm(q.word):'sentence:'+norm(q.prompt)+'|'+norm(q.answer);
+  if(!unique.has(key))unique.set(key,q);
+ });
+ return [...unique.values()];
+}
 function makeThirty(pool,sessionNo){
- if(!pool.length)return [];
- const primary=shuffle(pool);
- const out=[];
- while(out.length<30)out.push({...primary[out.length%primary.length]});
- return shuffle(out).map((q,i)=>({...q,qid:sessionNo+'-'+i+'-'+uid()}));
+ return shuffle(uniqueMonthlyQuestions(pool)).slice(0,30).map((q,i)=>({...q,qid:sessionNo+'-'+i+'-'+uid()}));
 }
 function createMonthlySession(m,id){
  const pool=id===4?wordQuestionPool(m):sentenceQuestionPool(m);
  const questions=makeThirty(pool,id);
  if(!questions.length)return null;
- return {id,month:m,questions,answers:Array(30).fill(null),drafts:Array(30).fill(null),index:0,score:0,completed:false,createdAt:Date.now()};
+ return {id,month:m,questions,answers:Array(questions.length).fill(null),drafts:Array(questions.length).fill(null),index:0,score:0,completed:false,createdAt:Date.now()};
 }
 function renderMonthlySessions(){
  const m=$('quizMonth').value||monthKey(new Date()),current=monthKey(new Date()),available=m<current;
  const r=monthlyTestLog.find(x=>x.month===m)||{sessions:[]};
- const sentenceAvailable=sentenceQuestionPool(m).length>0,wordAvailable=wordQuestionPool(m).length>0;
+ const sentencePool=sentenceQuestionPool(m),wordPool=wordQuestionPool(m);
+ const sentenceAvailable=uniqueMonthlyQuestions(sentencePool).length>0,wordAvailable=uniqueMonthlyQuestions(wordPool).length>0;
  $('quizSessions').innerHTML=sessionTitles.map((title,i)=>{
   const id=i+1,ss=r.sessions.find(x=>x.id===id),done=!!ss?.completed,started=!!ss&&!done;
   const poolAvailable=id===4?wordAvailable:sentenceAvailable;
+  const total=ss?.questions?.length||(id===4?uniqueMonthlyQuestions(wordPool).length:uniqueMonthlyQuestions(sentencePool).length);
   const count=ss?.answers?.filter(x=>x!==null&&x!==undefined).length||0;
   const score=ss?.score;
   const disabled=done||!available||!poolAvailable;
   const buttonLabel=done?'완료됨':!available?'월 종료 후 이용 가능':!poolAvailable?'출제할 항목 없음':started?'이어서 풀기':'시작하기';
-  return '<div class="monthly-session-card"><h3>'+title+'</h3><p>'+(id===4?'단어를 활용해 새 영어 문장을 만들고 한국어 의도를 적어요.':'학습한 예문과 과거 미숙달 문장을 영어로 떠올려요.')+'</p><div class="monthly-session-meta"><span>'+(done?'완료':started?'진행 중':'시작 전')+'</span><span>'+(done?(score+'/30'):(count+'/30'))+'</span></div><button type="button" data-monthly-session="'+id+'" '+(disabled?'disabled':'')+'>'+buttonLabel+'</button></div>';
+  return '<div class="monthly-session-card"><h3>'+title+'</h3><p>'+(id===4?'단어를 활용해 새 영어 문장을 만들고 한국어 의도를 적어요.':'학습한 예문과 과거 미숙달 문장을 영어로 떠올려요.')+'</p><div class="monthly-session-meta"><span>'+(done?'완료':started?'진행 중':'시작 전')+'</span><span>'+(done?(score+'/'+total):(count+'/'+total))+'</span></div><p class="muted">'+total+'문항 · 중복 없이 출제</p><button type="button" data-monthly-session="'+id+'" '+(disabled?'disabled':'')+'>'+buttonLabel+'</button></div>';
  }).join('');
 }
 function startMonthlySession(id){
@@ -1686,8 +1693,9 @@ function startMonthlySession(id){
 function showMonthlyQuestion(){
  const ss=activeMonthlySession;if(!ss)return;
  const i=ss.index,q=ss.questions[i],answer=ss.answers[i];
- $('quizCount').textContent='문제 '+(i+1)+' / 30 · 정답 '+ss.score;
- $('quizProgress').style.width=(i/30*100)+'%';
+ const total=ss.questions.length;
+ $('quizCount').textContent='문제 '+(i+1)+' / '+total+' · 정답 '+ss.score;
+ $('quizProgress').style.width=(i/total*100)+'%';
  $('quizPrompt').textContent=ss.id===4?q.word+' · '+q.meaning:q.prompt;
  $('quizAnswer').value=ss.drafts[i]?.sentence||answer?.given||'';
  $('quizIntent').value=ss.drafts[i]?.intendedMeaning||answer?.intendedMeaning||'';
@@ -1695,8 +1703,8 @@ function showMonthlyQuestion(){
  $('submitQuizAnswer').disabled=!!answer||ss.id===4;
  $('quizFeedback').classList.add('hidden');
  $('nextQuiz').classList.toggle('hidden',ss.id!==4&&!answer);
- $('nextQuiz').textContent=ss.id===4?(i===29?'마지막 문제':'다음 문제'):(i===29?'세션 결과':'다음 문제');
- $('completeQuizSession').classList.toggle('hidden',ss.id!==4||ss.drafts.filter(d=>d?.sentence?.trim()&&d?.intendedMeaning?.trim()).length!==30);
+ $('nextQuiz').textContent=ss.id===4?(i===total-1?'마지막 문제':'다음 문제'):(i===total-1?'세션 결과':'다음 문제');
+ $('completeQuizSession').classList.toggle('hidden',ss.id!==4||ss.drafts.filter(d=>d?.sentence?.trim()&&d?.intendedMeaning?.trim()).length!==total);
  if(ss.id===4){$('quizAnswer').disabled=false;$('submitQuizAnswer').disabled=true;}
  $('quizHint').textContent='답변은 자동 저장돼요. 저장하고 나가기를 눌러도 진행 상황은 유지됩니다.';
 }
@@ -1722,25 +1730,27 @@ function submitNormalMonthlyAnswer(){
  $('quizAnswer').disabled=true;$('submitQuizAnswer').disabled=true;
  $('quizFeedback').classList.remove('hidden');$('quizFeedback').classList.toggle('wrong',!ok);
  $('quizFeedback').innerHTML=ok?'<strong>정답이에요!</strong> · Easy 1회 반영':'<strong>정답:</strong> '+esc(q.answer);
- $('quizProgress').style.width=((i+1)/30*100)+'%';$('quizCount').textContent='문제 '+(i+1)+' / 30 · 정답 '+ss.score;
- $('nextQuiz').classList.remove('hidden');$('nextQuiz').textContent=i===29?'세션 결과':'다음 문제';
+ const total=ss.questions.length;
+ $('quizProgress').style.width=((i+1)/total*100)+'%';$('quizCount').textContent='문제 '+(i+1)+' / '+total+' · 정답 '+ss.score;
+ $('nextQuiz').classList.remove('hidden');$('nextQuiz').textContent=i===total-1?'세션 결과':'다음 문제';
 }
 async function gradeMonthlyWriting(){
  const ss=activeMonthlySession;if(!ss||ss.id!==4)return;
+ const total=ss.questions.length;
  ss.answers=ss.questions.map((q,i)=>{const d=ss.drafts[i]||{};return d.sentence?.trim()&&d.intendedMeaning?.trim()?{given:d.sentence.trim(),intendedMeaning:d.intendedMeaning.trim(),at:Date.now()}:null;});
- if(ss.answers.some(x=>!x)){showToast('30문항 모두 영어 문장과 한국어 의도를 입력해 주세요.');return;}
+ if(ss.answers.some(x=>!x)){showToast(total+'문항 모두 영어 문장과 한국어 의도를 입력해 주세요.');return;}
  persistMonthlySession();
  const btn=$('completeQuizSession');btn.disabled=true;btn.textContent='AI 채점 중…';
  try{
   const submissions=ss.questions.map((q,i)=>({word:q.word,meaning:q.meaning,sentence:ss.answers[i].given,intendedMeaning:ss.answers[i].intendedMeaning}));
   const {data,error}=await supabaseClient.functions.invoke('word-check',{body:{action:'grade-monthly-sentences',submissions}});
   if(error)throw error;if(data?.error)throw new Error(data.error);
-  const results=data?.result?.results;if(!Array.isArray(results)||results.length!==30)throw new Error('채점 결과가 올바르지 않아요.');
+  const results=data?.result?.results;if(!Array.isArray(results)||results.length!==total)throw new Error('채점 결과가 올바르지 않아요.');
   ss.aiResults=results;ss.score=results.filter(x=>x.status==='correct').length;ss.completed=true;ss.completedAt=Date.now();
   results.forEach((r,i)=>{const q=ss.questions[i],ok=r.status==='correct';updateTestEasy(q,ok);});
   persistMonthlySession();showMonthlyResult();
  }catch(e){showToast(e?.message||'AI 채점에 실패했어요. 다시 시도해 주세요.');}
- finally{btn.disabled=false;btn.textContent='30문제 제출하고 AI 채점';}
+ finally{btn.disabled=false;btn.textContent=ss.questions.length+'문제 제출하고 AI 채점';}
 }
 function completeNormalMonthlySession(){
  const ss=activeMonthlySession;if(!ss||ss.id===4||ss.answers.some(x=>!x))return;
@@ -1750,10 +1760,10 @@ function showMonthlyResult(){
  const ss=activeMonthlySession;if(!ss)return;
  $('quizTypeLabel').textContent='세션 완료 · '+sessionTitles[ss.id-1];
  $('quizCount').textContent='테스트 완료';$('quizProgress').style.width='100%';
- $('quizPrompt').textContent=ss.score+' / 30개 정답';
+ $('quizPrompt').textContent=ss.score+' / '+ss.questions.length+'개 정답';
  $('quizAnswer').classList.add('hidden');$('quizIntentWrap').classList.add('hidden');$('submitQuizAnswer').classList.add('hidden');
  $('quizFeedback').classList.remove('hidden');$('quizFeedback').classList.remove('wrong');
- let html='정답률 <strong>'+Math.round(ss.score/30*100)+'%</strong>';
+ let html='정답률 <strong>'+Math.round(ss.score/ss.questions.length*100)+'%</strong> · '+ss.score+'/'+ss.questions.length+'개 정답';
  if(ss.id===4&&ss.aiResults)html+='<div class="monthly-ai-results">'+ss.aiResults.map((r,i)=>'<div class="ai-example"><strong>'+(i+1)+'. '+esc(ss.questions[i].word)+'</strong><p>'+esc(ss.answers[i].given)+'</p><p>'+esc(r.feedback||'')+'</p>'+(r.correctedSentence&&r.correctedSentence!==ss.answers[i].given?'<p class="ai-corrected">'+esc(r.correctedSentence)+'</p>':'')+'<p class="muted">'+esc(r.naturalTranslation||'')+'</p></div>').join('')+'</div>';
  $('quizFeedback').innerHTML=html;
  $('nextQuiz').classList.add('hidden');$('completeQuizSession').classList.add('hidden');
@@ -1773,19 +1783,20 @@ $('quizAnswerForm').addEventListener('submit',e=>{e.preventDefault();submitNorma
 $('quizAnswer').addEventListener('input',()=>{
  const ss=activeMonthlySession;if(!ss||ss.id!==4)return;
  ss.drafts[ss.index]={sentence:$('quizAnswer').value,intendedMeaning:$('quizIntent').value};
- $('completeQuizSession').classList.toggle('hidden',ss.drafts.filter(d=>d?.sentence?.trim()&&d?.intendedMeaning?.trim()).length!==30);
+ $('completeQuizSession').classList.toggle('hidden',ss.drafts.filter(d=>d?.sentence?.trim()&&d?.intendedMeaning?.trim()).length!==ss.questions.length);
  persistMonthlySession();
 });
 $('quizIntent').addEventListener('input',()=>{
  const ss=activeMonthlySession;if(!ss||ss.id!==4)return;
  ss.drafts[ss.index]={sentence:$('quizAnswer').value,intendedMeaning:$('quizIntent').value};
- $('completeQuizSession').classList.toggle('hidden',ss.drafts.filter(d=>d?.sentence?.trim()&&d?.intendedMeaning?.trim()).length!==30);
+ $('completeQuizSession').classList.toggle('hidden',ss.drafts.filter(d=>d?.sentence?.trim()&&d?.intendedMeaning?.trim()).length!==ss.questions.length);
  persistMonthlySession();
 });
 $('nextQuiz').onclick=()=>{
  const ss=activeMonthlySession;if(!ss)return;
- if(ss.id!==4&&ss.index===29){completeNormalMonthlySession();return;}
- if(ss.index===29){showToast('마지막 문항이에요. 모든 답변을 확인한 뒤 AI 채점을 눌러 주세요.');return;}
+ const last=ss.questions.length-1;
+ if(ss.id!==4&&ss.index===last){completeNormalMonthlySession();return;}
+ if(ss.index===last){showToast('마지막 문항이에요. 모든 답변을 확인한 뒤 AI 채점을 눌러 주세요.');return;}
  ss.index++;persistMonthlySession();showMonthlyQuestion();
 };
 $('completeQuizSession').onclick=gradeMonthlyWriting;
