@@ -1,3 +1,1316 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wordloop — My Vocabulary</title>
+<link rel="icon" type="image/png" sizes="180x180" href="./bear-icon.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="./bear-icon.png?v=3">
+<meta name="theme-color" content="#eaf1eb">
+<style>
+:root{--bg:#f6f5f1;--panel:#fff;--ink:#24251f;--muted:#77796f;--line:#e8e6df;--accent:#536b58;--soft:#edf2ec;--red:#a85d52;--gold:#9a8151;--blue:#58728a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 15px;background:var(--accent);color:#fff;font-weight:650}button:disabled{opacity:.4;cursor:not-allowed}button.secondary{background:#f0f0eb;color:var(--ink);border:1px solid var(--line)}button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}button.danger{background:#f7edeb;color:var(--red);border:1px solid #ead5d1}
+header{max-width:1100px;margin:auto;padding:24px 22px 10px;display:flex;align-items:center;justify-content:space-between;gap:14px}h1{font-size:23px;letter-spacing:-.7px;margin:0}h1 span{color:var(--accent)}.sub,.muted{color:var(--muted);font-size:13px}.top-actions{display:flex;gap:8px;align-items:center}.top-actions button{font-size:13px}main{max-width:1100px;margin:12px auto;padding:0 22px 48px}.learning-switcher{margin:0 0 14px;padding:0;background:transparent;border:0}.learning-switch-buttons{display:flex;gap:8px;width:100%}.learning-choice{flex:1;min-width:0;padding:12px 18px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--muted);font-weight:700;transition:background .18s,border-color .18s,color .18s}.learning-choice.active{background:#278653;border-color:#278653;color:#fff}
+.tabs{display:flex;gap:6px;overflow:auto;padding:8px 0 18px}.tab{white-space:nowrap;background:transparent;color:var(--muted);border:1px solid transparent}.tab.active{background:var(--soft);color:var(--accent);border-color:#dce6dc}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.stat,.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.stat b{display:block;font-size:26px;letter-spacing:-1px}.stat small{color:var(--muted)}.layout{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel h2{font-size:17px;margin:0 0 14px}.field{display:grid;gap:6px;margin:10px 0}.field label{font-size:12px;color:var(--muted);font-weight:650}.field input,.field textarea,.field select,.search{width:100%;border:1px solid var(--line);background:#fff;border-radius:11px;padding:11px 12px;color:var(--ink);outline:none}.field textarea{min-height:72px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus,.search:focus{border-color:var(--accent)}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.notice{font-size:12px;color:var(--muted);margin-top:10px}.hidden{display:none!important}.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--accent);font-size:11px;font-weight:650}.wordlist{display:grid;gap:9px}.word-item{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}.word-head{display:flex;align-items:center;gap:10px;padding:12px}.word-open{flex:1;text-align:left;background:transparent;color:var(--ink);padding:2px 0;border-radius:0}.word-open strong{display:block;font-size:16px}.word-open small{display:block;color:var(--muted);font-weight:400}.word-tools{display:flex;gap:6px}.word-tools button{padding:8px 10px;font-size:12px}.word-detail{padding:14px 15px 16px;border-top:1px solid var(--line);background:#fcfcfa}.detail-label{font-size:11px;color:var(--muted);font-weight:700;margin:10px 0 3px}.detail-text{white-space:pre-wrap}.example-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:6px}.example-en{font-weight:650}.example-ko{color:var(--muted);margin-top:4px}.card-panel{max-width:680px;margin:18px auto;min-height:300px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:13px}.card-big{font-size:32px;font-weight:750;letter-spacing:-.8px;white-space:pre-wrap;max-width:100%}.card-answer{border-top:1px solid var(--line);padding-top:15px;margin-top:4px;width:100%}.grade{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:16px}.grade button{min-width:76px}.grade .again{background:var(--red)}.grade .hard{background:var(--gold)}.grade .good{background:var(--accent)}.grade .easy{background:var(--blue)}.empty{text-align:center;padding:30px 15px;color:var(--muted)}.empty button{margin-top:12px}.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:520px;margin:8px auto}.quiz-options button{background:#f0f0eb;color:var(--ink);border:1px solid var(--line);text-align:left}.quiz-options button:disabled{opacity:1}.quiz-options button.chosen-correct{background:#e8f1e8;border-color:#a9c1aa;color:#35533b}.quiz-options button.chosen-wrong{background:#f7edeb;border-color:#d9aaa3;color:#8e4037}.feedback{padding:12px;border-radius:12px;background:var(--soft);margin:12px auto;max-width:520px}.feedback.wrong{background:#f7edeb}.quiz-footer{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}.progress-track{width:100%;max-width:520px;height:7px;border-radius:99px;background:#efeee9;overflow:hidden}.progress-fill{height:100%;width:0;background:var(--accent);transition:width .2s}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.section-head h2{margin:0}.search{max-width:300px}.footer-note{margin-top:18px;text-align:center;color:var(--muted);font-size:12px}
+.auth-wrap{max-width:440px;margin:34px auto 56px;padding:0 18px}
+.auth-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px}
+.auth-card h2{margin:0 0 6px;font-size:20px}
+.auth-card .muted{margin:0 0 18px}
+.auth-actions{display:grid;gap:9px;margin-top:16px}
+.auth-message{font-size:13px;color:var(--muted);margin-top:13px;min-height:20px;white-space:pre-wrap;overflow-wrap:anywhere;padding:10px;border-radius:10px;background:#f7f8f5}
+.account-email{font-size:12px;color:var(--muted);padding:7px 9px;border:1px solid var(--line);border-radius:10px}
+.sync-status{font-size:11px;color:var(--muted)}
+#authGate .field{margin:12px 0}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,16px);z-index:1000;padding:11px 18px;border-radius:999px;background:#315d48;color:#fff;font-size:13px;font-weight:650;box-shadow:0 8px 26px rgba(25,48,34,.2);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}.related-picker{border:1px solid var(--line);border-radius:13px;padding:10px 12px;background:#fff}.related-picker-list{display:grid;gap:6px;max-height:190px;overflow:auto;margin-top:8px}.related-option{position:relative;display:flex;align-items:center;gap:10px;font-size:13px;padding:12px 42px 12px 14px;border:1px solid transparent;border-radius:13px;background:#fff;transition:background .15s,border-color .15s;cursor:pointer}.related-option.selected{background:#e4efe6;border-color:#b8d0bd;color:#244d37}.related-option.selected strong{color:#244d37}.related-option input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}.related-option.selected:after{content:'✓';position:absolute;right:15px;top:50%;transform:translateY(-50%);color:#315d48;font-size:19px;font-weight:750}.related-selected-words{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.related-selected-chip{display:inline-flex;align-items:center;gap:7px;max-width:100%;padding:6px 9px;border:1px solid #cbdccc;border-radius:999px;background:#eaf1eb;color:#315d48;font-size:12px;line-height:1.35}.related-selected-chip span{overflow-wrap:anywhere}.related-selected-chip button{min-height:18px;padding:0 2px;background:transparent;color:#52735a;font-size:16px;line-height:1}.ai-review-actions{margin:14px 0 10px;padding:14px;background:var(--soft);border:1px solid #dce6dc;border-radius:14px}.ai-review-actions p{margin:7px 0 0}.add-title-row{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}.ai-stale{font-size:11px;font-weight:700;color:#b34d45}.word-ai-stale{display:inline-flex;align-items:center;padding:3px 8px;border-radius:99px;background:#fbefed;border:1px solid #efd8d4;white-space:nowrap}.note-input{min-height:76px!important;height:76px;line-height:1.35!important;padding:10px 11px!important;resize:vertical}.pos-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.pos-choice-grid label{display:flex;align-items:center;gap:6px;padding:9px 8px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:12px;font-weight:550}.pos-choice-grid input{accent-color:var(--accent);margin:0;flex:0 0 auto}@media(max-width:420px){.pos-choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}.ai-review-result{margin:12px 0 16px;padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff;text-align:left}.ai-review-result h3{font-size:15px;margin:0 0 8px}.ai-review-result h4{font-size:13px;margin:13px 0 5px}.ai-review-result p{margin:5px 0;font-size:13px}.ai-review-result ul{margin:5px 0;padding-left:19px;font-size:13px}.ai-review-result .ai-status{display:inline-block;border-radius:99px;padding:3px 9px;background:#edf2ec;color:#536b58;font-size:11px;font-weight:700;margin:2px 0 8px}.ai-review-result .ai-status.warn{background:#fbf2e7;color:#9a6b32}.ai-review-result .ai-status.bad{background:#f7edeb;color:#a85d52}.ai-review-result .ai-example{padding:10px 0;border-top:1px solid var(--line)}.ai-review-result .ai-label{font-size:11px;color:var(--muted);font-weight:700}.ai-review-result .ai-corrected{font-weight:650;color:var(--accent)}.sentence-reply-card{padding:8px 10px;margin-top:6px;border-radius:10px}.sentence-reply-card .example-en{font-size:13px;line-height:1.4}.sentence-reply-card .example-ko{font-size:12px;line-height:1.45;margin-top:3px}.sentence-reply-card .muted{font-size:11px;margin:3px 0 0}.sentence-dialogue{white-space:pre-line;line-height:1.7}.ai-save-item{display:inline-flex;align-items:center;margin:5px 0 0;padding:4px 8px;font-size:10px;line-height:1.25;border-radius:8px;min-height:0;width:auto}
+.related-chip{display:inline-flex;padding:4px 9px;border-radius:99px;background:var(--soft);color:var(--accent);font-size:12px;margin:3px 4px 3px 0}
+#backRelated{display:block;text-align:left}#backRelated .related-chip{display:inline-flex;width:auto;max-width:100%;min-height:0;height:auto;align-items:center;justify-content:center;text-align:center;white-space:normal;overflow-wrap:anywhere;line-height:1.2;padding:4px 10px;margin:0 6px 6px 0;vertical-align:top}
+.word-detail .related-chip{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;box-sizing:border-box;min-height:28px;max-width:calc(100% - 8px);padding:5px 9px;margin:3px 3px 3px 0;text-align:center;line-height:1.2;white-space:normal;overflow-wrap:anywhere;font-size:11px;font-weight:600;cursor:pointer}
+.word-detail .related-chip:active{transform:scale(.98)}
+
+
+
+
+
+/* Monthly test sessions */
+.monthly-sessions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}
+.monthly-session-card{border:1px solid var(--line);border-radius:15px;padding:16px;background:#fff;display:flex;flex-direction:column;gap:9px}
+.monthly-session-card h3{margin:0;font-size:16px}.monthly-session-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+.monthly-session-card button{margin-top:auto;width:100%}
+.monthly-session-meta{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:700}
+#quiz #quizIntent{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit}
+#quiz #quizAnswer{width:100%;box-sizing:border-box}
+#quiz .quiz-answer-form{flex-wrap:wrap}
+#quiz .quiz-answer-form input{flex:1;min-width:0}
+@media(max-width:600px){.monthly-sessions{grid-template-columns:1fr}}
+/* Quiz alignment refinements */
+@media(min-width:741px){
+ #quiz .section-head:has(#quizMode){max-width:600px!important;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
+ #quiz .section-head:has(#quizMode) .field{width:100%;min-width:0!important}
+ #quiz #quizMode{width:100%;box-sizing:border-box}
+ #quiz #quizCount{text-align:right;align-self:center}
+}
+@media(max-width:740px){
+ #quiz #quizMode{text-align:center;text-align-last:center}
+ #quiz #quizAnswer{text-align:center}
+ #quiz #quizAnswer::placeholder{text-align:center}
+}
+
+/* Desktop/tablet: keep controls comfortably readable */
+@media(min-width:741px){
+ #quiz .quiz-filters .field label,#quiz .section-head .field label[for="quizMode"]{font-size:13px!important}
+ #quiz .quiz-filters input,#quiz .quiz-filters select{font-size:16px!important;min-height:50px;padding:11px 12px}
+ #quiz #quizMode{font-size:15px!important;min-height:48px;padding:10px 12px}
+ #quiz .quiz-intro{font-size:13px;padding:12px 14px}
+ #quiz #quizCount{font-size:14px!important}
+ #quiz #quizPrompt{font-size:26px;line-height:1.4}
+}
+@media(max-width:740px){header{padding:18px 15px 8px;align-items:flex-start}.top-actions{flex-direction:column;align-items:stretch}.top-actions button{padding:8px 10px}main{padding:0 14px 34px}.layout{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:13px}.stat b{font-size:22px}.panel{padding:15px}.card-big{font-size:27px}.quiz-options{grid-template-columns:1fr}.word-head{align-items:flex-start}.word-tools{flex-direction:column}.search{max-width:100%}}
+@media(max-width:740px){#home .dashboard-layout{display:flex;flex-direction:column}#home .calendar-panel{order:1;width:100%}#home .dashboard-side{order:2;width:100%}}
+:root{--bg:#f3f5f1;--panel:#fff;--ink:#203128;--muted:#78857c;--line:#e2e9e2;--accent:#315d48;--soft:#eaf1eb;--red:#b6655c;--gold:#a18145;--blue:#55758e}
+html{min-height:100%;background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-height:100vh;min-height:100dvh;background:radial-gradient(ellipse at 8% 0%,rgba(226,237,226,.78),transparent 36%),var(--bg);color:var(--ink);-webkit-tap-highlight-color:transparent}
+button,input,textarea,select{font-family:inherit}
+button{min-height:42px;transition:transform .12s ease,background .12s ease,box-shadow .12s ease}
+button:active{transform:scale(.985)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(49,93,72,.2);outline-offset:2px}
+header{padding-top:calc(24px + env(safe-area-inset-top))}
+h1{font-weight:800;letter-spacing:-1px}.logo-lockup{display:flex;align-items:center;gap:2px}.logo-bear{width:25px;height:25px;flex:0 0 auto;margin-right:0}
+main{margin-top:8px}
+.panel,.stat{border-color:var(--line);border-radius:22px;box-shadow:0 7px 24px rgba(37,57,43,.045)}
+.panel{padding:21px}
+.stat{padding:17px 19px}
+.stat b{font-size:28px;color:var(--ink)}
+.stat small{font-size:12px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:17px}
+.field input,.field textarea,.field select,.search{font-size:16px;min-height:46px;border-color:var(--line);border-radius:13px;-webkit-appearance:none;appearance:none}
+.field textarea{min-height:82px}
+.field select{background-image:linear-gradient(45deg,transparent 50%,#718077 50%),linear-gradient(135deg,#718077 50%,transparent 50%);background-position:calc(100% - 17px) 20px,calc(100% - 12px) 20px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:34px}
+.tabs{gap:7px;padding:10px 0 17px}
+.tab{border-radius:14px;font-size:13px;padding:10px 13px}
+.tab.active{background:var(--soft);border-color:#d8e5da}
+.section-head{align-items:center}
+.panel h2{letter-spacing:-.35px}
+.dashboard-layout{grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr);align-items:start}
+.dashboard-side{display:grid;gap:14px}
+.calendar-panel{min-width:0}
+.month-nav{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.month-nav{position:relative;z-index:100;isolation:isolate;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.month-nav button{position:relative;z-index:101;display:inline-flex;align-items:center;justify-content:center;pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;padding:7px 11px;min-width:48px;min-height:48px};width:48px;height:48px;min-width:48px;min-height:48px;max-width:48px;max-height:48px;padding:0;flex:0 0 48px;border-radius:12px;font-size:18px;line-height:1.month-label{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.month-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:12px;padding:7px 11px;min-width:48px;min-height:48px;font-weight:650;color:var(--ink);border:1px solid var(--line);background:#f0f0eb;touch-action:manipulation}
+.month-label{font-weight:750;min-width:92px;text-align:center;font-size:14px}
+.calendar-weekdays,.activity-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.calendar-weekdays{margin:19px 0 7px;text-align:center;color:var(--muted);font-size:11px;font-weight:700}
+.calendar-day{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:5px;min-width:0;min-height:66px;padding:8px 6px 7px;border:1px solid transparent;border-radius:13px;background:#f8faf7;color:var(--ink);text-align:left}
+.calendar-day .day-number{font-size:12px;font-weight:700}
+.calendar-day .day-events{display:grid;gap:1px;width:100%;font-size:9px;line-height:1.2;color:var(--muted);font-weight:650}
+.calendar-day .add-count{color:#4f8060;font-style:normal}
+.calendar-day .sentence-review-count{color:#71849D;font-style:normal;font-size:10px;font-weight:700;display:block;line-height:1.2}.add-count{font-variant-numeric:tabular-nums}
+.review-count{color:#667e9a;font-style:normal}
+.calendar-day .test-count{color:#9b8050;font-style:normal}
+.calendar-day.other-month{opacity:.35;background:transparent}
+.calendar-day.today{border-color:#9cb8a0;background:#eef5ef}
+.calendar-day.selected{box-shadow:inset 0 0 0 1.5px var(--accent);background:#e8f0e9}
+.calendar-legend{display:flex;gap:14px;flex-wrap:wrap;margin:13px 0 0;color:var(--muted);font-size:11px}
+.legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;background:#4f8060}
+.legend-dot.review{background:#667e9a}.legend-dot.test{background:#9b8050}
+.calendar-detail{margin-top:14px;padding:12px 14px;background:#f7f9f6;border-radius:14px;font-size:12px;color:var(--muted)}
+.calendar-detail strong{color:var(--ink)}
+.today-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
+.today-metric{padding:12px;border-radius:15px;background:#f7f9f6}
+.today-metric b{display:block;font-size:23px;letter-spacing:-.7px}
+.today-metric span{font-size:11px;color:var(--muted)}
+
+.word-category{display:inline-flex;margin-top:5px;padding:2px 8px;border-radius:99px;background:#edf2ed;color:#526e59;font-size:10px;font-weight:650;width:max-content}
+.calendar-detail-date{font-weight:650;margin-bottom:5px}.calendar-detail-counts{line-height:1.55;overflow-wrap:anywhere}
+.mascot-metric{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:#edf3ed;color:#52735a;min-height:78px}.mascot-metric svg{width:37px;height:37px}.mascot-metric span{font-size:11px;font-weight:650;color:#52735a}
+.mastery-track{height:9px;border-radius:99px;background:#edf0eb;overflow:hidden;margin:12px 0 7px}
+.mastery-fill{height:100%;background:linear-gradient(90deg,#71947a,#315d48);border-radius:inherit;width:0;transition:width .25s}
+.mastery-breakdown{font-size:12px;color:var(--muted);line-height:1.7}
+.mastery-breakdown strong{color:var(--ink)}
+.quick-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:15px}
+.quick-actions button{padding:10px 7px;font-size:12px}
+.word-status{display:inline-flex;vertical-align:middle;padding:3px 8px;border-radius:999px;background:#f4f2e9;color:#8b7749;font-size:10px;font-weight:700;margin-left:5px}
+.word-status.mastered{background:#e8f1e9;color:#3e6d4b}
+.word-status.learning{background:#eef1f6;color:#607795}
+.word-status.needs-review{background:#f7eeeb;color:#a25c50}
+.word-meta{font-size:11px!important;color:var(--muted)!important;margin-top:3px}
+.pos-inline{display:inline-flex;align-items:center;vertical-align:middle;padding:2px 8px;margin-right:7px;border-radius:999px;background:#eaf1eb;color:#526e59;font-size:.72em;font-weight:700;line-height:1.4;white-space:nowrap}.word-meta{font-size:10px!important;line-height:1.5!important;color:var(--muted)!important;margin-top:5px}.word-status{padding:2px 7px;font-size:9px}.word-category{margin-top:4px;padding:2px 8px;font-size:9px}
+.word-detail .detail-meta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 2px;font-size:11px;color:var(--muted)}
+/* Word meaning row: keep POS badge and meaning closely aligned */
+.word-open small{display:flex;align-items:baseline;justify-content:flex-start;flex-wrap:wrap;column-gap:7px;row-gap:2px;margin-top:3px;line-height:1.45}
+.word-open .pos-inline{display:inline-flex;flex:0 0 auto;align-items:center;vertical-align:baseline;margin:0;padding:1px 7px;font-size:10px;line-height:1.3}
+.word-open small:not(:has(.pos-inline)){display:block}
+
+.quiz-filters{display:grid;grid-template-columns:1fr 1.5fr;gap:10px;width:100%;max-width:650px;margin:0 auto 14px;text-align:left}
+.quiz-filters .field{margin:0}
+.quiz-intro{width:100%;max-width:650px;text-align:left;padding:12px 14px;background:#f7f9f6;border-radius:14px;font-size:12px;color:var(--muted)}
+.auth-card{box-shadow:0 10px 34px rgba(37,57,43,.07)}
+.account-email{background:rgba(255,255,255,.72)}
+@media(max-width:740px){
+  body{padding-bottom:calc(75px + env(safe-area-inset-bottom))}
+  header{padding:calc(13px + env(safe-area-inset-top)) 15px 9px;display:flex;flex-wrap:wrap;align-items:center;gap:9px}
+  header>div:first-child{flex:1}
+  .top-actions{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:6px;flex-wrap:wrap;width:100%}
+  .top-actions button{padding:8px 10px;font-size:12px}
+  .account-email{font-size:11px;padding:6px 8px}
+  main{padding:0 13px 28px;margin-top:5px}
+  .tabs{position:fixed;z-index:30;left:0;right:0;bottom:0;margin:0;padding:8px 7px calc(8px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid rgba(218,227,218,.9);backdrop-filter:none;-webkit-backdrop-filter:none;justify-content:space-around;gap:2px;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:1 0 auto;min-width:0;padding:9px 7px;font-size:11px;border-radius:12px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+  .stat{padding:12px 14px;border-radius:17px}
+  .stat b{font-size:23px}
+  .panel{padding:16px;border-radius:19px}
+  .layout,.dashboard-layout{grid-template-columns:1fr}
+  .dashboard-side{gap:12px}
+  .calendar-day{min-height:57px;padding:6px 4px;border-radius:10px}
+  .calendar-day .day-events{font-size:8px}
+  .calendar-weekdays,.activity-calendar{gap:3px}
+  .calendar-weekdays{margin-top:15px}
+  .calendar-legend{gap:9px}
+  .today-metrics{gap:7px}
+  .today-metric{padding:10px}
+  .today-metric b{font-size:21px}
+  .quick-actions{gap:6px}
+  .quick-actions button{font-size:11px;min-height:44px}
+  .card-panel{margin:12px auto;min-height:280px;gap:12px}
+  .card-big{font-size:27px;line-height:1.35}
+  .quiz-options{grid-template-columns:1fr}
+  .quiz-filters{grid-template-columns:1fr;gap:7px}
+  .word-head{align-items:flex-start}
+  .word-tools{flex-direction:row}
+  .word-tools button{font-size:11px;padding:7px}
+  .search{max-width:100%}
+  .row>*{min-width:0}
+  .auth-wrap{margin:24px auto 40px}
+}
+@media(max-width:380px){
+  .calendar-day{min-height:52px;padding:5px 3px}
+  .calendar-day .day-events{font-size:7px}
+  .calendar-weekdays,.activity-calendar{gap:2px}
+  .month-label{min-width:82px}
+  .quick-actions button{padding:8px 4px}
+}
+
+
+/* Compact global controls */
+button{font-size:13px;padding:9px 12px;min-height:38px;border-radius:11px;line-height:1.3}
+button.secondary,button.ghost,button.danger{font-size:13px}
+.tab{font-size:12px;padding:8px 10px;min-height:36px;border-radius:11px}
+.top-actions button{font-size:12px;padding:7px 10px;min-height:35px}
+.quick-actions button{font-size:12px;padding:8px 6px;min-height:38px}
+@media(max-width:740px){
+ button{font-size:12px;padding:8px 10px;min-height:36px;border-radius:10px}
+ button.secondary,button.ghost,button.danger{font-size:12px}
+ .tab{font-size:11px;padding:7px 8px;min-height:34px}
+ .top-actions button{font-size:11px;padding:6px 9px;min-height:33px}
+ .quick-actions button{font-size:11px;padding:8px 5px;min-height:36px}
+}
+
+.mastery-compact{padding:0 0 16px;margin:0 0 16px;border-bottom:1px solid var(--line)}.mastery-compact .section-head{margin-bottom:8px}.mastery-compact h2{font-size:15px;margin:0}.mastery-compact strong{font-size:14px;color:var(--accent)}.mastery-compact .mastery-track{height:7px}.mastery-compact .mastery-breakdown{font-size:11px;margin-top:7px}
+
+/* Ultra-compact mobile dashboard stats */
+@media(max-width:740px){
+  #home .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0 0 10px}
+  #home .stat{padding:5px 2px;background:transparent;border:0;border-radius:0;box-shadow:none;text-align:center;min-width:0}
+  #home .stat b{font-size:18px;line-height:1.15;letter-spacing:-.5px;margin-bottom:3px}
+  #home .stat small{display:block;font-size:9px;line-height:1.2;white-space:nowrap;letter-spacing:-.3px}
+}
+
+/* Compact white statistic tiles on mobile */
+@media(max-width:740px){
+  #home .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:0 0 10px}
+  #home .stat{padding:8px 2px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 8px rgba(37,57,43,.035);text-align:center;min-width:0}
+  #home .stat b{font-size:18px;line-height:1.15;letter-spacing:-.5px;margin-bottom:3px}
+  #home .stat small{display:block;font-size:9px;line-height:1.2;white-space:nowrap;letter-spacing:-.3px}
+}
+
+.study-direction{display:flex;gap:7px;margin:0 0 14px}
+.study-direction button{flex:1;max-width:180px}
+.study-direction button.active{background:var(--soft);color:var(--accent);border-color:#cbdccc}
+@media(max-width:740px){.study-direction button{max-width:none}}
+
+/* Compact study and test screens */
+#study.card-panel,#sentences.card-panel,#quiz.card-panel{min-height:0;padding:24px 22px;gap:16px}
+.review-card-top{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px}.extra-review-btn{font-size:12px!important;padding:7px 11px;min-height:34px;white-space:nowrap}
+.writing-practice-launch{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff}.writing-practice-launch p{margin:2px 0 0;font-size:12px}.writing-practice-launch button{white-space:nowrap;font-size:13px;padding:9px 12px}.writing-practice-area{width:100%;margin-top:12px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff;text-align:left}.writing-question{padding:12px 0;border-bottom:1px solid var(--line)}.writing-question:last-child{border-bottom:0}.writing-question textarea{width:100%;min-height:72px;margin-top:8px}.writing-result{margin-top:8px;padding:10px;border-radius:10px;background:var(--soft);font-size:13px}.writing-result strong{display:block;margin-bottom:4px}
+#sentences #sentenceWriteArea{width:100%;max-width:100%;align-self:stretch}#sentences #sentenceAnswerInput{display:block;width:100%;min-height:110px;box-sizing:border-box}#sentences #checkSentenceAnswer{display:block;width:100%;box-sizing:border-box}
+#study #front,#sentences #sentenceFront{font-size:25px;line-height:1.4;letter-spacing:-.45px}
+#study .study-direction button,#sentences button,#quiz button{font-size:14px}
+#quiz.card-panel{min-height:0!important;gap:13px}
+#quiz .section-head h2{font-size:19px}
+#quiz .quiz-filters{max-width:600px;gap:8px;margin-bottom:10px}
+#quiz .quiz-filters .field label,#quiz .field label{font-size:11px!important;line-height:1.3}
+#quiz .quiz-intro{font-size:11px;padding:9px 11px;line-height:1.45}
+#quiz .quiz-prompt,#quiz #quizPrompt{font-size:22px;line-height:1.35;letter-spacing:-.45px}
+#quiz .quiz-filters input,#quiz .quiz-filters select,#quiz #quizMode{font-size:12px!important;line-height:1.25;min-height:42px;padding:8px 9px}
+#quiz .quiz-filters select,#quiz #quizMode{padding-right:25px}
+#quiz #quizAnswer{font-size:16px;min-height:48px}
+#quiz .progress-track{margin-top:12px;margin-bottom:30px}
+#quiz #quizMode{font-size:12px!important;min-height:40px;padding:7px 9px}
+#quiz .section-head .field label[for="quizMode"]{font-size:11px!important}
+#quiz #quizCount{font-size:12px!important}
+#quiz #quizCount{font-size:13px}
+#quiz .quiz-filters select{-webkit-appearance:none;appearance:none}
+#quiz .quiz-options button{font-size:14px;padding:10px 12px;min-height:44px}
+#quiz .feedback{font-size:13px;padding:10px 12px}
+#quiz .quiz-footer button{font-size:13px;min-height:42px;padding:9px 13px}
+@media(max-width:740px){
+ #study.card-panel,#sentences.card-panel,#quiz.card-panel{padding:19px 15px;gap:13px;margin:10px auto}
+ #study #front,#sentences #sentenceFront{font-size:22px;line-height:1.4}
+ #sentences .pill{font-size:11px}
+ #quiz .section-head h2{font-size:18px}
+ #quiz #quizPrompt{font-size:22px;line-height:1.35}
+ #quiz .quiz-filters{grid-template-columns:1fr 1fr;gap:8px}
+ #quiz .quiz-intro{font-size:11px}
+ #quiz .quiz-options{gap:7px}
+ #quiz .quiz-options button{font-size:13px;min-height:42px;padding:9px 11px}
+ #quiz .quiz-footer{gap:6px}
+ #quiz .quiz-footer button{font-size:12px;padding:8px 10px}
+}
+
+
+/* iPad 9.7-inch and medium tablet layout: keep phone and desktop layouts unchanged */
+@media (min-width:741px) and (max-width:1100px){
+  header,main{width:100%;max-width:960px}
+  header{padding:13px 18px 5px;gap:9px}
+  header .sub{font-size:11px}
+  h1{font-size:20px}
+  main{padding:0 18px 26px;margin-top:4px}
+  .tabs{gap:3px;padding:5px 0 9px;flex-wrap:nowrap;overflow-x:auto}
+  .tab{padding:7px 9px;font-size:11px;min-height:32px}
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:6px}
+  .stat{padding:5px 8px;border-radius:12px;box-shadow:none}
+  .stat b{font-size:16px;line-height:1.05;letter-spacing:-.4px;margin-bottom:2px}
+  .stat small{font-size:10px;line-height:1.15}
+  .calendar-weekdays{font-size:10px}
+  .calendar-day .day-number{font-size:12px}
+  .calendar-legend{font-size:10px}
+  .calendar-detail{font-size:11px}
+  .mastery-compact .mastery-breakdown{font-size:10px}
+  .today-metric span{font-size:10px}
+  .dashboard-layout{grid-template-columns:minmax(0,1.12fr) minmax(270px,.88fr);gap:10px}
+  .dashboard-side{min-width:0;gap:10px}
+  .panel{padding:13px;border-radius:16px}
+  .panel h2{font-size:15px;margin-bottom:8px}
+  .calendar-day{min-height:43px;padding:5px 4px;border-radius:9px;gap:3px}
+  .calendar-day .day-number{font-size:11px}
+  .calendar-day .day-events{font-size:7px}
+  .calendar-weekdays,.activity-calendar{gap:3px}
+  .calendar-weekdays{margin:11px 0 5px;font-size:9px}
+  .calendar-legend{font-size:9px;margin-top:8px;gap:9px}
+  .calendar-detail{margin-top:8px;padding:8px 10px;font-size:10px}
+  .mastery-compact{padding-bottom:9px;margin-bottom:9px}
+  .mastery-compact h2{font-size:13px}
+  .mastery-compact .mastery-track{margin:7px 0 5px}
+  .mastery-compact .mastery-breakdown{font-size:9px;line-height:1.4}
+  .today-metrics{gap:6px;margin:8px 0}
+  .today-metric{padding:8px;border-radius:11px}
+  .today-metric b{font-size:18px}
+  .today-metric span{font-size:9px}
+  .mascot-metric{min-height:60px}
+  .mascot-metric svg{width:28px;height:28px}
+  .quick-actions{gap:4px;margin-top:9px}
+  .quick-actions button{padding:7px 4px;font-size:10px;min-height:32px}
+  .word-head{gap:9px;padding:11px}
+  .word-open{min-width:0;overflow-wrap:anywhere}
+  .word-tools{flex:0 0 auto;gap:5px}
+  .word-tools button{padding:8px 9px;font-size:12px}
+  .word-detail{padding:13px}
+  .search{max-width:260px}
+  .card-panel{max-width:760px}
+  .field input,.field textarea,.field select,.search{font-size:15px}
+  .word-head{gap:9px;padding:11px}
+  .word-open{min-width:0;overflow-wrap:anywhere}
+  .word-tools{flex:0 0 auto;gap:5px}
+  .word-tools button{padding:8px 9px;font-size:12px}
+  .word-detail{padding:13px}
+  .search{max-width:260px}
+  .card-panel{max-width:760px}
+  .field input,.field textarea,.field select,.search{font-size:15px}
+}
+@media (min-width:821px) and (max-width:1100px){
+  .dashboard-side>.mastery-compact{
+    background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    box-shadow:0 7px 24px rgba(37,57,43,.045);
+    padding:13px;margin:0;min-width:0;
+  }
+  .dashboard-side>.mastery-compact .section-head{margin-bottom:7px}
+  .dashboard-side>.mastery-compact h2{font-size:14px}
+  .dashboard-side>.mastery-compact .mastery-track{margin:8px 0 6px}
+  .dashboard-side>.mastery-compact .mastery-breakdown{font-size:10px;line-height:1.5}
+}
+@media (min-width:741px) and (max-width:820px){
+  header,main{max-width:760px}
+  header{padding-left:16px;padding-right:16px;align-items:flex-start;flex-wrap:wrap}
+  main{padding-left:16px;padding-right:16px}
+  .dashboard-layout{grid-template-columns:1fr}
+  .dashboard-side{grid-template-columns:1fr}
+  .stats{gap:7px}
+  .stat{padding:11px}
+  .stat b{font-size:22px}
+  .panel{padding:15px}
+  .tabs{gap:2px}
+  .tab{padding:8px 9px;font-size:11px}
+  .section-head{gap:8px}
+  .search{max-width:220px}
+}
+
+
+#wordbookViewSelect{flex:0 0 78px;width:78px;min-width:78px;height:32px;min-height:32px;padding:4px 22px 4px 9px;border:1px solid var(--line);border-radius:9px;background-color:#f7f9f6;color:var(--accent);font-size:12px;font-weight:650;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,#718077 50%),linear-gradient(135deg,#718077 50%,transparent 50%);background-position:calc(100% - 12px) 13px,calc(100% - 8px) 13px;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
+
+/* Wordbook header alignment */
+ .passage-editor{margin-top:18px;padding:17px;border:1px solid var(--line);border-radius:16px;background:#f9fbf8}.passage-editor h2{margin:0}.passage-add-actions{display:flex;justify-content:flex-end;margin-top:14px}.passage-detail-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7}.passage-linked-item{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:7px}.passage-linked-item strong{display:block;font-size:13px}.passage-linked-item small{display:block;color:var(--muted);margin-top:3px}.passage-list{display:grid;gap:10px}.passage-card{border:1px solid var(--line);border-radius:15px;background:#fff;overflow:hidden}.passage-card-head{display:flex;align-items:flex-start;gap:10px;padding:14px}.passage-card-main{flex:1;min-width:0;text-align:left;background:transparent;color:var(--ink);padding:0}.passage-card-main strong{display:block;font-size:16px;line-height:1.4}.passage-card-main small{display:block;color:var(--muted);margin-top:5px}.passage-card-tools{display:flex;gap:6px}.passage-card-tools button{padding:7px 9px}.passage-card-detail{border-top:1px solid var(--line);padding:14px;background:#fcfdfa}.passage-card-detail .detail-label{margin-top:12px}.passage-selection{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:12px}.passage-selection input{margin-top:3px;accent-color:var(--accent)}.passage-selection span{min-width:0;overflow-wrap:anywhere}.passage-selection small{display:block;color:var(--muted);margin-top:2px}@media(max-width:740px){.passage-card-head{padding:12px}.passage-card-tools{flex-direction:column}.passage-editor{padding:13px}}
+#words .wordbook-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,300px);align-items:center;column-gap:16px;row-gap:12px;width:100%}
+#words .wordbook-title-group{display:flex;align-items:center;justify-content:flex-start;gap:12px;min-width:0;white-space:nowrap}
+#words .wordbook-title-group h2{margin:0;line-height:1.25;white-space:nowrap}
+#words #wordbookViewSelect{flex:0 0 100px;width:100px;min-width:100px;height:34px;min-height:34px;padding:4px 20px 4px 9px;font-size:12px;box-sizing:border-box}
+#words #search{width:100%;max-width:300px;min-width:0;box-sizing:border-box;justify-self:end}
+@media(max-width:740px){
+ #words .wordbook-head{grid-template-columns:minmax(0,1fr);gap:12px}
+ #words #search{max-width:none;justify-self:stretch}
+}
+
+
+/* Monthly test layout */
+#quiz .quiz-panel{max-width:760px;margin:0 auto;padding:clamp(18px,4vw,32px)}
+#quiz .quiz-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+#quiz .quiz-heading h2{font-size:clamp(23px,4vw,30px);margin:4px 0 6px}
+#quiz .eyebrow{font-size:10px;letter-spacing:1.5px;font-weight:800;color:var(--accent);margin:0}
+#quiz .quiz-mark{display:grid;place-items:center;width:54px;height:54px;border-radius:18px;background:var(--soft);font-size:25px;color:var(--accent);flex:0 0 auto}
+#quiz .quiz-setup{display:grid;grid-template-columns:1fr 1fr auto;align-items:end;gap:12px;padding:16px;background:#f7f9f6;border:1px solid var(--line);border-radius:17px;margin-bottom:24px}
+#quiz .quiz-setup .field{margin:0;min-width:0}
+#quiz .quiz-setup input,#quiz .quiz-setup select{width:100%;box-sizing:border-box;min-height:46px;font-size:15px}
+#quiz #startQuizBtn{min-height:46px;white-space:nowrap}
+#quiz .quiz-stage{max-width:620px;margin:0 auto}
+#quiz .quiz-stage-top{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:10px}
+#quiz .quiz-question-label{margin-top:30px;color:var(--muted);font-size:12px;font-weight:750}
+#quiz #quizPrompt{min-height:110px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(22px,4vw,30px);line-height:1.5;font-weight:750;padding:20px 10px;overflow-wrap:anywhere}
+#quiz .quiz-answer-form{display:flex;gap:9px;margin:14px 0 16px}
+#quiz #quizAnswer{flex:1;min-width:0;min-height:54px;border:1px solid var(--line);border-radius:13px;padding:12px 15px;font-size:17px;background:#fff}
+#quiz #submitQuizAnswer{min-width:104px}
+#quiz .quiz-footer{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+#quiz #quizHint{text-align:center;margin-top:22px}
+@media(max-width:600px){#quiz .quiz-setup{grid-template-columns:1fr 1fr}#quiz #startQuizBtn{grid-column:1/-1;width:100%}#quiz .quiz-answer-form{flex-direction:column}#quiz #submitQuizAnswer{width:100%}#quiz .quiz-mark{width:44px;height:44px}}
+
+/* Calendar: fixed, consistent date and activity alignment */
+.calendar-day{justify-content:flex-start;align-items:stretch;gap:0}
+.calendar-day .day-number{display:block;min-height:1.45em;line-height:1.45}
+.calendar-day .day-events{display:grid;grid-template-rows:repeat(4,minmax(1.35em,auto));align-content:start;gap:0;margin-top:5px;min-height:5.4em;width:100%;font-size:clamp(9px,1.05vw,11px);line-height:1.35;text-align:left;font-variant-numeric:tabular-nums}
+.calendar-day .day-events i{display:block;min-width:0;min-height:1.35em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:normal;font-weight:700}
+.calendar-day .day-events .event-empty{visibility:hidden}
+.calendar-day .day-events .add-count{color:#4f8060}
+.calendar-day .day-events .review-count{color:#667e9a}
+.calendar-day .day-events .sentence-review-count{color:#71849d;font-size:inherit}
+.calendar-day .day-events .test-count{color:#9b8050}
+@media(max-width:740px){
+ .calendar-day{min-height:86px;padding:7px 5px 6px}
+ .calendar-day .day-events{margin-top:5px;grid-template-rows:repeat(4,minmax(1.35em,auto));min-height:5.4em;font-size:9px}
+}
+
+.collect-import-backdrop{display:none;position:fixed;inset:0;z-index:1200;background:#17231dcc;padding:18px;align-items:center;justify-content:center}.collect-import-backdrop.open{display:flex}.collect-import-card{width:min(520px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 60px #0003}.collect-import-card h2{margin:0 0 7px;font-size:20px}.collect-import-preview{background:#f7f9f6;border:1px solid var(--line);border-radius:13px;padding:13px;margin:14px 0;white-space:pre-wrap;overflow-wrap:anywhere}.collect-import-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.collect-import-actions button{min-height:46px}.collect-import-source{font-size:12px;color:var(--muted);margin-top:8px}.collect-import-foot{display:flex;justify-content:flex-end;margin-top:12px}
+
+/* Use a controlled small marker instead of an oversized text bullet */
+.calendar-day .day-events .word-event-dot{display:inline-block;width:7px;height:7px;min-height:0;border-radius:50%;background:#667e9a;vertical-align:middle;margin:0 2px 1px 0;flex:none}
+
+/* Calendar activity legend: matching colored dots + counts */
+.calendar-day .day-events .calendar-event-dot{display:inline-block;width:7px;height:7px;min-height:0;border-radius:50%;vertical-align:middle;margin:0 3px 1px 0}
+.calendar-day .day-events .add-dot{background:#4f8060}
+.calendar-day .day-events .review-dot{background:#667e9a}
+.calendar-day .day-events .test-dot{background:#9b8050}
+.calendar-day .day-events .month-test-day{color:#9b8050;font-size:9px;font-weight:700}
+
+/* Three consistent activity rows; no separate month-end test-day marker */
+.calendar-day .day-events{grid-template-rows:repeat(4,minmax(1.35em,auto));min-height:5.4em}
+@media(max-width:740px){.calendar-day .day-events{grid-template-rows:repeat(3,minmax(1.35em,auto));min-height:4.05em}}
+
+/* Month-end test-day text remains separate from activity dots; no star icon */
+.calendar-day .day-events .month-test-day{color:#9b8050;font-size:9px;font-weight:700}
+
+/* Calendar: green plus for additions, blue circle/diamond for separate review types */
+.calendar-day .day-events .calendar-event-dot{display:inline-block;width:7px;height:7px;min-height:0;vertical-align:middle;margin:0 3px 1px 0;background:#667e9a}
+.calendar-day .day-events .review-dot{border-radius:50%}
+.calendar-day .day-events .sentence-dot{width:6px;height:6px;border-radius:1px;transform:rotate(45deg);margin-left:1px;margin-right:4px}
+.calendar-day .day-events .add-count{color:#4f8060}
+.calendar-day .day-events .review-count,.calendar-day .day-events .sentence-review-count{color:#667e9a}
+.calendar-day .day-events .month-test-day{color:#9b8050;font-size:9px;font-weight:700}
+.calendar-day .day-events{grid-template-rows:repeat(4,minmax(1.35em,auto));min-height:5.4em}
+@media(max-width:740px){.calendar-day .day-events{grid-template-rows:repeat(4,minmax(1.35em,auto));min-height:5.4em}}
+
+.calendar-legend .legend-plus{display:inline-block;margin-right:5px;color:#4f8060;font-size:14px;line-height:1;font-weight:800}
+.calendar-legend .legend-dot.sentence{border-radius:1px;transform:rotate(45deg);background:#667e9a}
+.calendar-legend .legend-test{color:#9b8050;font-weight:650}
+
+/* Compact three-row activity stack; separate sentence color and month-end label */
+.calendar-day .day-events{grid-template-rows:repeat(3,minmax(1.35em,auto));min-height:4.05em}
+.calendar-day .day-events .sentence-dot{border-radius:50%;transform:none;background:#9a78ad}
+.calendar-day .day-events .sentence-review-count{color:#9a78ad}
+.calendar-day .month-test-day{display:block;margin-top:3px;color:#9b8050;font-size:9px;line-height:1.2;font-weight:700;white-space:nowrap}
+.calendar-legend .legend-dot.sentence{border-radius:50%;transform:none;background:#9a78ad}
+@media(max-width:740px){.calendar-day .day-events{grid-template-rows:repeat(3,minmax(1.35em,auto));min-height:4.05em}}
+
+/* Calendar compact layout: equal-sized review dots and no reserved empty rows */
+.calendar-day{min-height:60px}
+.calendar-day .day-events{grid-template-rows:none;grid-auto-rows:min-content;min-height:0;gap:2px}
+.calendar-day .day-events .calendar-event-dot{width:7px;height:7px;min-width:7px;min-height:7px;box-sizing:border-box;border-radius:50%;transform:none;vertical-align:middle}
+.calendar-day .day-events .review-dot{background:#667e9a}
+.calendar-day .day-events .sentence-dot{background:#9a78ad}
+.calendar-day .day-events .sentence-review-count{color:#9a78ad}
+.calendar-day .month-test-day{margin-top:3px}
+@media(max-width:740px){.calendar-day{min-height:60px}.calendar-day .day-events{grid-template-rows:none;min-height:0;gap:2px}}
+
+/* Fixed activity slots and identical marker geometry */
+.calendar-day .day-events{display:grid;grid-template-rows:repeat(2,1.35em);grid-auto-rows:1.35em;align-content:start;gap:0;min-height:2.7em}
+.calendar-day .day-events i{height:1.35em;min-height:1.35em;line-height:1.35em}
+.calendar-day .day-events .event-empty{visibility:hidden}
+.calendar-day .day-events .calendar-event-dot{display:inline-block;width:7px;height:7px;min-width:7px;min-height:7px;box-sizing:border-box;border:0;border-radius:50%;margin:0 3px 1px 0;padding:0;vertical-align:middle;transform:none}
+.calendar-day .day-events .review-dot{background:#667e9a}
+.calendar-day .day-events .sentence-dot{background:#9a78ad}
+.calendar-day .day-events .review-count{color:#667e9a}
+.calendar-day .day-events .sentence-review-count{color:#9a78ad}
+@media(max-width:740px){.calendar-day .day-events{grid-template-rows:repeat(2,1.35em);min-height:2.7em}}
+
+/* iPad-only dashboard: calendar left; stats top-right; today's learning below */
+@media (min-width:768px) and (hover:none) and (pointer:coarse){
+  #home{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr);grid-template-rows:auto 1fr;align-items:start;column-gap:14px;row-gap:14px}
+  #home>.stats{grid-column:2;grid-row:1;width:100%;margin:0;grid-template-columns:repeat(2,minmax(0,1fr))}
+  #home>.dashboard-layout{display:contents}
+  #home .calendar-panel{grid-column:1;grid-row:1 / span 2;width:100%;min-width:0}
+  #home .dashboard-side{grid-column:2;grid-row:2;width:100%;min-width:0}
+  .calendar-day .day-events>i{display:flex;align-items:center;justify-content:flex-start;text-align:left;box-sizing:border-box}
+  .calendar-day .day-events>i .calendar-event-dot,
+  .calendar-day .day-events>i .calendar-event-plus{display:inline-flex;align-items:center;justify-content:center;flex:0 0 7px;width:7px;height:7px;min-width:7px;min-height:7px;box-sizing:border-box;margin:0 10px 0 0;padding:0;border:0;transform:none}
+  .calendar-day .day-events>i .calendar-event-plus{font-size:12px;line-height:7px;font-weight:800}
+  .calendar-day .day-events>i.review-count,.calendar-day .day-events>i.sentence-review-count,.calendar-day .day-events>i.add-count{padding:0}
+  .calendar-day .day-events>i.event-empty{display:flex;visibility:hidden}
+}
+
+/* iPad-only: identical marker column and baseline for plus and review dots */
+@media (min-width:768px) and (hover:none) and (pointer:coarse){
+  #home .calendar-legend{align-items:center}
+  #home .calendar-legend>span{display:inline-flex;align-items:center;gap:6px;line-height:1.2}
+  #home .calendar-legend .legend-plus,
+  #home .calendar-legend .legend-dot{display:inline-flex;align-items:center;justify-content:center;flex:0 0 10px;width:10px;height:10px;min-width:10px;min-height:10px;box-sizing:border-box;margin:0;padding:0;line-height:10px;vertical-align:middle}
+  #home .calendar-legend .legend-plus{font-size:14px}
+  #home .calendar-legend .legend-dot{border-radius:50%;background-color:#667e9a}
+  #home .calendar-legend .legend-dot.sentence{background-color:#9a78ad}
+  #home .calendar-day .day-events>i{display:flex;align-items:center;justify-content:flex-start;text-align:left;box-sizing:border-box;gap:1px}
+  #home .calendar-day .day-events>i .calendar-event-dot{display:block!important;flex:0 0 7px!important;width:7px!important;height:7px!important;min-width:7px!important;min-height:7px!important;max-width:7px!important;max-height:7px!important;aspect-ratio:1/1;box-sizing:border-box;margin:0!important;padding:0!important;border:0;border-radius:50%!important;transform:none!important;background-color:#667e9a!important;background-image:none!important}
+  #home .calendar-day .day-events>i .calendar-event-dot.sentence-dot{background-color:#9a78ad!important}
+  #home .calendar-day .day-events>i .calendar-event-plus{display:inline-flex;flex:0 0 8px;width:8px;height:10px;min-width:8px;min-height:10px;align-items:center;justify-content:center;margin:0;padding:0;font-size:12px;line-height:10px;font-weight:800;box-sizing:border-box}
+  #home .calendar-day .day-events>i.review-count,
+  #home .calendar-day .day-events>i.sentence-review-count,
+  #home .calendar-day .day-events>i.add-count{padding:0}
+  #home .calendar-day .day-events>i.event-empty{display:flex;visibility:hidden}
+}
+.calendar-day .review-status-mark{display:block;font-style:normal;font-weight:800;font-size:13px;line-height:1.2;letter-spacing:0}
+.calendar-day .review-status-x{color:#d94a4a}
+.calendar-day .review-status-partial{color:#d69a35}
+.calendar-day .review-status-done{color:#4f8060}
+
+/* Writing history: visually distinguish AI's suggested sentence */
+.writing-recommendation{margin-top:8px;padding:8px 10px;border-left:2px solid #cbd8cd;border-radius:0 7px 7px 0;background:#fafbf9}
+.writing-recommendation-label{display:flex;align-items:center;gap:5px;margin-bottom:3px;color:#78877b;font-size:10px;font-weight:600}
+.writing-recommendation-text{color:inherit;font-size:13px;font-weight:500;line-height:1.5;overflow-wrap:anywhere}
+.word-meta-fields{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(190px,1fr);gap:16px;align-items:start;margin:10px 0}.word-meta-fields .field{min-width:0;margin:10px 0}.pos-choice-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.pos-choice-grid label{min-width:0;white-space:nowrap;padding:9px 7px;font-size:12px}.pos-choice-grid input{width:16px!important;height:16px!important;padding:0!important;border:0!important;box-shadow:none!important;flex:0 0 16px}.category-controls{display:flex;gap:7px;align-items:center}.category-controls select{flex:1;min-width:0}.category-controls button{flex:0 0 auto;padding:9px 11px}.category-manager{margin-top:9px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fafbf9}.category-manager .row>*{min-width:0}.category-manager #categoryManagerList{display:grid;gap:6px;margin-top:9px}.link-toggle{margin:10px 0;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}.link-toggle summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;cursor:pointer;list-style:none;font-size:13px;font-weight:650;color:var(--ink)}.link-toggle summary::-webkit-details-marker{display:none}.link-toggle summary:after{content:'＋';color:var(--muted);font-size:17px}.link-toggle[open] summary:after{content:'−'}.toggle-selected{margin-left:auto;color:var(--muted);font-size:11px;font-weight:500}.link-toggle-body{padding:0 12px 12px;border-top:1px solid #f0f0eb}.link-toggle-body .related-picker{margin-top:10px}.new-related-inline{display:grid;gap:10px;border-top:1px solid var(--line);margin-top:14px;padding:14px 0 0}.new-related-heading{display:flex;flex-direction:column;gap:2px}.new-related-heading strong{font-size:13px;color:var(--ink)}.new-related-heading span,.new-related-fields label>span{font-size:11px;color:var(--muted)}.new-related-fields{display:grid;grid-template-columns:1fr;gap:9px}.new-related-fields label{display:grid;gap:5px}.new-related-fields input{width:100%;min-height:44px;padding:10px 12px;border:1px solid #deded6;border-radius:11px;background:#fff;color:var(--ink);font-size:14px;box-shadow:0 1px 2px #24251f08;transition:border-color .15s,box-shadow .15s}.new-related-fields input:focus{outline:none;border-color:#8ba58e;box-shadow:0 0 0 3px #e8f0e8}.new-related-inline #addRelatedWord{width:100%;min-height:43px;border-radius:11px;background:#edf2ec;color:#365b40;border:1px solid #d8e3d8;font-size:13px;font-weight:650}.new-related-inline #addRelatedWord:hover{background:#e3ece3}@media(min-width:620px){.new-related-fields{grid-template-columns:1fr 1fr}}@media(max-width:620px){.word-meta-fields{grid-template-columns:1fr;gap:0}.pos-choice-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}.pos-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.pos-choice-grid .pos-toggle{position:relative;display:flex;align-items:center;justify-content:center;min-height:46px;padding:9px 8px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:13px;font-weight:650;text-align:center;cursor:pointer;transition:background .15s,border-color .15s,color .15s}.pos-choice-grid .pos-toggle span{display:flex;align-items:baseline;gap:4px;white-space:nowrap}.pos-choice-grid .pos-toggle small{font-size:10px;color:var(--muted);font-weight:550}.pos-choice-grid .pos-toggle input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}.pos-choice-grid .pos-toggle:has(input:checked){background:#e7f0e8;border:1.5px solid #6f9878;color:#28583a;box-shadow:inset 0 0 0 1px #6f9878}.pos-choice-grid .pos-toggle:has(input:checked) small{color:#477052}.pos-choice-grid .pos-toggle:has(input:checked):after{content:'✓';position:absolute;top:4px;right:7px;font-size:11px;color:#315d48}.pos-choice-grid .pos-toggle:focus-within{outline:2px solid #9ab89f;outline-offset:2px}@media(max-width:620px){.pos-choice-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.pos-choice-grid .pos-toggle{min-height:42px;padding:8px 3px;font-size:12px}}.pos-choice-grid{display:flex;flex-wrap:wrap;gap:7px}.pos-choice-grid .pos-toggle{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);font-size:12px;font-weight:600;text-align:center;cursor:pointer;transition:background .15s,border-color .15s,color .15s}.pos-choice-grid .pos-toggle span{display:flex;align-items:baseline;gap:4px;white-space:nowrap}.pos-choice-grid .pos-toggle small{font-size:10px;color:inherit;opacity:.75;font-weight:500}.pos-choice-grid .pos-toggle input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}.pos-choice-grid .pos-toggle:has(input:checked){background:#e7f0e8;border:1px solid #6f9878;color:#28583a;box-shadow:inset 0 0 0 1px #6f9878}.pos-choice-grid .pos-toggle:focus-within{outline:2px solid #9ab89f;outline-offset:2px}.verb-type-toggles{display:flex;flex-wrap:wrap;gap:7px}.verb-type-toggles button{min-height:34px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);font-size:12px;font-weight:600}.verb-type-toggles button small{font-size:10px;opacity:.75}.verb-type-toggles button.active{background:#e7f0e8;border-color:#6f9878;color:#28583a;box-shadow:inset 0 0 0 1px #6f9878}.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}.verb-type-field{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:7px 0 12px}.verb-type-field label{margin:0;white-space:nowrap}.verb-type-field select{width:auto;min-width:190px;max-width:100%;padding:8px 34px 8px 11px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:13px}/* Cleaner search-and-selection layout for relationship pickers */
+.link-toggle-body .related-picker{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin-top:12px;padding:0;border:0;border-radius:0;background:transparent}
+.link-toggle-body .related-picker>input{display:block;width:100%!important;max-width:none!important;min-width:0;min-height:44px;padding:11px 14px;border:1px solid #dfe5df;border-radius:12px;background:#fff;color:var(--ink);font-size:14px;box-shadow:0 1px 3px #1f2d2210}
+.link-toggle-body .related-picker>input:focus{outline:none;border-color:#8eaa94;box-shadow:0 0 0 3px #dce9de}
+#wordSentenceSelectedLabel,#relatedSelectedLabel{display:inline-flex;align-items:center;justify-self:start;min-height:25px;padding:4px 9px;border-radius:7px;background:#f2f4f1;color:#68736a;font-size:11px;line-height:1.4;font-weight:550}
+#wordSentenceSelectedLabel:not(:empty),#relatedSelectedLabel:not(:empty){margin-top:-1px}
+.link-toggle-body .related-picker-list{margin-top:2px;padding:2px 0}
+.link-toggle-body .related-selected-words{margin-top:2px}
+.saved-ai-review-wrap mark.wordloop-yellow{background:#fff19a;color:inherit;border-radius:3px;padding:0 .04em;box-decoration-break:clone;-webkit-box-decoration-break:clone}.wordloop-highlight-tools{position:fixed;z-index:99999;left:50%;bottom:22px;transform:translateX(-50%);display:none;align-items:center;gap:7px;padding:8px;background:#25392e;color:white;border-radius:13px;box-shadow:0 5px 22px #0003;white-space:nowrap}.wordloop-highlight-tools.show{display:flex}.wordloop-highlight-tools button{border:0;border-radius:8px;padding:8px 11px;background:#fff1a8;color:#3e3820;font-size:12px;font-weight:700}.wordloop-highlight-tools button[data-clear]{background:#eef1ed;color:#38463b}.saved-ai-review-wrap{user-select:text;-webkit-user-select:text}/* Compact typography for the saved AI review panel only */
+.saved-ai-review{padding:14px!important;margin:9px 0 12px!important;line-height:1.6}
+.saved-ai-review h3{font-size:15px!important;margin:0 0 8px!important;line-height:1.45}
+.saved-ai-review h4{font-size:14px!important;margin:12px 0 6px!important;line-height:1.45}
+.saved-ai-review p,.saved-ai-review li{font-size:14px!important;line-height:1.6!important}
+.saved-ai-review ul{font-size:14px!important;margin:5px 0;padding-left:19px}
+.saved-ai-review .ai-status{font-size:11px!important;padding:3px 9px;margin:2px 0 7px}
+.saved-ai-review .ai-label{font-size:11px!important}
+.saved-ai-review .ai-example{padding:7px 0}
+.saved-ai-review .ai-example p{font-size:12px!important;line-height:1.5!important}
+.saved-ai-review .muted{font-size:12px!important;line-height:1.5}
+.toggle-selected{font-size:11px;font-weight:600;color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 165</span></div></div>
+  <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost" id="logoutBtn">로그아웃</button></div>
+</header>
+<div id="appToast" class="toast" role="status" aria-live="polite"></div>
+<section id="authGate" class="auth-wrap">
+  <div class="auth-card">
+    <h2>Wordloop 로그인</h2>
+    <p class="muted">저장한 단어를 여러 기기에서 이어서 사용하세요.</p>
+    <div class="field"><label for="authEmail">이메일</label><input id="authEmail" type="email" value="srin001@icloud.com" autocomplete="username" readonly></div>
+    <div class="field"><label for="authPassword">비밀번호</label><input id="authPassword" type="password" minlength="8" placeholder="비밀번호 입력" autocomplete="current-password"></div>
+    <div class="auth-actions">
+      <button id="loginBtn">로그인</button>
+      <button class="secondary" id="signupBtn">처음 한 번 계정 만들기</button>
+    </div>
+    <div class="auth-message" id="authMessage">처음 이용할 때 계정을 만들고, 이메일 인증을 마친 뒤 로그인하세요.</div>
+  </div>
+</section>
+<main id="appMain" class="hidden">
+<nav class="tabs" aria-label="메인 메뉴">
+  <button class="tab active" data-tab="home">대시보드</button>
+  <button class="tab" data-tab="addGroup">등록</button>
+  <button class="tab" data-tab="reviewGroup">복습</button>
+  <button class="tab" data-tab="quiz">테스트</button>
+  <button class="tab" data-tab="words">내 단어장</button>
+</nav>
+<div id="learningSwitcher" class="learning-switcher hidden">
+  <div class="learning-switch-buttons">
+    <button type="button" class="learning-choice" data-learning-type="word">단어</button>
+    <button type="button" class="learning-choice" data-learning-type="sentence">문장</button>
+  </div>
+</div>
+
+<section id="home">
+  <div class="stats">
+    <div class="stat"><b id="total">0</b><small>전체 단어</small></div>
+    <div class="stat"><b id="masteredTotal">0</b><small>완벽 암기</small></div>
+    <div class="stat"><b id="learningTotal">0</b><small>익히는 중</small></div>
+    <div class="stat"><b id="reviewNeededTotal">0</b><small>복습 필요</small></div>
+  </div>
+  <div class="layout dashboard-layout">
+    <div class="panel calendar-panel">
+      <div id="masteryOriginalSlot"></div>
+      <div class="mastery-compact">
+        <div class="section-head"><h2>암기 진행률</h2><strong id="masteryPercent">0%</strong></div>
+        <div class="mastery-track"><div class="mastery-fill" id="masteryFill"></div></div>
+        <div class="mastery-breakdown" id="masteryBreakdown"></div>
+      </div>
+      <div class="section-head">
+        <div><h2>학습 캘린더</h2><p class="muted">등록한 날과 복습한 날을 기록해요.</p></div>
+        <div class="month-nav"><button type="button" class="secondary" id="calendarPrev" aria-label="이전 달" >‹</button><span class="month-label" id="calendarMonthLabel"></span><button type="button" class="secondary" id="calendarNext" aria-label="다음 달" >›</button></div>
+      </div>
+      <div class="calendar-weekdays"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span></div>
+      <div class="activity-calendar" id="activityCalendar"></div>
+      
+      <div class="calendar-detail" id="calendarDayDetail"></div>
+    </div>
+    <div class="dashboard-side">
+      <div class="panel">
+        <div class="section-head"><h2>오늘의 학습</h2><span class="muted" id="todayDate"></span></div>
+        <div class="today-metrics">
+          <div class="today-metric"><b id="todayAdded">0</b><span>오늘 등록</span></div>
+          <div class="today-metric"><b id="todayReviewed">0</b><span>오늘 복습</span></div>
+          <div class="today-metric"><b id="due">0</b><span>복습 대기 단어</span></div>
+          <div class="today-metric"><b id="sentenceDue">0</b><span>복습 대기 문장</span></div>
+          <div class="today-metric"><b id="monthlyTestStatus">0/4</b><span>월간 테스트 · <span id="monthlyTestLabel">전월분</span></span></div><div class="today-metric mascot-metric"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="currentColor"/><circle cx="30" cy="25" r="1.7" fill="currentColor"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="currentColor"/></svg><span>오늘도 차근차근!</span></div>
+        </div>
+        <div class="quick-actions">
+          <button id="homeWordStudy">단어 복습</button>
+          <button class="secondary" id="homeSentenceStudy">문장 복습</button>
+          <button class="secondary" id="homeQuizStart">테스트</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="footer-note">Again은 다음 날, Hard와 익히는 중인 단어는 7일 뒤, 완벽 암기한 단어는 30일 뒤 다시 복습해요. 완벽 암기는 Good 또는 Easy 5회 연속 기준이에요.</p>
+</section>
+
+<section id="add" class="hidden">
+  <div class="panel"><div class="add-title-row"><h2 id="addTitle">새 단어 등록</h2><span id="aiReviewStale" class="ai-stale hidden">AI 재검수가 필요합니다</span></div>
+    <div class="field"><label for="word">영어 단어 / 표현 *</label><input id="word" placeholder="reluctant"></div>
+    <div class="field"><label for="englishMeaning">영문 뜻</label><input id="englishMeaning" placeholder="to use food, energy, or resources"></div>
+    <div class="field"><div class="section-head"><label for="meaning">뜻 *</label><button type="button" class="secondary translate-btn" data-translate="meaning">뜻 자동 번역</button></div><input id="meaning" placeholder="꺼리는, 내키지 않는"><div class="muted translate-status" id="meaningTranslateStatus"></div></div>
+    <div class="word-meta-fields"><div class="field pos-field"><label>품사 (복수 선택 가능)</label><div id="partOfSpeechChoices" class="pos-choice-grid"><label class="pos-toggle"><input type="checkbox" value="명사 (n.)"><span>명사 <small>n.</small></span></label><label class="pos-toggle"><input type="checkbox" value="동사 (v.)"><span>동사 <small>v.</small></span></label><label class="pos-toggle"><input type="checkbox" value="형용사 (adj.)"><span>형용사 <small>adj.</small></span></label><label class="pos-toggle"><input type="checkbox" value="부사 (adv.)"><span>부사 <small>adv.</small></span></label><label class="pos-toggle"><input type="checkbox" value="전치사 (prep.)"><span>전치사 <small>prep.</small></span></label><label class="pos-toggle"><input type="checkbox" value="접속사 (conj.)"><span>접속사 <small>conj.</small></span></label><label class="pos-toggle"><input type="checkbox" value="대명사 (pron.)"><span>대명사 <small>pron.</small></span></label><label class="pos-toggle"><input type="checkbox" value="감탄사 (interj.)"><span>감탄사 <small>interj.</small></span></label><label class="pos-toggle"><input type="checkbox" value="기타 (other)"><span>기타 <small>other</small></span></label></div><input type="hidden" id="partOfSpeech"></div><div class="field category-field"><label for="category">카테고리</label><div class="category-controls"><select id="category"></select><button type="button" class="secondary" id="manageCategoriesToggle">관리</button></div><div id="categoryManager" class="hidden category-manager"><div class="row"><input id="newCategoryName" placeholder="새 카테고리 이름"><button type="button" id="addCategoryBtn">추가</button></div><div id="categoryManagerList"></div><p class="notice">카테고리를 삭제해도 해당 단어는 삭제되지 않고 카테고리만 빈칸이 돼요.</p></div></div></div>
+    <div class="field hidden verb-type-field" id="verbTypeField"><label for="verbType">동사 유형 (선택)</label><select id="verbType"><option value="">선택 안 함</option><option value="타동사 (vt.)">타동사 (vt.)</option><option value="자동사 (vi.)">자동사 (vi.)</option><option value="자동사·타동사 모두 가능 (vi./vt.)">자동사·타동사 모두 가능 (vi./vt.)</option></select></div>
+    <div class="field"><div class="section-head"><label>예문 (선택)</label><button type="button" class="secondary" id="addExample" style="padding:7px 11px;min-height:36px">＋ 예문 추가</button></div><div id="examplesList"></div></div>
+    <div class="ai-review-actions"><button type="button" class="secondary" id="aiReviewBtn"><span aria-hidden="true">✦</span> AI로 단어·예문 검수</button><p class="muted">뜻의 정확성, 품사, 자동사·타동사, 문장 문법과 자연스러움을 확인해요.</p></div>
+    <div id="aiReviewResult" class="ai-review-result hidden" aria-live="polite"></div>
+    <div class="field"><label for="note">메모 (선택)</label><textarea id="note" class="note-input" rows="2" placeholder="비슷한 표현, 주의할 점"></textarea></div>
+    <details class="link-toggle"><summary>기존 문장과 연결하기 <span class="toggle-selected" id="wordSentenceToggleSummary">선택 안 함</span></summary><div class="link-toggle-body"><div class="related-picker"><input id="wordSentenceSearch" placeholder="기존 문장 검색"><div class="muted" id="wordSentenceSelectedLabel">연결한 문장 없음</div><div class="related-picker-list" id="wordSentenceChoices"></div></div><p class="notice">선택한 문장은 이 단어의 예문 목록에도 표시돼요.</p></div></details>
+    <details class="link-toggle"><summary>기존 단어와 연결하기 <span class="toggle-selected" id="relatedToggleSummary">선택 안 함</span></summary><div class="link-toggle-body"><div class="related-picker"><input id="relatedSearch" placeholder="내 단어장에서 단어 검색"><div class="muted" id="relatedSelectedLabel">연결된 단어 없음</div><div id="relatedSelectedWords" class="related-selected-words"></div><div class="related-picker-list" id="relatedChoices"></div><div class="new-related-inline"><div class="new-related-heading"><strong>새 단어 바로 추가</strong><span>연결할 표현을 단어장에 등록해요</span></div><div class="new-related-fields"><label><span>단어 또는 표현</span><input id="newRelatedWord" placeholder="예: transform"></label><label><span>뜻</span><input id="newRelatedMeaning" placeholder="예: 변화시키다, 변형하다"></label></div><button type="button" id="addRelatedWord" class="secondary">＋ 단어 추가하고 연결</button></div></div><p class="notice">뜻이나 쓰임이 비슷하거나 함께 기억하고 싶은 단어를 연결하세요.</p></div></details>
+    <div class="row"><button id="saveWord">단어 저장하기</button><button class="secondary hidden" id="cancelEdit">수정 취소</button></div>
+  </div>
+</section>
+
+<section id="study" class="hidden">
+  <div class="panel card-panel">
+    <div class="review-card-top"><div class="muted" id="studyCount">단어 복습</div><button type="button" class="secondary extra-review-btn" id="extraWordStudy">추가 복습</button></div><div class="card-big" id="front">복습을 시작해 보세요.</div>
+    <button id="revealWord">뜻 확인하기</button>
+    <div class="card-answer hidden" id="wordBack"><h2 id="backMeaning"></h2><div id="backPartOfSpeechWrap" class="muted hidden" style="margin:4px 0 12px"><span id="backPartOfSpeech"></span></div><div id="backExample" class="example-en"></div><div id="backTranslation" class="example-ko"></div><div id="backRelatedWrap" class="hidden" style="margin-top:12px;text-align:left"><div class="detail-label">연결된 단어</div><div id="backRelated"></div></div>
+      <div class="grade"><button class="again" data-word-grade="again">다시</button><button class="hard" data-word-grade="hard">어려움</button><button class="good" data-word-grade="good">알겠음</button><button class="easy" data-word-grade="easy">쉬움</button></div>
+    </div><p class="notice" id="studyHint">영어 단어를 보고 뜻을 떠올려 보세요.</p>
+    <div class="writing-practice-launch"><div><strong>오늘의 영작 연습</strong><p class="muted">복습한 단어를 활용해 하루 3문제</p></div><button type="button" class="secondary" id="openDailyWriting">영작 3문제</button></div>
+    <div id="dailyWritingArea" class="hidden writing-practice-area"></div>
+  </div>
+</section>
+
+<section id="sentences" class="hidden">
+  <div class="panel card-panel">
+    <div class="review-card-top"><div class="muted" id="sentenceCount">문장 복습</div><button type="button" class="secondary extra-review-btn" id="extraSentenceStudy">추가 복습</button></div><div class="pill">한국어 해석을 보고 영어 문장 떠올리기</div>
+    <div class="card-big" id="sentenceFront">문장 복습을 시작해 보세요.</div>
+    <div id="sentenceWriteArea" class="field" style="margin:16px 0 10px"><textarea id="sentenceAnswerInput" rows="3" placeholder="영어 문장을 입력하세요" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea><button type="button" id="checkSentenceAnswer" style="width:100%;margin-top:8px">정답 확인</button></div>
+    <div class="card-answer hidden" id="sentenceBack"><div id="sentenceCheckFeedback" class="notice" style="margin-bottom:10px"></div><h2 class="example-en" id="sentenceEnglish"></h2><p class="muted" id="sentenceWord"></p>
+      <div class="grade" id="sentenceGradeOptions"><button class="again" data-sentence-grade="again">다시</button><button class="hard" data-sentence-grade="hard">어려움</button><button class="good" data-sentence-grade="good">알겠음</button><button class="easy" data-sentence-grade="easy">쉬움</button></div>
+    </div><p class="notice" id="sentenceHint">한국어 뜻을 보고 영어 문장을 직접 입력해 보세요.</p>
+  </div>
+</section>
+
+<section id="quiz" class="hidden">
+  <div class="panel quiz-panel">
+    <div class="quiz-heading"><div><p class="eyebrow">WORDLOOP · MONTHLY TEST</p><h2 id="quizTitle">월간 테스트</h2><p class="muted">선택한 달의 학습 내용과 과거 미숙달 항목을 확인해요.</p></div><span class="quiz-mark">✎</span></div>
+    <div class="quiz-setup">
+      <div class="field"><label for="quizMonth">학습 월 선택</label><input type="month" id="quizMonth"></div>
+      <button type="button" id="startQuizBtn">테스트 불러오기</button>
+    </div>
+    <div id="quizSessions" class="monthly-sessions"></div>
+    <div id="quizStage" class="quiz-stage hidden">
+      <div class="quiz-stage-top"><span id="quizTypeLabel">세션</span><span id="quizCount">문제 1 / 30</span></div>
+      <div class="progress-track"><div class="progress-fill" id="quizProgress"></div></div>
+      <div class="quiz-question-label" id="quizQuestionLabel">한국어 해석</div>
+      <div class="card-big" id="quizPrompt"></div>
+      <form id="quizAnswerForm" class="quiz-answer-form">
+        <input id="quizAnswer" type="text" autocomplete="off" placeholder="영어 문장을 입력하세요">
+        <button type="submit" id="submitQuizAnswer">정답 확인</button>
+      </form>
+      <div class="field hidden" id="quizIntentWrap"><label for="quizIntent">내가 의도한 한국어 뜻</label><textarea id="quizIntent" rows="2" placeholder="이 문장으로 표현하려던 의미를 한국어로 적어 주세요"></textarea></div>
+      <div id="quizFeedback" class="feedback hidden" aria-live="polite"></div>
+      <div class="quiz-footer">
+        <button type="button" class="secondary hidden" id="nextQuiz">다음 문제</button>
+        <button type="button" class="secondary" id="saveQuizExit">저장하고 나가기</button>
+        <button type="button" class="secondary hidden" id="completeQuizSession">30문제 제출하고 AI 채점</button>
+      </div>
+      <p class="notice" id="quizHint">답변은 입력할 때마다 자동 저장돼요.</p>
+    </div>
+  </div>
+</section>
+
+<section id="sentenceAdd" class="hidden"><div class="panel"><h2 id="sentenceFormTitle">새 문장 등록</h2><div class="field"><label for="newSentenceEn">영어 문장 *</label><textarea id="newSentenceEn" placeholder="I was reluctant to ask for help."></textarea></div><div class="field"><div class="section-head"><label for="newSentenceKo">한국어 해석 *</label><button type="button" class="secondary" id="translateSentence">자동 번역</button></div><textarea id="newSentenceKo" placeholder="나는 도움을 요청하는 것이 내키지 않았다."></textarea></div><div class="ai-review-actions"><button type="button" class="secondary" id="explainNewSentence">✦ AI 문장 설명</button><p class="notice">문장의 구조, 문법, 동사 용법과 자연스러운 의미를 설명해요.</p></div><div id="sentenceAIExplanation" class="ai-review-result hidden"></div><div class="field"><label>기존 단어와 연결하기 (선택)</label><div id="sentenceExpressionRecommendations" class="related-picker-list"></div><input id="sentenceExpressionSearch" placeholder="기존 단어 직접 검색"><div id="sentenceExpressionResults" class="related-picker-list"></div><div id="sentenceExpressionSelected" class="muted">선택한 표현 없음</div></div><div class="field"><label>새 표현 추가</label><div class="row"><input id="newExpression" placeholder="reluctant"><input id="newExpressionMeaning" placeholder="꺼리는, 내키지 않는"></div><button type="button" class="secondary" id="addSentenceExpression">＋ 표현 추가</button></div><div id="newSentenceExpressionTags"></div><button id="saveStandaloneSentence">문장 저장하기</button></div></section>
+<section id="words" class="hidden">
+  <div class="panel"><div class="section-head wordbook-head"><div class="wordbook-title-group"><h2>내 단어장</h2><select id="wordbookViewSelect" aria-label="단어장 보기"><option value="all">전체</option><option value="words">단어</option><option value="sentences">문장</option><option value="passages">본문</option><option value="writing">작문기록</option></select></div><input class="search" id="search" placeholder="단어·뜻 검색..."></div>
+    <p class="notice" id="wordbookNotice">단어를 누르면 뜻과 예문이 펼쳐져요.</p><div id="wordList" class="wordlist"></div>
+    <div id="passageEditor" class="passage-editor hidden">
+      <div class="section-head"><h2 id="passageEditorTitle">새 본문 등록</h2><button type="button" class="ghost" id="cancelPassageEdit">닫기</button></div>
+      <div class="field"><label for="passageTitle">본문 제목 *</label><input id="passageTitle" placeholder="Falling Wine Sales Reflect a Societal Shift"></div>
+      <div class="field"><label for="passageText">영어 본문 *</label><textarea id="passageText" rows="7" placeholder="본문 전체를 입력하세요. 문단과 문장 순서를 유지할 수 있어요."></textarea></div>
+      <div class="field"><label for="passageTranslation">한국어 해석 (선택)</label><textarea id="passageTranslation" rows="5" placeholder="본문 전체 해석을 입력하세요."></textarea></div>
+      <div class="field"><label>기존 단어 연결</label><input id="passageWordSearch" placeholder="단어 검색"><div id="passageWordChoices" class="related-picker-list"></div></div>
+      <div class="field"><label>기존 문장 연결</label><input id="passageSentenceSearch" placeholder="문장 또는 해석 검색"><div id="passageSentenceChoices" class="related-picker-list"></div></div>
+      <div class="row"><button type="button" id="savePassage">본문 저장하기</button><button type="button" class="secondary hidden" id="deletePassageFromEditor">삭제</button></div>
+      <p class="notice">기존 단어와 문장을 연결하므로 데이터가 복사되거나 복습 기록이 초기화되지 않아요.</p>
+    </div>
+    <div id="passageAddActions" class="passage-add-actions"><button type="button" class="secondary" id="addPassageBtn">＋ 본문 추가</button></div>
+  </div>
+</section>
+</main>
+
+<div class="collect-import-backdrop" id="collectImportModal" role="dialog" aria-modal="true" aria-labelledby="collectImportTitle"><div class="collect-import-card"><h2 id="collectImportTitle">Collect에서 가져오기</h2><p class="muted">가져올 형식을 선택하면 Wordloop 입력 화면에 내용을 채워둘게요. 확인 후 직접 저장해야 등록됩니다.</p><div class="collect-import-preview" id="collectImportPreview"></div><div class="collect-import-source" id="collectImportSource"></div><div class="collect-import-actions"><button type="button" id="collectImportSentence">문장으로 가져오기</button><button type="button" class="secondary" id="collectImportWord">단어로 가져오기</button></div><div class="collect-import-foot"><button type="button" class="ghost" id="collectImportCancel">닫기</button></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1"></script>
+<script>
+'use strict';
+const KEY='wordloop-v1';
+const SUPABASE_URL='https://jmjfhvlrwwfuyurbxlsy.supabase.co';
+const SUPABASE_KEY='sb_publishable_ED2G8FRPHtCz5y_AmazRiw_nCitH2d1';
+const OWNER_EMAIL='srin001@icloud.com';
+const AUTH_STORAGE_KEY='sb-jmjfhvlrwwfuyurbxlsy-auth-token';
+const AUTH_BACKUP_KEY='wordloop-auth-refresh-backup-v1';
+document.getElementById('authMessage').textContent='앱 스크립트 시작됨 · 로그인 기능을 초기화하고 있어요…';
+function backupAuthSession(session){try{if(session?.refresh_token)localStorage.setItem(AUTH_BACKUP_KEY,JSON.stringify({refresh_token:session.refresh_token,updated_at:Date.now()}));}catch(e){console.error('Wordloop auth backup failed:',e);}}
+let wordloopAuthLockTail=Promise.resolve();
+const wordloopAuthLock=async(_name,_acquireTimeout,fn)=>{
+  const previous=wordloopAuthLockTail;
+  let release;
+  wordloopAuthLockTail=new Promise(resolve=>{release=resolve;});
+  await previous;
+  try{return await fn();}finally{release();}
+};
+let supabaseClient=null;
+window.wordloopSupabaseClient=null;
+// Install the tap handler BEFORE initializing Supabase. A storage/CDN initialization
+// error must never leave the visible login button without a click response.
+document.getElementById('loginBtn')?.addEventListener('click',async event=>{
+ event.preventDefault();
+ const btn=document.getElementById('loginBtn'),message=document.getElementById('authMessage');
+ const email=document.getElementById('authEmail')?.value.trim().toLowerCase(),password=document.getElementById('authPassword')?.value||'';
+ if(!email||!password){message.textContent='이메일과 비밀번호를 입력해 주세요.';return;}
+ const client=window.wordloopSupabaseClient;
+ if(!client?.auth){message.textContent='로그인 기능 초기화에 실패했어요. '+(window.wordloopAuthInitError||'페이지를 새로고침해 주세요.');return;}
+ btn.disabled=true;message.textContent='로그인 요청을 보내고 있어요…';
+ try{
+  const {data,error}=await client.auth.signInWithPassword({email,password});
+  if(error)throw error;
+  if(!data?.user||!data?.session)throw new Error('로그인 세션을 받지 못했어요. 다시 시도해 주세요.');
+  backupAuthSession(data.session);await activateAccount(data.user);
+ }catch(error){console.error('Wordloop login failed:',error);message.textContent=typeof authErrorMessage==='function'?authErrorMessage(error):String(error.message||error);}
+ finally{btn.disabled=false;}
+},true);
+try{
+ let authStorage=null;
+ try{authStorage=window.localStorage;authStorage.getItem('__wordloop_storage_probe__');}
+ catch(storageError){console.warn('Wordloop localStorage unavailable; using Supabase fallback storage:',storageError);}
+ const authOptions={storageKey:AUTH_STORAGE_KEY,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,lock:wordloopAuthLock};
+ if(authStorage)authOptions.storage=authStorage;
+ if(!window.supabase?.createClient)throw new Error('Supabase 로그인 라이브러리를 불러오지 못했어요. 네트워크 또는 콘텐츠 차단 설정을 확인해 주세요.');
+ supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:authOptions});
+ if(!supabaseClient?.auth)throw new Error('Supabase 인증 기능을 초기화하지 못했어요.');
+ window.wordloopSupabaseClient=supabaseClient;
+}catch(initError){
+ window.wordloopAuthInitError=String(initError?.message||initError);
+ console.error('Wordloop Supabase initialization failed:',initError);
+ document.getElementById('authMessage').textContent='로그인 기능 초기화 오류: '+window.wordloopAuthInitError;
+}
+// Early auth bootstrap and visible diagnostics: catch errors before the end-of-file startup code.
+window.addEventListener('error',event=>{
+  console.error('Wordloop script error:',event.error||event.message);
+  const message=document.getElementById('authMessage');
+  if(message)message.textContent='앱 실행 오류: '+String(event.message||event.error?.message||'알 수 없는 스크립트 오류');
+});
+window.addEventListener('unhandledrejection',event=>{
+  console.error('Wordloop unhandled rejection:',event.reason);
+  const message=document.getElementById('authMessage');
+  if(message)message.textContent='앱 초기화 오류: '+String(event.reason?.message||event.reason||'알 수 없는 비동기 오류');
+});
+// Initialization status is set before any operation that can fail.
+// Run after this script has finished declaring its shared helpers (including the $ selector).
+queueMicrotask(()=>{
+  bootAuth().catch(error=>{
+    console.error('Wordloop authentication startup failed:',error);
+    const gate=document.getElementById('authGate'),main=document.getElementById('appMain'),message=document.getElementById('authMessage');
+    if(gate)gate.classList.remove('hidden');
+    if(main)main.classList.add('hidden');
+    if(message)message.textContent='로그인 초기화 오류: '+String(error?.message||error);
+  });
+});
+function authStorageDiagnostic(){try{const raw=localStorage.getItem(AUTH_STORAGE_KEY),backupRaw=localStorage.getItem(AUTH_BACKUP_KEY);const primary=raw?JSON.parse(raw):null,backup=backupRaw?JSON.parse(backupRaw):null;const p=!!primary?.refresh_token,b=!!backup?.refresh_token;if(p&&b)return '진단: Safari에 기본 로그인 토큰과 백업 토큰이 모두 저장돼 있어요. Supabase 세션 복원 단계에서 실패한 상태예요.';if(p)return '진단: 기본 로그인 토큰은 저장돼 있지만 백업 토큰은 없어요. Supabase 세션 복원 오류를 확인해야 해요.';if(b)return '진단: 백업 로그인 토큰은 저장돼 있지만 기본 토큰이 없어요. 백업 토큰으로 복원을 시도했어요.';return '진단: Safari 저장 공간에 로그인 토큰이 없어요. 로그인 시 토큰 저장이 되지 않았거나 다른 웹사이트 주소로 저장됐을 수 있어요.';}catch(e){return '진단: Safari 웹사이트 저장 공간에 접근하지 못했어요. 개인정보 보호 설정 또는 저장 공간 오류를 확인해야 해요.';}}
+let words=[];
+let standaloneSentences=[];
+const SENTENCE_STORE_ID='__wordloop_sentence_store__';
+let deletedIds=new Set();
+try{words=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(words))words=[];}catch(e){words=[];}
+try{deletedIds=new Set(JSON.parse(localStorage.getItem(KEY+'-deleted')||'[]').map(String));}catch(e){deletedIds=new Set();}
+const sentenceStoreAtLoad=words.find(w=>w&&w.id===SENTENCE_STORE_ID)||{};
+standaloneSentences=sentenceStoreAtLoad.items||[];
+let passages=Array.isArray(sentenceStoreAtLoad.passages)?sentenceStoreAtLoad.passages:[];
+let deletedPassageIds=new Set(Array.isArray(sentenceStoreAtLoad.deletedPassageIds)?sentenceStoreAtLoad.deletedPassageIds.map(String):[]);
+passages=passages.filter(p=>p&&p.id&&!deletedPassageIds.has(String(p.id)));
+let dailyReviewPlans=Array.isArray(sentenceStoreAtLoad.dailyReviewPlans)?sentenceStoreAtLoad.dailyReviewPlans:[];
+let wordCategories=Array.isArray(sentenceStoreAtLoad.categories)?sentenceStoreAtLoad.categories.filter(x=>typeof x==='string'&&x.trim()):['일상 영어','직장 영어','IELTS','기타'];
+wordCategories=[...new Set(wordCategories.map(x=>x.trim()))];if(!wordCategories.length)wordCategories=['일상 영어','직장 영어','IELTS','기타'];
+let monthlyTestLog=Array.isArray(sentenceStoreAtLoad.monthlyTests)?sentenceStoreAtLoad.monthlyTests:[];
+let dailyWritingPractice=sentenceStoreAtLoad.dailyWritingPractice&&typeof sentenceStoreAtLoad.dailyWritingPractice==='object'?sentenceStoreAtLoad.dailyWritingPractice:null;
+let dailyWritingHistory=Array.isArray(sentenceStoreAtLoad.dailyWritingHistory)?sentenceStoreAtLoad.dailyWritingHistory:[];
+words=words.filter(w=>w&&w.id&&w.id!==SENTENCE_STORE_ID&&!deletedIds.has(String(w.id)));
+let currentUser=null,cloudReady=false,activatingUserId=null,saveTimer=null,syncChannel=null;
+let selectedRelatedIds=[],selectedSentenceIds=[],toastTimer=null,deletingWord=false,latestAIReview=null;
+let expandedId=null,editingId=null,wordQueue=[],currentWord=null,sentenceQueue=[],currentSentence=null;
+let quizState={queue:[],current:null,index:0,score:0,wrong:[],answered:false,mode:'meaningToWord',onlyWrong:false};
+const $=id=>document.getElementById(id);
+function renderCategoryOptions(selected=$('category')?.value||''){const el=$('category');if(!el)return;el.innerHTML='<option value="">선택 안 함</option>'+wordCategories.map(name=>'<option value="'+esc(name)+'">'+esc(name)+'</option>').join('');el.value=wordCategories.includes(selected)?selected:'';}
+function renderCategoryManager(){const el=$('categoryManagerList');if(!el)return;el.innerHTML=wordCategories.map((name,index)=>'<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#fff"><span style="font-size:13px;flex:1">'+esc(name)+'</span><div style="display:flex;gap:4px;flex:0 0 auto"><button type="button" class="secondary" data-move-category="'+index+'" data-delta="-1" aria-label="'+esc(name)+' 위로 이동" '+(index===0?'disabled':'')+' style="padding:5px 9px;min-height:32px;font-size:13px">↑</button><button type="button" class="secondary" data-move-category="'+index+'" data-delta="1" aria-label="'+esc(name)+' 아래로 이동" '+(index===wordCategories.length-1?'disabled':'')+' style="padding:5px 9px;min-height:32px;font-size:13px">↓</button><button type="button" class="danger" data-delete-category="'+esc(name)+'" style="padding:5px 9px;min-height:32px;font-size:11px">삭제</button></div></div>').join('')||'<span class="muted">등록된 카테고리가 없어요.</span>';}
+function moveWordCategory(index,delta){const next=index+delta;if(next<0||next>=wordCategories.length)return;const selected=$('category')?.value||'';[wordCategories[index],wordCategories[next]]=[wordCategories[next],wordCategories[index]];renderCategoryOptions(selected);renderCategoryManager();save();}
+function addWordCategory(){const input=$('newCategoryName'),name=input.value.trim();if(!name){showToast('카테고리 이름을 입력해 주세요.');return;}if(wordCategories.some(x=>x.toLowerCase()===name.toLowerCase())){showToast('이미 있는 카테고리예요.');return;}wordCategories.push(name);renderCategoryOptions(name);renderCategoryManager();input.value='';save();showToast('카테고리를 추가했어요.');}
+function deleteWordCategory(name){const count=words.filter(w=>w.category===name).length;const message=count?'\''+name+'\' 카테고리를 삭제할까요? 해당 단어 '+count+'개의 단어 정보는 유지되고 카테고리만 빈칸이 됩니다.':'\''+name+'\' 카테고리를 삭제할까요?';if(!confirm(message))return;wordCategories=wordCategories.filter(x=>x!==name);words.forEach(w=>{if(w.category===name)w.category='';});if($('category').value===name)$('category').value='';renderCategoryOptions('');renderCategoryManager();save();showToast('카테고리를 삭제했어요. 단어는 그대로 보존됐어요.');}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+function aiSaveButtonHTML(english,meaning,kind='표현',source='AI 문장 설명'){
+ const en=String(english||'').trim(),ko=String(meaning||'').trim();
+ if(!en||!ko)return '';
+ return '<button type="button" class="secondary ai-save-item" data-ai-save-item="'+esc(en)+'" data-ai-save-meaning="'+esc(ko)+'" data-ai-save-kind="'+esc(kind)+'" data-ai-save-source="'+esc(source)+'">＋ 문장 탭에 저장</button>';
+}
+function saveAIItemToSentenceBook(button){
+ const example=String(button.dataset.aiSaveItem||'').trim(),translation=String(button.dataset.aiSaveMeaning||'').trim();
+ if(!example||!translation){showToast('저장할 영어 표현과 뜻을 확인해 주세요.');return;}
+ const duplicate=sentenceWords().some(x=>String(x.example||'').trim().toLowerCase()===example.toLowerCase()&&String(x.translation||'').trim()===translation);
+ if(duplicate){showToast('이미 문장 탭에 저장된 표현이에요.');button.textContent='이미 저장됨';button.disabled=true;return;}
+ standaloneSentences.unshift({id:uid(),example,translation,expressions:[],created:Date.now(),sourceNote:'AI에서 저장 · '+String(button.dataset.aiSaveSource||'AI 답변'),sourceType:'ai-'+String(button.dataset.aiSaveKind||'expression')});
+ save();button.textContent='저장 완료';button.disabled=true;showToast('내 단어장 문장 탭에 저장했어요.');
+}
+const setSyncStatus=(message)=>{const el=$('syncStatus');if(el)el.textContent=message;};
+const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify([...words,{id:SENTENCE_STORE_ID,items:standaloneSentences,passages,deletedPassageIds:[...deletedPassageIds],monthlyTests:monthlyTestLog,dailyReviewPlans,dailyWritingPractice,dailyWritingHistory,categories:wordCategories}]));localStorage.setItem(KEY+'-deleted',JSON.stringify([...deletedIds]));renderStats();renderList();};
+const save=()=>{saveLocal();if(currentUser&&cloudReady){setSyncStatus('저장 중…');clearTimeout(saveTimer);saveTimer=setTimeout(writeCloud,450);}};
+async function writeCloud(){
+  if(!currentUser)return;
+  const snapshot=[...JSON.parse(JSON.stringify(words)),{id:SENTENCE_STORE_ID,items:JSON.parse(JSON.stringify(standaloneSentences)),passages:JSON.parse(JSON.stringify(passages)),deletedPassageIds:[...deletedPassageIds],monthlyTests:JSON.parse(JSON.stringify(monthlyTestLog)),dailyWritingPractice:JSON.parse(JSON.stringify(dailyWritingPractice)),dailyWritingHistory:JSON.parse(JSON.stringify(dailyWritingHistory)),categories:JSON.parse(JSON.stringify(wordCategories))},...[...deletedIds].map(id=>({id,_deleted:true,deletedAt:Date.now()}))];
+  const {error}=await supabaseClient.from('wordloop_data').upsert(
+    {user_id:currentUser.id,words:snapshot,updated_at:new Date().toISOString()},
+    {onConflict:'user_id'}
+  );
+  if(error){console.error(error);setSyncStatus('동기화 오류 · 인터넷 연결 확인');return;}
+  setSyncStatus('동기화 완료');
+}
+function mergeCloudWords(remoteWords){
+  const remote=Array.isArray(remoteWords)?remoteWords:[];
+  let cloudNeedsUpdate=false;
+  remote.filter(w=>w&&w.id&&w._deleted).forEach(w=>deletedIds.add(String(w.id)));
+  const sentenceStore=remote.find(w=>w&&w.id===SENTENCE_STORE_ID);if(sentenceStore?.dailyWritingPractice&&(!dailyWritingPractice||Number(sentenceStore.dailyWritingPractice.updatedAt||0)>Number(dailyWritingPractice.updatedAt||0)))dailyWritingPractice=sentenceStore.dailyWritingPractice;const historyMap=new Map((Array.isArray(sentenceStore?.dailyWritingHistory)?sentenceStore.dailyWritingHistory:[]).filter(x=>x&&x.date).map(x=>[x.date,x]));for(const item of dailyWritingHistory){if(item?.date){const prior=historyMap.get(item.date);if(!prior||Number(item.updatedAt||0)>=Number(prior.updatedAt||0))historyMap.set(item.date,item);}}dailyWritingHistory=Array.from(historyMap.values()).sort((a,b)=>String(b.date).localeCompare(String(a.date)));if(Array.isArray(sentenceStore?.categories)){wordCategories=[...new Set(sentenceStore.categories.filter(x=>typeof x==='string'&&x.trim()).map(x=>x.trim()))];}else{cloudNeedsUpdate=true;}const remoteTests=Array.isArray(sentenceStore?.monthlyTests)?sentenceStore.monthlyTests:[];const testMap=new Map(remoteTests.filter(x=>x&&x.month).map(x=>[x.month,x]));for(const item of monthlyTestLog){if(!item||!item.month)continue;const prior=testMap.get(item.month);if(!prior){testMap.set(item.month,item);continue;}const sessions=new Map((Array.isArray(prior.sessions)?prior.sessions:[]).map(x=>[x.id,x]));for(const localSession of (Array.isArray(item.sessions)?item.sessions:[])){const cloudSession=sessions.get(localSession.id);if(!cloudSession||Number(localSession.updatedAt||localSession.completedAt||0)>=Number(cloudSession.updatedAt||cloudSession.completedAt||0))sessions.set(localSession.id,localSession);}testMap.set(item.month,{...prior,...item,sessions:Array.from(sessions.values()),updatedAt:Math.max(Number(prior.updatedAt)||0,Number(item.updatedAt)||0)});}monthlyTestLog=Array.from(testMap.values());const remoteSentences=Array.isArray(sentenceStore?.items)?sentenceStore.items:[];const sentenceMap=new Map(remoteSentences.filter(x=>x&&x.id).map(x=>[String(x.id),x]));for(const item of standaloneSentences){if(item&&item.id&&!sentenceMap.has(String(item.id))){sentenceMap.set(String(item.id),item);cloudNeedsUpdate=true;}}standaloneSentences=Array.from(sentenceMap.values());
+  const remotePassages=Array.isArray(sentenceStore?.passages)?sentenceStore.passages:[];
+  const passageTombstones=new Set([...(Array.isArray(sentenceStore?.deletedPassageIds)?sentenceStore.deletedPassageIds:[]).map(String),...deletedPassageIds]);
+  const passageMap=new Map(remotePassages.filter(p=>p&&p.id&&!passageTombstones.has(String(p.id))).map(p=>[String(p.id),p]));
+  for(const p of passages){if(!p||!p.id||passageTombstones.has(String(p.id)))continue;const prior=passageMap.get(String(p.id));if(!prior||Number(p.updatedAt||p.created||0)>=Number(prior.updatedAt||prior.created||0)){passageMap.set(String(p.id),p);if(!prior)cloudNeedsUpdate=true;}}
+  passages=Array.from(passageMap.values());deletedPassageIds=passageTombstones;
+  if(!Array.isArray(sentenceStore?.passages)||!Array.isArray(sentenceStore?.deletedPassageIds))cloudNeedsUpdate=true;
+  const map=new Map(remote.filter(w=>w&&w.id&&w.id!==SENTENCE_STORE_ID&&!w._deleted&&!deletedIds.has(String(w.id))).map(w=>[String(w.id),w]));
+  for(const w of words){
+    if(!w||!w.id||deletedIds.has(String(w.id)))continue;
+    if(!map.has(String(w.id))){map.set(String(w.id),w);cloudNeedsUpdate=true;}
+  }
+  const remoteTombstones=new Set(remote.filter(w=>w&&w.id&&w._deleted).map(w=>String(w.id)));
+  if([...deletedIds].some(id=>!remoteTombstones.has(id)))cloudNeedsUpdate=true;
+  words=Array.from(map.values());
+  normalizeRelatedLinks();
+  saveLocal();
+  return cloudNeedsUpdate;
+}
+async function pullCloud(){
+  if(!currentUser)return;
+  cloudReady=false;
+  setSyncStatus('불러오는 중…');
+  const {data,error}=await supabaseClient.from('wordloop_data').select('words').eq('user_id',currentUser.id).maybeSingle();
+  if(error){console.error(error);setSyncStatus('동기화 오류 · 새로고침해 주세요');cloudReady=true;return;}
+  const hasLocal=words.length>0;
+  const hasCloud=!!data;
+  const localOnly=mergeCloudWords(data?.words||[]);
+  cloudReady=true;
+  if(localOnly||!hasCloud||(!hasLocal&&hasCloud)){
+    await writeCloud();
+  }else{
+    setSyncStatus('동기화 완료');
+  }
+  subscribeToCloud();
+}
+async function refreshCloud(){
+  if(!currentUser||!cloudReady||deletingWord)return;
+  const {data,error}=await supabaseClient.from('wordloop_data').select('words').eq('user_id',currentUser.id).maybeSingle();
+  if(error){console.error(error);return;}
+  const localOnly=mergeCloudWords(data?.words||[]);
+  if(localOnly||!data)await writeCloud();
+}
+function subscribeToCloud(){
+  if(syncChannel){supabaseClient.removeChannel(syncChannel);syncChannel=null;}
+  // Avoid a persistent realtime websocket; foreground refresh keeps devices in sync with lower memory use.
+  return;
+  syncChannel=supabaseClient.channel('wordloop-sync-'+currentUser.id)
+    .on('postgres_changes',{event:'*',schema:'public',table:'wordloop_data',filter:'user_id=eq.'+currentUser.id},payload=>{
+      if(!deletingWord&&payload.new&&Array.isArray(payload.new.words)){
+        const localOnly=mergeCloudWords(payload.new.words);
+        if(localOnly)writeCloud();
+      }
+    }).subscribe();
+}
+async function activateAccount(user){
+  if(!user)return;
+  if(activatingUserId===user.id)return;
+  if(currentUser&&currentUser.id===user.id&&cloudReady)return;
+  activatingUserId=user.id;
+  currentUser=user;
+  $('authGate').classList.add('hidden');
+  $('appMain').classList.remove('hidden');
+  $('topActions').classList.remove('hidden');
+  $('currentAccount').textContent=user.email||OWNER_EMAIL;
+  $('authPassword').value='';
+  // Show the selected screen immediately. Cloud sync must not hold the whole app blank.
+  document.querySelectorAll('main>section').forEach(section=>section.classList.add('hidden'));
+  const savedTab=localStorage.getItem('wordloop-active-tab');
+  const hashTab=location.hash.replace(/^#/, '');
+  const validTabs=['home','addGroup','reviewGroup','quiz','words','add','sentenceAdd','study','sentences'];
+  const restoreTab=validTabs.includes(hashTab)?hashTab:(validTabs.includes(savedTab)?savedTab:'home');
+  // Render the app before waiting for Supabase. A slow or stalled network request
+  // must not leave every main section hidden behind the header.
+  activateTab(restoreTab);
+  try{await pullCloud();}catch(error){console.error('Wordloop cloud startup failed:',error);setSyncStatus('동기화 오류 · 화면은 계속 사용할 수 있어요');}
+  activatingUserId=null;
+  openCollectImportIfPending();
+}
+function showSignedOut(){
+  currentUser=null;cloudReady=false;activatingUserId=null;
+  if(syncChannel){supabaseClient.removeChannel(syncChannel);syncChannel=null;}
+  clearTimeout(saveTimer);
+  $('appMain').classList.add('hidden');
+  $('topActions').classList.add('hidden');
+  $('authGate').classList.remove('hidden');
+  $('authMessage').textContent='이메일과 비밀번호로 로그인하세요.';
+}
+function authErrorMessage(error){
+  const msg=String(error?.message||error||'로그인에 실패했어요.');
+  if(msg.toLowerCase().includes('redirect')||msg.toLowerCase().includes('url')){
+    return '인증 주소가 허용되지 않았어요. Supabase의 Authentication → URL Configuration → Redirect URLs에 아래 주소를 추가해야 해요:\n'+window.location.origin+window.location.pathname;
+  }
+  if(msg.toLowerCase().includes('email not confirmed'))return '먼저 이메일로 받은 인증 링크를 눌러 이메일 인증을 완료해 주세요.';
+  if(msg.toLowerCase().includes('invalid login credentials'))return '이메일 또는 비밀번호가 맞지 않아요. 처음 이용한다면 계정 만들기를 먼저 해 주세요.';
+  return msg;
+}
+async function bootAuth(){
+  $('authMessage').textContent='로그인 상태를 확인하고 있어요…';
+  if(!supabaseClient?.auth){$('authGate').classList.remove('hidden');$('authMessage').textContent='로그인 기능 초기화 오류: '+String(window.wordloopAuthInitError||'Supabase 연결을 확인해 주세요.');return;}
+  supabaseClient.auth.onAuthStateChange((event,session)=>{
+    if(session){backupAuthSession(session);setTimeout(()=>activateAccount(session.user),0);return;}
+    if(event==='SIGNED_OUT'&&!currentUser){$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');}
+  });
+  let authResult;
+  try{
+    authResult=await Promise.race([
+      supabaseClient.auth.getSession(),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('Safari에서 로그인 세션 확인이 8초 이상 지연됐어요. 브라우저 인증 잠금 또는 저장 공간을 확인해야 해요.')),8000))
+    ]);
+  }catch(sessionCheckError){
+    $('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');
+    $('authMessage').textContent='로그인 세션 확인 실패: '+String(sessionCheckError.message||sessionCheckError)+' · '+authStorageDiagnostic();
+    return;
+  }
+  let {data,error}=authResult;
+  if(!error&&!data.session){
+    try{
+      const raw=localStorage.getItem(AUTH_STORAGE_KEY);
+      const primary=raw?JSON.parse(raw):null;
+      const backupRaw=localStorage.getItem(AUTH_BACKUP_KEY);
+      const backup=backupRaw?JSON.parse(backupRaw):null;
+      const saved=primary?.refresh_token?primary:backup;
+      if(saved?.refresh_token){
+        const recovered=await supabaseClient.auth.refreshSession({refresh_token:saved.refresh_token});
+        if(!recovered.error&&recovered.data.session){data={session:recovered.data.session};backupAuthSession(recovered.data.session);}
+        else if(recovered.error)error=recovered.error;
+        else if(!recovered.data.session)error=new Error('저장된 갱신 토큰으로 세션을 복원하지 못했어요. '+authStorageDiagnostic());
+      }
+    }catch(recoveryError){console.error('Wordloop refresh-token recovery failed:',recoveryError);error=recoveryError;}
+  }
+  if(error){console.error('Wordloop session restore failed:',error);$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent='로그인 복원 오류: '+String(error.message||error)+' · '+authStorageDiagnostic();return;}
+  if(data.session){backupAuthSession(data.session);await activateAccount(data.session.user);}
+  else{$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent=authStorageDiagnostic();}
+}
+// Login uses the early capture-phase handler registered before app initialization.
+$('signupBtn').onclick=async()=>{
+  const email=$('authEmail').value.trim().toLowerCase(),password=$('authPassword').value;
+  if(email!==OWNER_EMAIL){$('authMessage').textContent='이 Wordloop 계정은 지정된 이메일 주소만 사용할 수 있어요.';return;}
+  if(password.length<8){$('authMessage').textContent='비밀번호는 8자 이상으로 설정해 주세요.';return;}
+  $('signupBtn').disabled=true;$('authMessage').textContent='계정을 만들고 있어요…';
+  if(!supabaseClient?.auth){$('authMessage').textContent='로그인 기능을 초기화하지 못했어요. '+String(window.wordloopAuthInitError||'');$('signupBtn').disabled=false;return;}
+  const {data,error}=await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin+window.location.pathname}});
+  $('signupBtn').disabled=false;
+  if(error){$('authMessage').textContent=authErrorMessage(error);return;}
+  if(data.session){await activateAccount(data.user);}
+  else{$('authMessage').textContent='인증 메일을 보냈어요. 메일함에서 인증 링크를 누른 뒤 이 페이지로 돌아와 로그인해 주세요.';}
+};
+$('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();try{localStorage.removeItem(AUTH_BACKUP_KEY);}catch(e){}showSignedOut();};
+$('logoHomeBtn').addEventListener('click',()=>activateTab('home'));
+$('logoHomeBtn').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activateTab('home');}});
+window.addEventListener('focus',()=>{if(currentUser&&cloudReady)refreshCloud();});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&currentUser&&cloudReady)refreshCloud();});
+function getDirectionProgress(w,direction){
+  if(!w.directionProgress||typeof w.directionProgress!=='object')w.directionProgress={};
+  if(!w.directionProgress[direction])w.directionProgress[direction]={streak:0,next:0,reps:0,lastGrade:null};
+  return w.directionProgress[direction];
+}
+const isDirectionDue=(w,direction)=>{const p=getDirectionProgress(w,direction);return !p.next||p.next<=Date.now();};
+const todayKey=()=>dateKey(new Date());
+const extraReviewedToday=(item,key)=>Array.isArray(item.reviewLog)&&item.reviewLog.some(e=>e.extra&&e.wasDue&&dateKey(e.at)===key);
+const extraSentenceReviewedToday=(item,key)=>Array.isArray(item.sentenceLog)&&item.sentenceLog.some(e=>e.extra&&e.wasDue&&dateKey(e.at)===key);
+const dueWords=()=>words.filter(w=>isDirectionDue(w,'en-ko')||isDirectionDue(w,'ko-en')||extraReviewedToday(w,todayKey()));
+const legacySentenceWords=()=>words.flatMap(w=>(Array.isArray(w.examples)&&w.examples.length?w.examples:[{id:'legacy',example:w.example,translation:w.translation,expressions:w.exampleExpressions||[],sentenceNext:w.sentenceNext,sentenceInterval:w.sentenceInterval,sentenceReps:w.sentenceReps}]).filter(x=>x.example&&x.translation).map((x,i)=>({...x,id:w.id+'::'+(x.id||i),wordId:w.id,word:w.word,meaning:w.meaning,created:w.created,expressions:Array.isArray(x.expressions)?x.expressions:[]})));
+const sentenceWords=()=>[...standaloneSentences.map(x=>({...x,standalone:true,word:(x.expressions||[]).map(e=>e.expression).join(', '),wordId:null})),...legacySentenceWords()];
+const dueSentences=()=>sentenceWords().filter(w=>!w.sentenceNext||w.sentenceNext<=Date.now()||extraSentenceReviewedToday(w,todayKey()));
+function dateKey(value){
+  const d=value instanceof Date?value:new Date(value);
+  if(Number.isNaN(d.getTime()))return '';
+  return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+}
+function monthKey(value){
+  const d=value instanceof Date?value:new Date(value);
+  if(Number.isNaN(d.getTime()))return '';
+  return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0')].join('-');
+}
+function formatDate(value){
+  if(!value)return '날짜 정보 없음';
+  const d=new Date(value);
+  return Number.isNaN(d.getTime())?'날짜 정보 없음':d.toLocaleDateString('ko-KR',{year:'numeric',month:'short',day:'numeric'});
+}
+function wordStatus(w){
+  const en=getDirectionProgress(w,'en-ko'),ko=getDirectionProgress(w,'ko-en');
+  if(Number(en.streak)>=5&&Number(ko.streak)>=5)return 'mastered';
+  if(Number(en.streak)>0||Number(ko.streak)>0)return 'learning';
+  return 'needs-review';
+}
+function statusLabel(w){
+  return ({mastered:'완벽 암기',learning:'익히는 중','needs-review':'복습 필요'})[wordStatus(w)];
+}
+function nextReviewText(w){
+  const logged=Array.isArray(w.reviewLog)?w.reviewLog.length:0;
+  const count=Math.max(Number(w.reps)||0,logged);
+  return '복습 횟수: '+count+'회';
+}
+function recordEvent(w,key,event){
+  const list=Array.isArray(w[key])?w[key]:[];
+  list.push(event);
+  w[key]=list.slice(-240);
+}
+function ensureDailyReviewPlan(key){
+  if(key!==dateKey(new Date()))return;
+  if(dailyReviewPlans.some(x=>x.date===key))return;
+  dailyReviewPlans.push({date:key,word:dueWords().length,sentence:dueSentences().length,capturedAt:Date.now()});
+  dailyReviewPlans=dailyReviewPlans.slice(-400);
+  saveLocal();
+}
+function activityForDate(key){
+  const result={added:0,word:0,sentence:0,test:0};
+  words.forEach(w=>{
+    if(dateKey(w.created)===key)result.added++;
+    (Array.isArray(w.reviewLog)?w.reviewLog:[]).forEach(e=>{if(!e.extra&&dateKey(e.at)===key)result.word++;});
+    (Array.isArray(w.sentenceLog)?w.sentenceLog:[]).forEach(e=>{if(!e.extra&&dateKey(e.at)===key)result.sentence++;});
+    (Array.isArray(w.testLog)?w.testLog:[]).forEach(e=>{if(dateKey(e.at)===key)result.test++;});
+  });
+  standaloneSentences.forEach(item=>{
+    if(dateKey(item.created)===key)result.added++;
+    (Array.isArray(item.sentenceLog)?item.sentenceLog:[]).forEach(e=>{if(!e.extra&&dateKey(e.at)===key)result.sentence++;});
+  });
+  return result;
+}
+let calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let selectedCalendarDate=dateKey(new Date());
+function renderCalendar(){
+  if(!$('activityCalendar')||!$('calendarMonthLabel')||!$('calendarDayDetail')||!$('todayDate')||!$('todayAdded')||!$('todayReviewed')||!$('monthlyTestStatus'))return;
+  const year=calendarMonth.getFullYear(),month=calendarMonth.getMonth();
+  $('calendarMonthLabel').textContent=calendarMonth.toLocaleDateString('ko-KR',{year:'numeric',month:'long'});
+
+  const firstOffset=(new Date(year,month,1).getDay()+6)%7;
+  const totalDays=new Date(year,month+1,0).getDate();
+  const cells=Math.ceil((firstOffset+totalDays)/7)*7;
+  const today=dateKey(new Date());
+  const parts=[];
+  for(let i=0;i<cells;i++){
+    const day=i-firstOffset+1;
+    if(day<1||day>totalDays){
+      parts.push('<div class="calendar-day other-month" aria-hidden="true"></div>');
+      continue;
+    }
+    const key=[year,String(month+1).padStart(2,'0'),String(day).padStart(2,'0')].join('-');
+    const a=activityForDate(key);
+    ensureDailyReviewPlan(key);
+    const plan=dailyReviewPlans.find(x=>x.date===key);
+    const events=[];
+    events.push(a.added?'<i class="add-count" title="단어 등록 '+a.added+'개"><span class="calendar-event-plus" aria-hidden="true">+</span>'+a.added+'</i>':'<i class="event-empty" aria-hidden="true"></i>');
+    const plannedTotal=plan?(Number(plan.word)||0)+(Number(plan.sentence)||0):0;
+    const completedTotal=a.word+a.sentence;
+    let reviewMark='';
+    if(key===today){
+      // 오늘은 실제 복습 기록과 남은 복습 항목을 함께 확인해요.
+      const pendingNow=dueWords().length+dueSentences().length;
+      if(pendingNow<=0&&completedTotal>0)reviewMark='<i class="review-status-mark review-status-done" title="복습 완료">○</i>';
+      else if(pendingNow>0&&completedTotal>0)reviewMark='<i class="review-status-mark review-status-partial" title="복습 일부 완료">△</i>';
+      else if(pendingNow>0)reviewMark='<i class="review-status-mark review-status-x" title="복습 미완료">×</i>';
+    }else if(plan&&plannedTotal>0){
+      if(completedTotal<=0)reviewMark='<i class="review-status-mark review-status-x" title="복습 미완료">×</i>';
+      else if(completedTotal<plannedTotal)reviewMark='<i class="review-status-mark review-status-partial" title="복습 일부 완료">△</i>';
+      else reviewMark='<i class="review-status-mark review-status-done" title="복습 완료">○</i>';
+    }else if(key<today&&completedTotal>0){
+      reviewMark='<i class="review-status-mark review-status-done" title="이 날짜에 복습 기록이 있어요">○</i>';
+    }
+    events.push(reviewMark||'<i class="event-empty" aria-hidden="true"></i>');
+    const classes=['calendar-day'];
+    if(key===today)classes.push('today');
+    if(key===selectedCalendarDate)classes.push('selected');
+    parts.push('<button type="button" class="'+classes.join(' ')+'" data-calendar-date="'+key+'" title="'+key+' 등록 '+a.added+' · 복습 '+(a.word+a.sentence)+' · 테스트 '+a.test+'"><span class="day-header"><span class="day-number">'+day+'</span></span><span class="day-events">'+events.join('')+'</span></button>');
+  }
+  $('activityCalendar').innerHTML=parts.join('');
+  const a=activityForDate(selectedCalendarDate);
+  $('calendarDayDetail').innerHTML='<div class="calendar-detail-date"><strong>'+selectedCalendarDate+'</strong></div><div class="calendar-detail-counts">등록 '+a.added+'개 · 단어 복습 '+a.word+'회 · 문장 복습 '+a.sentence+'회</div>';
+  const todayActivity=activityForDate(today);
+  $('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
+  $('todayAdded').textContent=todayActivity.added;
+  $('todayReviewed').textContent=todayActivity.word+todayActivity.sentence;
+  const testMonthDate=new Date(new Date().getFullYear(),new Date().getMonth()-1,1);
+  const testMonth=monthKey(testMonthDate),testRecord=monthlyTestLog.find(x=>x.month===testMonth);
+  const availableSessions=[1,2,3].filter(()=>sentenceQuestionPool(testMonth).length>0).concat(wordQuestionPool(testMonth).length>0?[4]:[]);
+  const completedSessions=(testRecord?.sessions||[]).filter(x=>x&&x.completed&&availableSessions.includes(x.id)).length;
+  $('monthlyTestStatus').textContent=availableSessions.length===0||completedSessions===availableSessions.length?'완료':completedSessions+'/'+availableSessions.length;
+  if($('monthlyTestLabel'))$('monthlyTestLabel').textContent=testMonthDate.toLocaleDateString('ko-KR',{month:'long'})+'분';
+}
+function renderStats(){
+  const counts={mastered:0,learning:0,'needs-review':0};
+  words.forEach(w=>counts[wordStatus(w)]++);
+  $('total').textContent=words.length;
+  $('masteredTotal').textContent=counts.mastered;
+  $('learningTotal').textContent=counts.learning;
+  $('reviewNeededTotal').textContent=counts['needs-review'];
+  $('due').textContent=dueWords().length;
+  $('sentenceDue').textContent=dueSentences().length;
+  const ratio=words.length?Math.round(counts.mastered/words.length*100):0;
+  $('masteryFill').style.width=ratio+'%';
+  if($('masteryPercent'))$('masteryPercent').textContent=ratio+'%';$('masteryBreakdown').innerHTML='완벽 암기 · 익히는 중 '+counts.learning+'개 · 복습 필요 '+counts['needs-review']+'개';
+  renderCalendar();
+}
+
+function openCollectImportIfPending(){
+ let payload;try{payload=JSON.parse(localStorage.getItem('collect-to-wordloop-pending')||'null');}catch(e){payload=null;}
+ if(!payload||payload.version!==1||!payload.text)return;
+ $('collectImportPreview').textContent=payload.text;
+ const source=[payload.sourceTitle,payload.sourceCreator,payload.sourceType].filter(Boolean).join(' · ');
+ $('collectImportSource').textContent=[source,payload.sourceUrl].filter(Boolean).join(' | ')||'출처 정보 없음';
+ $('collectImportModal').classList.add('open');
+}
+function collectImportContext(payload){return [payload.context||'',payload.sourceTitle?'출처: '+payload.sourceTitle:'',payload.sourceUrl||''].filter(Boolean).join('\n');}
+$('collectImportSentence').onclick=()=>{
+ let p;try{p=JSON.parse(localStorage.getItem('collect-to-wordloop-pending')||'null');}catch(e){}
+ if(!p||!p.text)return;
+ localStorage.removeItem('collect-to-wordloop-pending');
+ const duplicate=sentenceWords().some(x=>String(x.example||'').trim().toLowerCase()===String(p.text).trim().toLowerCase());
+ $('collectImportModal').classList.remove('open');
+ editingSentence=null;$('sentenceFormTitle').textContent='Collect에서 가져온 문장';$('saveStandaloneSentence').textContent='문장 저장하기';
+ $('newSentenceEn').value=p.text;$('newSentenceKo').value=p.translation||'';pendingCollectSourceNote=collectImportContext(p)+(p.tags?.length?'\nTags: '+p.tags.join(', '):'');sentenceExpressionLinks=[];
+ $('sentenceExpressionSearch').value='';$('newExpression').value='';$('newExpressionMeaning').value='';renderSentenceExpressionTags();activateTab('sentenceAdd');
+ if(duplicate)showToast('같은 문장이 이미 있어요. 중복 여부를 확인해 주세요.');else showToast('문장을 불러왔어요. 내용을 확인하고 저장하세요.');
+};
+$('collectImportWord').onclick=()=>{
+ let p;try{p=JSON.parse(localStorage.getItem('collect-to-wordloop-pending')||'null');}catch(e){}
+ if(!p||!p.text)return;
+ localStorage.removeItem('collect-to-wordloop-pending');
+ const duplicate=words.some(w=>String(w.word||'').trim().toLowerCase()===String(p.text).trim().toLowerCase());
+ $('collectImportModal').classList.remove('open');clearForm();$('word').value=p.text;$('meaning').value=p.translation||'';$('note').value=collectImportContext(p);activateTab('add');
+ if(duplicate)showToast('같은 단어가 이미 있어요. 기존 단어와 중복 여부를 확인해 주세요.');else showToast('단어를 불러왔어요. 뜻을 확인하고 저장하세요.');
+};
+$('collectImportCancel').onclick=()=>{$('collectImportModal').classList.remove('open');};
+
+function addWord(data){if(!data.word||!data.meaning){showToast('영어 단어와 뜻을 입력해 주세요.');return false;}if(words.some(w=>w.word.toLowerCase()===data.word.toLowerCase())){if(!confirm('이미 등록된 단어예요. 그래도 추가할까요?'))return false;}words.unshift({id:uid(),...data,aiReview:data.aiReview||null,relatedIds:Array.isArray(data.relatedIds)?data.relatedIds:[],created:Date.now(),interval:0,reps:0,next:Date.now(),sentenceInterval:0,sentenceReps:0,sentenceNext:Date.now(),masteryStreak:0,lastGrade:null,masteredAt:null,reviewLog:[],sentenceLog:[],testLog:[]});save();return true;}
+function showToast(message){const el=$('appToast');if(!el)return;el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);}
+function renderRelatedChoices(){
+ const q=($('relatedSearch')?.value||'').trim().toLowerCase();
+ const selectedWords=selectedRelatedIds.map(id=>words.find(w=>String(w.id)===String(id))).filter(Boolean);
+ const candidates=q?words.filter(w=>String(w.id)!==String(editingId)&&((w.word+' '+w.meaning).toLowerCase().includes(q))):[];
+ $('relatedChoices').innerHTML=!q?'':candidates.length?candidates.map(w=>'<label class="related-option '+(selectedRelatedIds.some(id=>String(id)===String(w.id))?'selected':'')+'"><input type="checkbox" data-related-id="'+esc(w.id)+'" '+(selectedRelatedIds.some(id=>String(id)===String(w.id))?'checked':'')+'><span><strong>'+esc(w.word)+'</strong> <span class="muted">· '+esc(w.meaning)+'</span></span></label>').join(''):'<span class="muted">검색 결과가 없어요.</span>';
+ $('relatedSelectedLabel').textContent=selectedWords.length?'선택한 단어 '+selectedWords.length+'개':'연결된 단어 없음';
+ $('relatedSelectedWords').innerHTML=selectedWords.map(w=>'<span class="related-selected-chip"><span>'+esc(w.word)+' · '+esc(w.meaning)+'</span><button type="button" data-remove-related="'+esc(w.id)+'" aria-label="'+esc(w.word)+' 연결 해제">×</button></span>').join('');
+}
+function relatedIdsFor(w){const byId=new Map(words.map(x=>[String(x.id),x]));const seen=new Set([String(w.id)]),queue=[String(w.id)];while(queue.length){const id=queue.shift(),item=byId.get(id);if(!item)continue;const neighbors=new Set([...(Array.isArray(item.relatedIds)?item.relatedIds.map(String):[]),...words.filter(x=>Array.isArray(x.relatedIds)&&x.relatedIds.map(String).includes(id)).map(x=>String(x.id))]);neighbors.forEach(next=>{if(byId.has(next)&&!seen.has(next)){seen.add(next);queue.push(next);}});}seen.delete(String(w.id));return [...seen];}
+function relatedWordsFor(w){return relatedIdsFor(w).map(id=>words.find(x=>String(x.id)===id)).filter(Boolean);}
+function syncRelatedLinks(wordId,selectedIds){const selected=new Set(selectedIds.map(String));const target=words.find(w=>String(w.id)===String(wordId));if(!target)return;target.relatedIds=[...selected].filter(id=>words.some(w=>String(w.id)===id&&String(w.id)!==String(wordId)));words.forEach(w=>{if(String(w.id)===String(wordId))return;const ids=new Set(Array.isArray(w.relatedIds)?w.relatedIds.map(String):[]);if(selected.has(String(w.id)))ids.add(String(wordId));else ids.delete(String(wordId));w.relatedIds=[...ids];});}
+function normalizeRelatedLinks(){const links=new Map(words.map(w=>[String(w.id),new Set()]));words.forEach(w=>(Array.isArray(w.relatedIds)?w.relatedIds:[]).forEach(id=>{const a=String(w.id),b=String(id);if(a!==b&&links.has(a)&&links.has(b)){links.get(a).add(b);links.get(b).add(a);}}));words.forEach(w=>w.relatedIds=[...(links.get(String(w.id))||[])]);}
+
+function getExamplesFromForm(){return [...document.querySelectorAll('.example-entry')].map(el=>({id:el.dataset.exampleId||uid(),example:el.querySelector('[data-example-en]').value.trim(),translation:el.querySelector('[data-example-ko]').value.trim(),sentenceNext:Number(el.dataset.next)||Date.now(),sentenceInterval:Number(el.dataset.interval)||0,sentenceReps:Number(el.dataset.reps)||0})).filter(x=>x.example||x.translation);}
+function renderExampleFields(items){items=items&&items.length?items:[{example:'',translation:''}];$('examplesList').innerHTML=items.map((x,i)=>'<div class="example-entry" data-example-id="'+esc(x.id||uid())+'" data-next="'+Number(x.sentenceNext||Date.now())+'" data-interval="'+Number(x.sentenceInterval||0)+'" data-reps="'+Number(x.sentenceReps||0)+'" style="border:1px solid var(--line);border-radius:13px;padding:12px;margin-top:8px"><div class="section-head"><strong class="muted">예문 '+(i+1)+'</strong><div style="display:flex;gap:6px;align-items:center"><button type="button" class="secondary" data-generate-example style="min-height:32px;padding:5px 9px">✦ AI 예문 생성</button><button type="button" class="secondary translate-btn" data-translate="example" style="min-height:32px;padding:5px 9px">해석 자동 번역</button>'+(i?'<button type="button" class="ghost" data-remove-example style="min-height:32px;padding:5px 9px">삭제</button>':'')+'</div></div><textarea data-example-en placeholder="영어 예문" style="width:100%;margin-top:8px;min-height:65px;border:1px solid var(--line);border-radius:10px;padding:10px">'+esc(x.example||'')+'</textarea><textarea data-example-ko placeholder="예문 해석" style="width:100%;margin-top:7px;min-height:65px;border:1px solid var(--line);border-radius:10px;padding:10px">'+esc(x.translation||'')+'</textarea><div class="muted translate-status" data-translate-status></div></div>').join('');}
+function reviewFingerprint(word,meaning,examples){return JSON.stringify({word,meaning,examples:examples.map(x=>({example:x.example,translation:x.translation}))});}
+function savedAIReviewHTML(r){
+ if(!r)return '';
+ const uses=Array.isArray(r.verbUses)?r.verbUses:[],examples=Array.isArray(r.examples)?r.examples:[],tips=Array.isArray(r.tips)?r.tips:[],extra=Array.isArray(r.additionalExamples)?r.additionalExamples:[],similar=Array.isArray(r.similarExpressions)?r.similarExpressions:[];
+ const status=r.overall==='good'?'검수 완료':r.overall==='incorrect'?'수정이 필요해요':'확인해 보세요';
+ const cls=r.overall==='good'?'':r.overall==='incorrect'?'bad':'warn';
+ return '<div class="ai-review-result saved-ai-review"><h3>✦ 저장된 AI 검수 결과</h3><span class="ai-status '+cls+'">'+esc(status)+'</span>'+
+ (r.partOfSpeech?'<h4>품사 및 용법</h4><p>'+esc(r.partOfSpeech)+'</p>':'')+
+ (uses.length?'<ul>'+uses.map(x=>'<li><strong>'+esc(x.type||'')+'</strong> · '+esc(x.meaning||'')+(x.pattern?'<br><span class="muted">주요 패턴: '+esc(x.pattern)+'</span>':'')+'</li>').join('')+'</ul>':'')+
+ '<h4>뜻 검수</h4><div class="ai-example"><span class="ai-label">'+esc(r.meaningStatus||'확인 필요')+'</span><p><strong>추천 뜻:</strong> '+esc(r.suggestedMeaning||'')+'</p>'+(r.meaningExplanation?'<p class="muted">'+esc(r.meaningExplanation)+'</p>':'')+'</div>'+
+ (examples.length?'<h4>예문 검수</h4>'+examples.map(x=>'<div class="ai-example"><span class="ai-label">'+esc(x.status||'')+'</span><p>'+esc(x.original||'')+'</p>'+(x.corrected&&x.corrected!==x.original?'<p class="ai-corrected">'+esc(x.corrected)+'</p>':'')+'<p>'+esc(x.translation||'')+'</p>'+(x.explanation?'<p class="muted">'+esc(x.explanation)+'</p>':'')+aiSaveButtonHTML(x.corrected||x.original,x.translation,'예문','AI 예문 검수')+'</div>').join(''):'')+
+ (extra.length?'<h4>추가 추천 예문</h4>'+extra.map(x=>'<div class="ai-example"><p>'+esc(x.sentence||'')+'</p><p>'+esc(x.translation||'')+'</p>'+(x.note?'<p class="muted">'+esc(x.note)+'</p>':'')+aiSaveButtonHTML(x.sentence,x.translation,'예문','AI 추천 예문')+'</div>').join(''):'')+
+ (similar.length?'<h4>비슷한 표현 · 주의할 점</h4><ul>'+similar.map(x=>'<li><strong>'+esc(x.expression||'')+'</strong> · '+esc(x.meaning||'')+(x.distinction?'<br><span class="muted">'+esc(x.distinction)+'</span>':'')+'</li>').join('')+'</ul>':'')+
+ (tips.length?'<h4>추가 참고</h4><ul>'+tips.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'')+
+ '</div>';
+}
+function wordAIReviewIsStale(w){if(!w?.aiReview||!w.aiReviewFingerprint)return false;const examples=Array.isArray(w.examples)&&w.examples.length?w.examples:[{example:w.example||'',translation:w.translation||''}];return w.aiReviewFingerprint!==reviewFingerprint(w.word||'',w.meaning||'',examples);}
+function refreshAIReviewStatus(){const stale=!!latestAIReview&&latestAIReview.fingerprint!==reviewFingerprint($("word").value.trim(),$("meaning").value.trim(),getExamplesFromForm());$("aiReviewStale").classList.toggle("hidden",!stale);}
+function renderAIReview(r){
+ $('aiReviewResult').dataset.savedReview=JSON.stringify(r);
+ const status=r.overall==='good'?'검수 완료':r.overall==='incorrect'?'수정이 필요해요':'확인해 보세요';
+ const statusClass=r.overall==='good'?'':r.overall==='incorrect'?'bad':'warn';
+ const uses=Array.isArray(r.verbUses)?r.verbUses:[];
+ const examples=Array.isArray(r.examples)?r.examples:[];
+ const tips=Array.isArray(r.tips)?r.tips:[];
+ const extra=Array.isArray(r.additionalExamples)?r.additionalExamples:[];
+ const similar=Array.isArray(r.similarExpressions)?r.similarExpressions:[];
+ $('aiReviewResult').innerHTML=`
+  <h3>✦ AI 검수 결과</h3><span class="ai-status ${statusClass}">${esc(status)}</span>
+  ${r.englishMeaning?'<h4>영문 뜻</h4><p>'+esc(r.englishMeaning)+'</p>':''}\n  ${r.partOfSpeech?'<h4>품사 및 용법</h4><p>'+esc(r.partOfSpeech)+'</p>':''}
+  ${uses.length?'<ul>'+uses.map(x=>'<li><strong>'+esc(x.type||'')+'</strong> · '+esc(x.meaning||'')+(x.pattern?'<br><span class="muted">주요 패턴: '+esc(x.pattern)+'</span>':'')+'</li>').join('')+'</ul>':''}
+  <h4>뜻 검수</h4><div class="ai-example"><span class="ai-label">${esc(r.meaningStatus||'확인 필요')}</span><p><strong>추천 뜻:</strong> ${esc(r.suggestedMeaning||'')}</p>${r.meaningExplanation?'<p class="muted">'+esc(r.meaningExplanation)+'</p>':''}</div>
+  ${examples.length?`<h4>예문 검수</h4>${examples.map(x=>'<div class="ai-example"><span class="ai-label">'+esc(x.status||'')+'</span><p>'+esc(x.original||'')+'</p>'+(x.corrected&&x.corrected!==x.original?'<p class="ai-corrected">'+esc(x.corrected)+'</p>':'')+'<p>'+esc(x.translation||'')+'</p>'+(x.explanation?'<p class="muted">'+esc(x.explanation)+'</p>':'')+aiSaveButtonHTML(x.corrected||x.original,x.translation,'예문','AI 예문 검수')+'</div>').join('')}`:''}
+  ${extra.length?'<h4>추가 추천 예문</h4>'+extra.map(x=>'<div class="ai-example"><p>'+esc(x.sentence||'')+'</p><p>'+esc(x.translation||'')+'</p>'+(x.note?'<p class="muted">'+esc(x.note)+'</p>':'')+aiSaveButtonHTML(x.sentence,x.translation,'예문','AI 추천 예문')+'</div>').join(''):''}
+  ${similar.length?'<h4>비슷한 표현 · 주의할 점</h4><ul>'+similar.map(x=>'<li><strong>'+esc(x.expression||'')+'</strong> · '+esc(x.meaning||'')+(x.distinction?'<br><span class="muted">'+esc(x.distinction)+'</span>':'')+'</li>').join('')+'</ul>':''}
+  ${tips.length?'<h4>추가 참고</h4><ul>'+tips.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':''}
+ `;
+ $('aiReviewResult').classList.remove('hidden');
+}
+$('aiReviewResult').addEventListener('click',e=>{const b=e.target.closest('[data-ai-save-item]');if(b)saveAIItemToSentenceBook(b);});
+async function getEdgeFunctionErrorMessage(err,fallback='AI 요청에 실패했어요. 잠시 후 다시 시도해 주세요.'){try{const response=err?.context;if(response&&typeof response.clone==='function'){const payload=await response.clone().json();if(payload?.error)return String(payload.error);if(payload?.message)return String(payload.message);}}catch(parseError){console.warn('Could not read Edge Function error response:',parseError);}return err?.message||fallback;}
+async function runAIReview(){
+ const word=$('word').value.trim(),meaning=$('meaning').value.trim();
+ const examples=getExamplesFromForm().map(x=>({example:x.example,translation:x.translation}));
+ if(!word||!meaning){showToast('단어와 뜻을 먼저 입력해 주세요.');return;}
+ if(!supabaseClient){showToast('AI 서버에 연결할 수 없어요.');return;}
+ const btn=$('aiReviewBtn');btn.disabled=true;btn.textContent='AI가 검수하고 있어요…';
+ $('aiReviewResult').classList.add('hidden');
+ try{
+  const {data,error}=await supabaseClient.functions.invoke('word-check',{body:{word,meaning,examples}});
+  if(error)throw error;
+  if(data?.error)throw new Error(data.error);
+  if(!data?.result)throw new Error('검수 결과를 받지 못했어요.');
+  latestAIReview={fingerprint:reviewFingerprint(word,meaning,getExamplesFromForm()),result:data.result};
+  if(data.result.englishMeaning){$('englishMeaning').value=data.result.englishMeaning;}
+  if(editingId){const existing=words.find(w=>String(w.id)===String(editingId));if(existing){existing.aiReview=data.result;existing.aiReviewFingerprint=latestAIReview.fingerprint;if(data.result.englishMeaning)existing.englishMeaning=data.result.englishMeaning;save();}}
+  renderAIReview(data.result);refreshAIReviewStatus();
+ }catch(err){
+  console.error('AI review failed',err);
+  const message=await getEdgeFunctionErrorMessage(err,'알 수 없는 오류');
+  $('aiReviewResult').innerHTML='<p>'+esc(message.includes('Failed to fetch')?'AI 서버에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.':message)+'</p>';
+  $('aiReviewResult').classList.remove('hidden');
+ }finally{btn.disabled=false;btn.innerHTML='<span aria-hidden="true">✦</span> AI로 단어·예문 검수';}
+}
+function selectedPartOfSpeech(){return [...document.querySelectorAll('#partOfSpeechChoices input:checked')].map(x=>x.value);}
+function setSelectedPartOfSpeech(value){const values=Array.isArray(value)?value:String(value||'').split(/[,，]/).map(x=>x.trim()).filter(Boolean);document.querySelectorAll('#partOfSpeechChoices input').forEach(x=>x.checked=values.includes(x.value));$('partOfSpeech').value=values.join(', ');$('verbTypeField').classList.toggle('hidden',!values.includes('동사 (v.)'));if(!values.includes('동사 (v.)'))$('verbType').value='';}
+function collectForm(){const examples=getExamplesFromForm(),word=$('word').value.trim(),meaning=$('meaning').value.trim(),fingerprint=reviewFingerprint(word,meaning,examples),pos=selectedPartOfSpeech();let candidate=latestAIReview;if(!candidate&&$('aiReviewResult').dataset.savedReview){try{candidate={fingerprint,result:JSON.parse($('aiReviewResult').dataset.savedReview)};}catch(e){candidate=null;}}const aiReview=candidate?.result||null,aiReviewFingerprint=candidate?.fingerprint||(aiReview?fingerprint:'');return{word,englishMeaning:$('englishMeaning').value.trim(),meaning,partOfSpeech:pos.join(', '),verbType:pos.includes('동사 (v.)')?($('verbType').value||''):'',examples,example:examples[0]?.example||'',translation:examples[0]?.translation||'',category:$('category').value,note:$('note').value.trim(),relatedIds:[...selectedRelatedIds],aiReview,aiReviewFingerprint};}
+function clearForm(){['word','englishMeaning','meaning','partOfSpeech','verbType','note','relatedSearch','wordSentenceSearch'].forEach(id=>$(id).value='');setSelectedPartOfSpeech([]);$('verbTypeField').classList.add('hidden');renderExampleFields([]);$('category').value=wordCategories.includes('일상 영어')?'일상 영어':(wordCategories[0]||'');editingId=null;selectedRelatedIds=[];selectedSentenceIds=[];latestAIReview=null;$('aiReviewResult').removeAttribute('data-saved-review');$('aiReviewResult').innerHTML='';$('aiReviewResult').classList.add('hidden');$('addTitle').textContent='새 단어 등록';$('saveWord').textContent='단어 저장하기';$('cancelEdit').classList.add('hidden');renderRelatedChoices();updateLinkToggleSummaries();refreshAIReviewStatus();}
+function fillForm(w){editingId=w.id;['word','englishMeaning','meaning','category','note'].forEach(k=>$(k).value=w[k]||'');setSelectedPartOfSpeech(w.partOfSpeech||'');$('verbType').value=w.verbType||'';$('verbTypeField').classList.toggle('hidden',!selectedPartOfSpeech().includes('동사 (v.)'));renderExampleFields(w.examples&&w.examples.length?w.examples:[{example:w.example||'',translation:w.translation||'',sentenceNext:w.sentenceNext,sentenceInterval:w.sentenceInterval,sentenceReps:w.sentenceReps}]);selectedRelatedIds=relatedIdsFor(w);selectedSentenceIds=sentenceWords().filter(x=>(x.expressions||[]).some(e=>String(e.wordId||'')===String(w.id)||String(e.expression||'').trim().toLowerCase()===String(w.word||'').trim().toLowerCase())).map(x=>String(x.id));$('wordSentenceSearch').value='';latestAIReview=w.aiReview?{fingerprint:w.aiReviewFingerprint||reviewFingerprint(w.word,w.meaning,getExamplesFromForm()),result:w.aiReview}:null;if(w.aiReview)renderAIReview(w.aiReview);else{$('aiReviewResult').removeAttribute('data-saved-review');$('aiReviewResult').innerHTML='';$('aiReviewResult').classList.add('hidden');}$('addTitle').textContent='단어 수정';$('saveWord').textContent='수정 내용 저장';$('cancelEdit').classList.remove('hidden');renderRelatedChoices();renderWordSentenceChoices();updateLinkToggleSummaries();refreshAIReviewStatus();activateTab('add');}
+
+function renderWordSentenceChoices(){
+ const q=($('wordSentenceSearch')?.value||'').trim().toLowerCase(),term=($('word')?.value||'').trim().toLowerCase(),chosen=new Set(selectedSentenceIds.map(String));
+ const normalize=value=>String(value||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9']+/g,' ').replace(/\s+/g,' ').trim();
+ const stop=new Set(['a','an','the','i','you','he','she','it','we','they','to','of','in','on','at','for','and','or','but','am','is','are','be','been','being','do','does','did']);
+ const phrase=normalize(term),tokens=phrase.split(' ').filter(t=>t&&!stop.has(t));
+ const all=sentenceWords().filter(x=>!(editingId&&String(x.wordId)===String(editingId))),ranked=all.map(x=>{const sentence=normalize(x.example),exact=!!phrase&&sentence.includes(phrase),hits=tokens.filter(t=>sentence.includes(t)).length;const score=exact?3:tokens.length&&hits===tokens.length?2:hits?1:0;return {...x,_recommendScore:score};}).filter(x=>x._recommendScore>0).sort((a,b)=>b._recommendScore-a._recommendScore);
+ const recommended=ranked;
+ const items=q?all.filter(x=>(x.example+' '+x.translation+' '+(x.expressions||[]).map(e=>e.expression).join(' ')).toLowerCase().includes(q)):all.filter(x=>chosen.has(String(x.id))||recommended.some(r=>String(r.id)===String(x.id)));
+ $('wordSentenceSelectedLabel').textContent=chosen.size?'연결된 문장 '+chosen.size+'개'+(!q&&term?' · 자동 추천 '+recommended.length+'개':''):(term?'자동 추천 '+recommended.length+'개':'연결한 문장 없음');
+ $('wordSentenceChoices').innerHTML=items.length?items.slice(0,40).map(x=>'<label class="related-option '+(chosen.has(String(x.id))?'selected':'')+'"><input type="checkbox" data-word-sentence="'+esc(x.id)+'" '+(chosen.has(String(x.id))?'checked':'')+'><span><strong>'+esc(x.example)+'</strong><br><span class="muted">'+esc(x.translation)+'</span></span></label>').join(''):'<span class="muted">'+(q?'검색 결과가 없어요.':term?'일치하는 기존 문장이 없어요. 직접 검색할 수도 있어요.':'연결된 문장이 없어요. 단어를 입력하거나 검색해 주세요.')+'</span>';
+}
+function syncWordSentenceLinks(wordId,selectedIds){
+ const selected=new Set(selectedIds.map(String)),w=words.find(z=>String(z.id)===String(wordId));if(!w)return;
+ const add=(obj)=>{obj.expressions=Array.isArray(obj.expressions)?obj.expressions:[];if(!obj.expressions.some(e=>String(e.wordId||'')===String(wordId)))obj.expressions.push({wordId:w.id,expression:w.word,meaning:w.meaning});};
+ sentenceWords().forEach(x=>{
+  const has=(x.expressions||[]).some(e=>String(e.wordId||'')===String(wordId));
+  if(selected.has(String(x.id))){if(x.standalone){const item=standaloneSentences.find(z=>String(z.id)===String(x.id));if(item)add(item);}else{const [pid,eid]=String(x.id).split('::'),parent=words.find(z=>String(z.id)===pid);if(parent){if(Array.isArray(parent.examples)&&parent.examples.length){const entry=parent.examples.find((v,i)=>String(v.id||i)===eid);if(entry)add(entry);}else{parent.exampleExpressions=Array.isArray(parent.exampleExpressions)?parent.exampleExpressions:[];if(!parent.exampleExpressions.some(e=>String(e.wordId||'')===String(wordId)))parent.exampleExpressions.push({wordId:w.id,expression:w.word,meaning:w.meaning});}}}}
+  else if(has){if(x.standalone){const item=standaloneSentences.find(z=>String(z.id)===String(x.id));if(item)item.expressions=(item.expressions||[]).filter(e=>String(e.wordId||'')!==String(wordId));}else{const [pid,eid]=String(x.id).split('::'),parent=words.find(z=>String(z.id)===pid);if(parent){if(Array.isArray(parent.examples)&&parent.examples.length){const entry=parent.examples.find((v,i)=>String(v.id||i)===eid);if(entry)entry.expressions=(entry.expressions||[]).filter(e=>String(e.wordId||'')!==String(wordId));}else parent.exampleExpressions=(parent.exampleExpressions||[]).filter(e=>String(e.wordId||'')!==String(wordId));}}}
+ });
+}
+
+function savedSentenceAIExplanationHTML(r,sourceSentence=''){
+ const grammar=Array.isArray(r.grammarPoints)?r.grammarPoints:[],verbs=Array.isArray(r.verbUsage)?r.verbUsage:[],chunks=Array.isArray(r.chunks)?r.chunks:[],notes=Array.isArray(r.notes)?r.notes:[];
+ return '<div class="ai-review-result saved-ai-review"><h3>✦ 저장된 AI 문장 설명</h3>'+
+ (r.naturalMeaning?'<h4>자연스러운 의미</h4><p>'+esc(r.naturalMeaning)+'</p>':'')+
+ (r.structure?'<h4>문장 구조</h4><p>'+esc(r.structure)+'</p>':'')+
+ (grammar.length?'<h4>핵심 문법</h4>'+grammar.map(x=>'<div class="ai-example"><strong>'+esc(x.title||'')+'</strong><p>'+esc(x.explanation||'')+'</p></div>').join(''):'')+
+ (verbs.length?'<h4>동사 용법</h4>'+verbs.map(x=>'<div class="ai-example"><strong>'+esc(x.verb||'')+'</strong> · '+esc(x.type||'')+'<p>'+esc(x.meaning||'')+'</p>'+(x.pattern?'<p class="muted">주요 구조: '+esc(x.pattern)+'</p>':'')+'</div>').join(''):'')+
+ (filterSentenceChunks(chunks,r,sourceSentence).length?'<h4>유용한 표현</h4>'+filterSentenceChunks(chunks,r,sourceSentence).map(x=>'<div class="ai-example"><strong>'+esc(x.expression||'')+'</strong><p>'+esc(x.meaning||'')+'</p>'+(x.usage?'<p class="muted">'+esc(x.usage)+'</p>':'')+'</div>').join(''):'')+
+ sentenceConversationHTML(r,false)+
+ (notes.length?'<h4>추가 참고</h4><ul>'+notes.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'')+'</div>';
+}
+function openSentenceForEditing(id){
+ const x=sentenceWords().find(z=>String(z.id)===String(id));
+ if(!x){showToast('수정할 문장을 찾지 못했어요.');return;}
+ editingSentence={type:x.standalone?'standalone':'legacy',id:String(id)};
+ $('sentenceFormTitle').textContent='예문 수정';
+ $('newSentenceEn').value=x.example||'';
+ $('newSentenceKo').value=x.translation||'';
+ latestSentenceAIExplanation=x.aiExplanation?{fingerprint:sentenceExplanationFingerprint(x.example||'',x.translation||''),result:x.aiExplanation}:null;
+ if(latestSentenceAIExplanation)renderSentenceAIExplanation(latestSentenceAIExplanation.result);
+ else{$('sentenceAIExplanation').innerHTML='';$('sentenceAIExplanation').classList.add('hidden');}
+ sentenceExpressionLinks=x.standalone?(x.expressions||[]).map(a=>{
+  const w=words.find(w=>String(w.id)===String(a.wordId))||words.find(w=>w.word.toLowerCase()===String(a.expression||'').toLowerCase());
+  return w?{wordId:w.id,expression:w.word,meaning:w.meaning}:{...a};
+ }):((x.expressions||[]).length?(x.expressions||[]).map(a=>{
+  const w=words.find(w=>String(w.id)===String(a.wordId))||words.find(w=>w.word.toLowerCase()===String(a.expression||'').toLowerCase());
+  return w?{wordId:w.id,expression:w.word,meaning:w.meaning}:{...a};
+ }):(()=>{
+  const parent=words.find(w=>String(w.id)===String(x.wordId));
+  return parent?[{wordId:parent.id,expression:parent.word,meaning:parent.meaning}]:[];
+ })());
+ $('sentenceExpressionSearch').value='';
+ renderSentenceExpressionTags();
+ $('saveStandaloneSentence').textContent='수정 내용 저장';
+ activateTab('sentenceAdd');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderSentenceList(){const q=($('search')?.value||'').trim().toLowerCase();const list=sentenceWords().filter(x=>(x.example+' '+x.translation+' '+(x.expressions||[]).map(e=>e.expression+' '+e.meaning).join(' ')+' '+(x.word||'')).toLowerCase().includes(q));if(!list.length){$('wordList').innerHTML='<div class="empty">등록된 예문이 없어요.</div>';return;}$('wordList').innerHTML=list.map(x=>{const tags=(x.expressions||[]).length?x.expressions.map(e=>e.expression):[x.word];const open=expandedSentenceId===x.id;return '<article class="word-item"><div class="word-head"><button class="word-open" data-sentence-detail="'+esc(x.id)+'" aria-expanded="'+open+'"><strong>'+esc(x.example)+'</strong><small>'+esc(x.translation)+'</small><div class="word-meta">'+tags.filter(Boolean).map(v=>'<span class="related-chip">'+esc(v)+'</span>').join('')+'</div></button><div class="word-tools"><button class="secondary" data-sentence-edit="'+esc(x.id)+'">수정</button><button class="danger" data-sentence-delete="'+esc(x.id)+'">삭제</button></div></div>'+(open?'<div class="word-detail"><div class="detail-label">영어 문장</div><div class="detail-text">'+esc(x.example)+'</div><div class="detail-label">해석</div><div class="detail-text">'+esc(x.translation)+'</div>'+(x.aiExplanation?'<div class="detail-label">AI 문장 설명</div>'+savedSentenceAIExplanationHTML(x.aiExplanation,x.example):'')+'<div class="detail-label">연결 표현</div><div>'+(tags.filter(Boolean).map(v=>'<span class="related-chip">'+esc(v)+'</span>').join('')||'없음')+'</div>'+(x.sourceNote?'<div class="detail-label">출처 및 메모</div><div class="detail-text">'+esc(x.sourceNote)+'</div>':'')+'</div>':'')+'</article>';}).join('');}
+let wordbookView=['words','sentences','writing'].includes(localStorage.getItem('wordloop-wordbook-view'))?localStorage.getItem('wordloop-wordbook-view'):'words';let expandedSentenceId=null;let editingSentence=null;
+function partOfSpeechAbbr(value,verbType=''){const raw=String(value||'').trim();if(!raw)return '';const map={'명사':'n.','동사':'v.','형용사':'adj.','부사':'adv.','전치사':'prep.','접속사':'conj.','대명사':'pron.','감탄사':'interj.','기타':'other'};return raw.split(/[,，]/).map(part=>{const item=part.trim();if(!item)return '';if(item.includes('동사')&&verbType){if(verbType.includes('모두'))return 'v.t./i.';if(verbType.includes('타동사'))return 'v.t.';if(verbType.includes('자동사'))return 'v.i.';}const match=item.match(/\\b(n\\.|v\\.|adj\\.|adv\\.|prep\\.|conj\\.|pron\\.|interj\\.|other)\\b/i);if(match)return match[1].toLowerCase();const korean=Object.keys(map).find(k=>item.includes(k));return korean?map[korean]:item.replace(/[()]/g,'');}).filter(Boolean).join(' · ');}
 
 let editingPassageId=null,expandedPassageId=null,passageWordIds=[],passageSentenceIds=[];
 function passageSentenceLabel(x){return String(x.example||'')+' · '+String(x.translation||'');}
@@ -403,7 +1716,7 @@ function wordQuestionPool(m){
 }
 function uniqueMonthlyQuestions(pool){
  const unique=new Map();
- const norm=v=>String(v||'').toLowerCase().replace(/[\p{P}\p{S}]/gu,' ').replace(/\s+/g,' ').trim();
+ const norm=v=>String(v||'').toLowerCase().replace(/[\\p{P}\\p{S}]/gu,' ').replace(/\\s+/g,' ').trim();
  pool.forEach(q=>{
   const key=q.kind==='word'?'word:'+norm(q.word):'sentence:'+norm(q.prompt)+'|'+norm(q.answer);
   if(!unique.has(key))unique.set(key,q);
@@ -427,7 +1740,7 @@ function renderMonthlySessions(){
  $('quizSessions').innerHTML=sessionTitles.map((title,i)=>{
   const id=i+1,ss=r.sessions.find(x=>x.id===id),done=!!ss?.completed,started=!!ss&&!done;
   const poolAvailable=id===4?wordAvailable:sentenceAvailable;
-  const total=ss?.questions?.length||Math.min(30,id===4?uniqueMonthlyQuestions(wordPool).length:uniqueMonthlyQuestions(sentencePool).length);
+  const total=ss?.questions?.length||(id===4?uniqueMonthlyQuestions(wordPool).length:uniqueMonthlyQuestions(sentencePool).length);
   const count=ss?.answers?.filter(x=>x!==null&&x!==undefined).length||0;
   const score=ss?.score;
   const disabled=done||!available||!poolAvailable;
@@ -446,7 +1759,6 @@ function startMonthlySession(id){
  activeMonthlySession=ss;
  $('quizSessions').classList.add('hidden');$('quizStage').classList.remove('hidden');
  $('quizTypeLabel').textContent='세션 '+id+' · '+sessionTitles[id-1];
- $('completeQuizSession').textContent=ss.questions.length+'문제 제출하고 AI 채점';
  $('quizIntentWrap').classList.toggle('hidden',id!==4);
  $('quizAnswer').placeholder=id===4?'이 단어를 활용해 영어 문장을 만들어 보세요':'영어 문장 전체를 입력하세요';
  $('quizQuestionLabel').textContent=id===4?'목표 단어와 뜻':'한국어 해석';
