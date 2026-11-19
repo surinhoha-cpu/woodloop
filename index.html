@@ -6,7 +6,8 @@
 <title>Wordloop — My Vocabulary</title>
 <link rel="icon" type="image/png" sizes="180x180" href="./bear-icon.png?v=3">
 <link rel="apple-touch-icon" sizes="180x180" href="./bear-icon.png?v=3">
-<meta name="theme-color" content="#eaf1eb">\n<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#eaf1eb">
+<link rel="manifest" href="./manifest.webmanifest">
 <style>
 :root{--bg:#f6f5f1;--panel:#fff;--ink:#24251f;--muted:#77796f;--line:#e8e6df;--accent:#536b58;--soft:#edf2ec;--red:#a85d52;--gold:#9a8151;--blue:#58728a}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 15px;background:var(--accent);color:#fff;font-weight:650}button:disabled{opacity:.4;cursor:not-allowed}button.secondary{background:#f0f0eb;color:var(--ink);border:1px solid var(--line)}button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}button.danger{background:#f7edeb;color:var(--red);border:1px solid #ead5d1}
@@ -718,7 +719,9 @@ const SUPABASE_URL='https://jmjfhvlrwwfuyurbxlsy.supabase.co';
 const SUPABASE_KEY='sb_publishable_ED2G8FRPHtCz5y_AmazRiw_nCitH2d1';
 const OWNER_EMAIL='srin001@icloud.com';
 const AUTH_STORAGE_KEY='sb-jmjfhvlrwwfuyurbxlsy-auth-token';
-const AUTH_BACKUP_KEY='wordloop-auth-refresh-backup-v1';\nconst OFFLINE_USER_KEY='wordloop-offline-user-v1';\nconst OFFLINE_PENDING_KEY='wordloop-offline-pending-v1';
+const AUTH_BACKUP_KEY='wordloop-auth-refresh-backup-v1';
+const OFFLINE_USER_KEY='wordloop-offline-user-v1';
+const OFFLINE_PENDING_KEY='wordloop-offline-pending-v1';
 document.getElementById('authMessage').textContent='앱 스크립트 시작됨 · 로그인 기능을 초기화하고 있어요…';
 function backupAuthSession(session){try{if(session?.refresh_token)localStorage.setItem(AUTH_BACKUP_KEY,JSON.stringify({refresh_token:session.refresh_token,updated_at:Date.now()}));}catch(e){console.error('Wordloop auth backup failed:',e);}}
 let wordloopAuthLockTail=Promise.resolve();
@@ -808,7 +811,8 @@ let monthlyTestLog=Array.isArray(sentenceStoreAtLoad.monthlyTests)?sentenceStore
 let dailyWritingPractice=sentenceStoreAtLoad.dailyWritingPractice&&typeof sentenceStoreAtLoad.dailyWritingPractice==='object'?sentenceStoreAtLoad.dailyWritingPractice:null;
 let dailyWritingHistory=Array.isArray(sentenceStoreAtLoad.dailyWritingHistory)?sentenceStoreAtLoad.dailyWritingHistory:[];
 words=words.filter(w=>w&&w.id&&w.id!==SENTENCE_STORE_ID&&!deletedIds.has(String(w.id)));
-let currentUser=null,cloudReady=false,activatingUserId=null,saveTimer=null,syncChannel=null;\nlet offlinePending=localStorage.getItem(OFFLINE_PENDING_KEY)==='1';
+let currentUser=null,cloudReady=false,activatingUserId=null,saveTimer=null,syncChannel=null;
+let offlinePending=localStorage.getItem(OFFLINE_PENDING_KEY)==='1';
 let selectedRelatedIds=[],selectedSentenceIds=[],toastTimer=null,deletingWord=false,latestAIReview=null;
 let expandedId=null,editingId=null,wordQueue=[],currentWord=null,sentenceQueue=[],currentSentence=null;
 let quizState={queue:[],current:null,index:0,score:0,wrong:[],answered:false,mode:'meaningToWord',onlyWrong:false};
@@ -837,9 +841,18 @@ function saveAIItemToSentenceBook(button){
 const setSyncStatus=(message)=>{const el=$('syncStatus');if(el)el.textContent=message;};
 const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify([...words,{id:SENTENCE_STORE_ID,items:standaloneSentences,deletedSentenceIds:[...deletedSentenceIds],passages,deletedPassageIds:[...deletedPassageIds],monthlyTests:monthlyTestLog,dailyReviewPlans,dailyWritingPractice,dailyWritingHistory,categories:wordCategories}]));localStorage.setItem(KEY+'-deleted',JSON.stringify([...deletedIds]));if(!navigator.onLine){offlinePending=true;localStorage.setItem(OFFLINE_PENDING_KEY,'1');setSyncStatus('오프라인 · 기기에 저장됨');}renderStats();renderList();};
 const save=()=>{saveLocal();if(currentUser&&cloudReady){setSyncStatus('저장 중…');clearTimeout(saveTimer);saveTimer=setTimeout(writeCloud,450);}};
-async function writeCloud(){\n  if(!currentUser)return;\n  if(!navigator.onLine||!supabaseClient?.from){offlinePending=true;localStorage.setItem(OFFLINE_PENDING_KEY,'1');setSyncStatus('오프라인 · 변경 내용 저장 대기');return;}
+async function writeCloud(){
+  if(!currentUser)return;
+  if(!navigator.onLine||!supabaseClient?.from){offlinePending=true;localStorage.setItem(OFFLINE_PENDING_KEY,'1');setSyncStatus('오프라인 · 변경 내용 저장 대기');return;}
   const snapshot=[...JSON.parse(JSON.stringify(words)),{id:SENTENCE_STORE_ID,items:JSON.parse(JSON.stringify(standaloneSentences)),deletedSentenceIds:[...deletedSentenceIds],passages:JSON.parse(JSON.stringify(passages)),deletedPassageIds:[...deletedPassageIds],monthlyTests:JSON.parse(JSON.stringify(monthlyTestLog)),dailyWritingPractice:JSON.parse(JSON.stringify(dailyWritingPractice)),dailyWritingHistory:JSON.parse(JSON.stringify(dailyWritingHistory)),categories:JSON.parse(JSON.stringify(wordCategories))},...[...deletedIds].map(id=>({id,_deleted:true,deletedAt:Date.now()}))];
-  try{\n    const {error}=await supabaseClient.from('wordloop_data').upsert(\n      {user_id:currentUser.id,words:snapshot,updated_at:new Date().toISOString()},\n      {onConflict:'user_id'}\n    );\n    if(error)throw error;\n    offlinePending=false;localStorage.removeItem(OFFLINE_PENDING_KEY);setSyncStatus('동기화 완료');\n  }catch(error){console.error('Wordloop cloud save failed:',error);offlinePending=true;localStorage.setItem(OFFLINE_PENDING_KEY,'1');setSyncStatus('동기화 대기 · 연결을 확인해 주세요');}
+  try{
+    const {error}=await supabaseClient.from('wordloop_data').upsert(
+      {user_id:currentUser.id,words:snapshot,updated_at:new Date().toISOString()},
+      {onConflict:'user_id'}
+    );
+    if(error)throw error;
+    offlinePending=false;localStorage.removeItem(OFFLINE_PENDING_KEY);setSyncStatus('동기화 완료');
+  }catch(error){console.error('Wordloop cloud save failed:',error);offlinePending=true;localStorage.setItem(OFFLINE_PENDING_KEY,'1');setSyncStatus('동기화 대기 · 연결을 확인해 주세요');}
 }
 function mergeCloudWords(remoteWords){
   const remote=Array.isArray(remoteWords)?remoteWords:[];
@@ -864,7 +877,9 @@ function mergeCloudWords(remoteWords){
   saveLocal();
   return cloudNeedsUpdate;
 }
-async function pullCloud(){\n  if(!currentUser)return;\n  if(!navigator.onLine||!supabaseClient?.from){cloudReady=true;setSyncStatus('오프라인 · 기기에 저장된 데이터');return;}
+async function pullCloud(){
+  if(!currentUser)return;
+  if(!navigator.onLine||!supabaseClient?.from){cloudReady=true;setSyncStatus('오프라인 · 기기에 저장된 데이터');return;}
   cloudReady=false;
   setSyncStatus('불러오는 중…');
   const {data,error}=await supabaseClient.from('wordloop_data').select('words').eq('user_id',currentUser.id).maybeSingle();
@@ -899,7 +914,9 @@ function subscribeToCloud(){
       }
     }).subscribe();
 }
-async function activateAccount(user){\n  if(!user)return;\n  try{localStorage.setItem(OFFLINE_USER_KEY,JSON.stringify({id:user.id,email:user.email||OWNER_EMAIL,updatedAt:Date.now()}));}catch(e){}
+async function activateAccount(user){
+  if(!user)return;
+  try{localStorage.setItem(OFFLINE_USER_KEY,JSON.stringify({id:user.id,email:user.email||OWNER_EMAIL,updatedAt:Date.now()}));}catch(e){}
   if(activatingUserId===user.id)return;
   if(currentUser&&currentUser.id===user.id&&cloudReady)return;
   activatingUserId=user.id;
@@ -942,7 +959,11 @@ function authErrorMessage(error){
   if(msg.toLowerCase().includes('invalid login credentials'))return '이메일 또는 비밀번호가 맞지 않아요. 처음 이용한다면 계정 만들기를 먼저 해 주세요.';
   return msg;
 }
-async function bootAuth(){\n  $('authMessage').textContent='로그인 상태를 확인하고 있어요…';\n  const cachedOfflineUser=()=>{try{const u=JSON.parse(localStorage.getItem(OFFLINE_USER_KEY)||'null');return u?.id?{id:u.id,email:u.email||OWNER_EMAIL}:null;}catch(e){return null;}};\n  if(!navigator.onLine){const cached=cachedOfflineUser();if(cached){await activateAccount(cached);return;}}\n  if(!supabaseClient?.auth){const cached=cachedOfflineUser();if(cached){await activateAccount(cached);return;} $('authGate').classList.remove('hidden');$('authMessage').textContent='로그인 기능 초기화 오류: '+String(window.wordloopAuthInitError||'Supabase 연결을 확인해 주세요.');return;}
+async function bootAuth(){
+  $('authMessage').textContent='로그인 상태를 확인하고 있어요…';
+  const cachedOfflineUser=()=>{try{const u=JSON.parse(localStorage.getItem(OFFLINE_USER_KEY)||'null');return u?.id?{id:u.id,email:u.email||OWNER_EMAIL}:null;}catch(e){return null;}};
+  if(!navigator.onLine){const cached=cachedOfflineUser();if(cached){await activateAccount(cached);return;}}
+  if(!supabaseClient?.auth){const cached=cachedOfflineUser();if(cached){await activateAccount(cached);return;} $('authGate').classList.remove('hidden');$('authMessage').textContent='로그인 기능 초기화 오류: '+String(window.wordloopAuthInitError||'Supabase 연결을 확인해 주세요.');return;}
   supabaseClient.auth.onAuthStateChange((event,session)=>{
     if(session){backupAuthSession(session);setTimeout(()=>activateAccount(session.user),0);return;}
     if(event==='SIGNED_OUT'&&!currentUser){$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');}
@@ -953,7 +974,12 @@ async function bootAuth(){\n  $('authMessage').textContent='로그인 상태를 
       supabaseClient.auth.getSession(),
       new Promise((_,reject)=>setTimeout(()=>reject(new Error('Safari에서 로그인 세션 확인이 8초 이상 지연됐어요. 브라우저 인증 잠금 또는 저장 공간을 확인해야 해요.')),8000))
     ]);
-  }catch(sessionCheckError){\n    const cached=cachedOfflineUser();if(!navigator.onLine&&cached){await activateAccount(cached);return;}\n    $('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');\n    $('authMessage').textContent='로그인 세션 확인 실패: '+String(sessionCheckError.message||sessionCheckError)+' · '+authStorageDiagnostic();\n    return;\n  }
+  }catch(sessionCheckError){
+    const cached=cachedOfflineUser();if(!navigator.onLine&&cached){await activateAccount(cached);return;}
+    $('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');
+    $('authMessage').textContent='로그인 세션 확인 실패: '+String(sessionCheckError.message||sessionCheckError)+' · '+authStorageDiagnostic();
+    return;
+  }
   let {data,error}=authResult;
   if(!error&&!data.session){
     try{
@@ -970,7 +996,9 @@ async function bootAuth(){\n  $('authMessage').textContent='로그인 상태를 
       }
     }catch(recoveryError){console.error('Wordloop refresh-token recovery failed:',recoveryError);error=recoveryError;}
   }
-  if(error){const cached=cachedOfflineUser();if(!navigator.onLine&&cached){await activateAccount(cached);return;}console.error('Wordloop session restore failed:',error);$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent='로그인 복원 오류: '+String(error.message||error)+' · '+authStorageDiagnostic();return;}\n  if(data.session){backupAuthSession(data.session);await activateAccount(data.session.user);}\n  else{const cached=cachedOfflineUser();if(!navigator.onLine&&cached){await activateAccount(cached);return;} $('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent=authStorageDiagnostic();}
+  if(error){const cached=cachedOfflineUser();if(!navigator.onLine&&cached){await activateAccount(cached);return;}console.error('Wordloop session restore failed:',error);$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent='로그인 복원 오류: '+String(error.message||error)+' · '+authStorageDiagnostic();return;}
+  if(data.session){backupAuthSession(data.session);await activateAccount(data.session.user);}
+  else{const cached=cachedOfflineUser();if(!navigator.onLine&&cached){await activateAccount(cached);return;} $('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent=authStorageDiagnostic();}
 }
 // Login uses the early capture-phase handler registered before app initialization.
 $('signupBtn').onclick=async()=>{
@@ -988,7 +1016,8 @@ $('signupBtn').onclick=async()=>{
 $('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();try{localStorage.removeItem(AUTH_BACKUP_KEY);}catch(e){}showSignedOut();};
 $('logoHomeBtn').addEventListener('click',()=>activateTab('home'));
 $('logoHomeBtn').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activateTab('home');}});
-window.addEventListener('focus',()=>{if(currentUser&&cloudReady&&navigator.onLine)refreshCloud();});\nwindow.addEventListener('offline',()=>{if(currentUser)setSyncStatus('오프라인 · 변경 내용은 기기에 저장돼요');});window.addEventListener('online',async()=>{if(!currentUser)return;setSyncStatus('온라인 · 동기화 연결 중…');try{let session=(await supabaseClient?.auth?.getSession())?.data?.session;if(!session&&supabaseClient?.auth)session=(await supabaseClient.auth.refreshSession()).data?.session;if(session){currentUser=session.user;await pullCloud();}else setSyncStatus('온라인 · 다시 로그인하면 동기화돼요');}catch(error){console.error('Wordloop reconnect sync failed:',error);setSyncStatus('동기화 대기 · 다시 시도해 주세요');}});
+window.addEventListener('focus',()=>{if(currentUser&&cloudReady&&navigator.onLine)refreshCloud();});
+window.addEventListener('offline',()=>{if(currentUser)setSyncStatus('오프라인 · 변경 내용은 기기에 저장돼요');});window.addEventListener('online',async()=>{if(!currentUser)return;setSyncStatus('온라인 · 동기화 연결 중…');try{let session=(await supabaseClient?.auth?.getSession())?.data?.session;if(!session&&supabaseClient?.auth)session=(await supabaseClient.auth.refreshSession()).data?.session;if(session){currentUser=session.user;await pullCloud();}else setSyncStatus('온라인 · 다시 로그인하면 동기화돼요');}catch(error){console.error('Wordloop reconnect sync failed:',error);setSyncStatus('동기화 대기 · 다시 시도해 주세요');}});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&currentUser&&cloudReady&&navigator.onLine)refreshCloud();});
 function getDirectionProgress(w,direction){
   if(!w.directionProgress||typeof w.directionProgress!=='object')w.directionProgress={};
@@ -2082,5 +2111,8 @@ try{renderExampleFields([]);}catch(error){console.error('Wordloop example-field 
 try{renderStats();}catch(error){console.error('Wordloop dashboard startup failed:',error);}
 try{renderList();}catch(error){console.error('Wordloop list startup failed:',error);}
 </script>
-<script>\nif('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(error=>console.warn('Wordloop offline setup failed:',error)));}\n</script>\n</body>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(error=>console.warn('Wordloop offline setup failed:',error)));}
+</script>
+</body>
 </html>
