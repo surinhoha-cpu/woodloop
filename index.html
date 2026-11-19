@@ -1103,8 +1103,26 @@ function recordEvent(w,key,event){
 }
 function ensureDailyReviewPlan(key){
   if(key!==dateKey(new Date()))return;
-  if(dailyReviewPlans.some(x=>x.date===key))return;
-  dailyReviewPlans.push({date:key,word:dueWords().length,sentence:dueSentences().length,capturedAt:Date.now()});
+  const currentWordDue=dueWords().length;
+  const currentSentenceDue=dueSentences().length;
+  const existing=dailyReviewPlans.find(x=>x.date===key);
+  if(existing){
+    // 앱 시작 직후 클라우드 데이터가 아직 로드되지 않아 0으로 저장된 계획은
+    // 오늘 복습 기록이 생기기 전까지 실제 복습 대상 수로 보정해요.
+    const activity=activityForDate(key);
+    if(activity.word===0&&activity.sentence===0){
+      const nextWord=Math.max(Number(existing.word)||0,currentWordDue);
+      const nextSentence=Math.max(Number(existing.sentence)||0,currentSentenceDue);
+      if(nextWord!==(Number(existing.word)||0)||nextSentence!==(Number(existing.sentence)||0)){
+        existing.word=nextWord;
+        existing.sentence=nextSentence;
+        existing.capturedAt=Date.now();
+        saveLocal();
+      }
+    }
+    return;
+  }
+  dailyReviewPlans.push({date:key,word:currentWordDue,sentence:currentSentenceDue,capturedAt:Date.now()});
   dailyReviewPlans=dailyReviewPlans.slice(-400);
   saveLocal();
 }
