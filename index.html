@@ -539,7 +539,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 209</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 210</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost refresh-app-btn" id="refreshAppBtn" type="button" aria-label="앱 새로고침" title="최신 화면으로 새로고침">↻</button><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -842,11 +842,39 @@ function saveAIItemToSentenceBook(button){
  save();button.textContent='저장 완료';button.disabled=true;showToast('내 단어장 문장 탭에 저장했어요.');
 }
 const setSyncStatus=(message)=>{const el=$('syncStatus');if(el)el.textContent=message;};
-const updateOfflineIndicator=()=>{const el=$('offlineIndicator');if(!el)return;const offline=!navigator.onLine;el.classList.toggle('visible',offline);el.textContent=offline?'오프라인':'온라인';if(offline&&currentUser)setSyncStatus('오프라인 · 기기에 저장');};
-window.addEventListener('online',()=>{updateOfflineIndicator();if(currentUser)setSyncStatus('연결 복구 · 동기화 대기');});
-window.addEventListener('offline',updateOfflineIndicator);
-window.addEventListener('DOMContentLoaded',updateOfflineIndicator);
-updateOfflineIndicator();
+let wordloopNetworkReachable=navigator.onLine;
+let wordloopNetworkProbeRunning=false;
+const updateOfflineIndicator=(offline=!navigator.onLine)=>{
+ const el=$('offlineIndicator');if(!el)return;
+ el.classList.toggle('visible',offline);
+ el.textContent='오프라인';
+ if(offline&&currentUser)setSyncStatus('오프라인 · 기기에 저장');
+};
+const checkWordloopNetwork=async()=>{
+ if(wordloopNetworkProbeRunning)return;
+ if(!navigator.onLine){wordloopNetworkReachable=false;updateOfflineIndicator(true);return;}
+ wordloopNetworkProbeRunning=true;
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),5000);
+ try{
+  // Check the actual Wordloop backend, not only the browser's connection flag.
+  await fetch(SUPABASE_URL+'/auth/v1/health',{method:'GET',cache:'no-store',signal:controller.signal});
+  wordloopNetworkReachable=true;
+  updateOfflineIndicator(false);
+  if(currentUser&&$('syncStatus')?.textContent==='오프라인 · 기기에 저장')setSyncStatus('연결 복구 · 동기화 대기');
+ }catch(error){
+  wordloopNetworkReachable=false;
+  updateOfflineIndicator(true);
+ }finally{
+  clearTimeout(timeout);
+  wordloopNetworkProbeRunning=false;
+ }
+};
+window.addEventListener('online',()=>{checkWordloopNetwork();if(currentUser)setSyncStatus('연결 확인 중…');});
+window.addEventListener('offline',()=>{wordloopNetworkReachable=false;updateOfflineIndicator(true);});
+window.addEventListener('DOMContentLoaded',checkWordloopNetwork);
+checkWordloopNetwork();
+setInterval(checkWordloopNetwork,15000);
 const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify([...words,{id:SENTENCE_STORE_ID,items:standaloneSentences,deletedSentenceIds:[...deletedSentenceIds],passages,deletedPassageIds:[...deletedPassageIds],monthlyTests:monthlyTestLog,dailyReviewPlans,dailyWritingPractice,dailyWritingHistory,categories:wordCategories}]));localStorage.setItem(KEY+'-deleted',JSON.stringify([...deletedIds]));renderStats();renderList();};
 const save=()=>{saveLocal();if(currentUser&&cloudReady){setSyncStatus('저장 중…');clearTimeout(saveTimer);saveTimer=setTimeout(writeCloud,450);}};
 async function writeCloud(){
