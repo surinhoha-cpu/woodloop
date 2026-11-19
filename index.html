@@ -6,7 +6,7 @@
 <title>Wordloop — My Vocabulary</title>
 <link rel="icon" type="image/png" sizes="180x180" href="./bear-icon.png?v=3">
 <link rel="apple-touch-icon" sizes="180x180" href="./bear-icon.png?v=3">
-<meta name="theme-color" content="#eaf1eb">
+<meta name="theme-color" content="#eaf1eb">\n<link rel="manifest" href="./manifest.webmanifest">
 <style>
 :root{--bg:#f6f5f1;--panel:#fff;--ink:#24251f;--muted:#77796f;--line:#e8e6df;--accent:#536b58;--soft:#edf2ec;--red:#a85d52;--gold:#9a8151;--blue:#58728a}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 15px;background:var(--accent);color:#fff;font-weight:650}button:disabled{opacity:.4;cursor:not-allowed}button.secondary{background:#f0f0eb;color:var(--ink);border:1px solid var(--line)}button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}button.danger{background:#f7edeb;color:var(--red);border:1px solid #ead5d1}
@@ -538,7 +538,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 203</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 204</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost refresh-app-btn" id="refreshAppBtn" type="button" aria-label="앱 새로고침" title="최신 화면으로 새로고침">↻</button><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -718,7 +718,7 @@ const SUPABASE_URL='https://jmjfhvlrwwfuyurbxlsy.supabase.co';
 const SUPABASE_KEY='sb_publishable_ED2G8FRPHtCz5y_AmazRiw_nCitH2d1';
 const OWNER_EMAIL='srin001@icloud.com';
 const AUTH_STORAGE_KEY='sb-jmjfhvlrwwfuyurbxlsy-auth-token';
-const AUTH_BACKUP_KEY='wordloop-auth-refresh-backup-v1';
+const AUTH_BACKUP_KEY='wordloop-auth-refresh-backup-v1';\nconst OFFLINE_USER_KEY='wordloop-offline-user-v1';\nconst OFFLINE_PENDING_KEY='wordloop-offline-pending-v1';
 document.getElementById('authMessage').textContent='앱 스크립트 시작됨 · 로그인 기능을 초기화하고 있어요…';
 function backupAuthSession(session){try{if(session?.refresh_token)localStorage.setItem(AUTH_BACKUP_KEY,JSON.stringify({refresh_token:session.refresh_token,updated_at:Date.now()}));}catch(e){console.error('Wordloop auth backup failed:',e);}}
 let wordloopAuthLockTail=Promise.resolve();
@@ -808,7 +808,7 @@ let monthlyTestLog=Array.isArray(sentenceStoreAtLoad.monthlyTests)?sentenceStore
 let dailyWritingPractice=sentenceStoreAtLoad.dailyWritingPractice&&typeof sentenceStoreAtLoad.dailyWritingPractice==='object'?sentenceStoreAtLoad.dailyWritingPractice:null;
 let dailyWritingHistory=Array.isArray(sentenceStoreAtLoad.dailyWritingHistory)?sentenceStoreAtLoad.dailyWritingHistory:[];
 words=words.filter(w=>w&&w.id&&w.id!==SENTENCE_STORE_ID&&!deletedIds.has(String(w.id)));
-let currentUser=null,cloudReady=false,activatingUserId=null,saveTimer=null,syncChannel=null;
+let currentUser=null,cloudReady=false,activatingUserId=null,saveTimer=null,syncChannel=null;\nlet offlinePending=localStorage.getItem(OFFLINE_PENDING_KEY)==='1';
 let selectedRelatedIds=[],selectedSentenceIds=[],toastTimer=null,deletingWord=false,latestAIReview=null;
 let expandedId=null,editingId=null,wordQueue=[],currentWord=null,sentenceQueue=[],currentSentence=null;
 let quizState={queue:[],current:null,index:0,score:0,wrong:[],answered:false,mode:'meaningToWord',onlyWrong:false};
@@ -835,17 +835,11 @@ function saveAIItemToSentenceBook(button){
  save();button.textContent='저장 완료';button.disabled=true;showToast('내 단어장 문장 탭에 저장했어요.');
 }
 const setSyncStatus=(message)=>{const el=$('syncStatus');if(el)el.textContent=message;};
-const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify([...words,{id:SENTENCE_STORE_ID,items:standaloneSentences,deletedSentenceIds:[...deletedSentenceIds],passages,deletedPassageIds:[...deletedPassageIds],monthlyTests:monthlyTestLog,dailyReviewPlans,dailyWritingPractice,dailyWritingHistory,categories:wordCategories}]));localStorage.setItem(KEY+'-deleted',JSON.stringify([...deletedIds]));renderStats();renderList();};
+const saveLocal=()=>{localStorage.setItem(KEY,JSON.stringify([...words,{id:SENTENCE_STORE_ID,items:standaloneSentences,deletedSentenceIds:[...deletedSentenceIds],passages,deletedPassageIds:[...deletedPassageIds],monthlyTests:monthlyTestLog,dailyReviewPlans,dailyWritingPractice,dailyWritingHistory,categories:wordCategories}]));localStorage.setItem(KEY+'-deleted',JSON.stringify([...deletedIds]));if(!navigator.onLine){offlinePending=true;localStorage.setItem(OFFLINE_PENDING_KEY,'1');setSyncStatus('오프라인 · 기기에 저장됨');}renderStats();renderList();};
 const save=()=>{saveLocal();if(currentUser&&cloudReady){setSyncStatus('저장 중…');clearTimeout(saveTimer);saveTimer=setTimeout(writeCloud,450);}};
-async function writeCloud(){
-  if(!currentUser)return;
+async function writeCloud(){\n  if(!currentUser)return;\n  if(!navigator.onLine||!supabaseClient?.from){offlinePending=true;localStorage.setItem(OFFLINE_PENDING_KEY,'1');setSyncStatus('오프라인 · 변경 내용 저장 대기');return;}
   const snapshot=[...JSON.parse(JSON.stringify(words)),{id:SENTENCE_STORE_ID,items:JSON.parse(JSON.stringify(standaloneSentences)),deletedSentenceIds:[...deletedSentenceIds],passages:JSON.parse(JSON.stringify(passages)),deletedPassageIds:[...deletedPassageIds],monthlyTests:JSON.parse(JSON.stringify(monthlyTestLog)),dailyWritingPractice:JSON.parse(JSON.stringify(dailyWritingPractice)),dailyWritingHistory:JSON.parse(JSON.stringify(dailyWritingHistory)),categories:JSON.parse(JSON.stringify(wordCategories))},...[...deletedIds].map(id=>({id,_deleted:true,deletedAt:Date.now()}))];
-  const {error}=await supabaseClient.from('wordloop_data').upsert(
-    {user_id:currentUser.id,words:snapshot,updated_at:new Date().toISOString()},
-    {onConflict:'user_id'}
-  );
-  if(error){console.error(error);setSyncStatus('동기화 오류 · 인터넷 연결 확인');return;}
-  setSyncStatus('동기화 완료');
+  try{\n    const {error}=await supabaseClient.from('wordloop_data').upsert(\n      {user_id:currentUser.id,words:snapshot,updated_at:new Date().toISOString()},\n      {onConflict:'user_id'}\n    );\n    if(error)throw error;\n    offlinePending=false;localStorage.removeItem(OFFLINE_PENDING_KEY);setSyncStatus('동기화 완료');\n  }catch(error){console.error('Wordloop cloud save failed:',error);offlinePending=true;localStorage.setItem(OFFLINE_PENDING_KEY,'1');setSyncStatus('동기화 대기 · 연결을 확인해 주세요');}
 }
 function mergeCloudWords(remoteWords){
   const remote=Array.isArray(remoteWords)?remoteWords:[];
@@ -870,8 +864,7 @@ function mergeCloudWords(remoteWords){
   saveLocal();
   return cloudNeedsUpdate;
 }
-async function pullCloud(){
-  if(!currentUser)return;
+async function pullCloud(){\n  if(!currentUser)return;\n  if(!navigator.onLine||!supabaseClient?.from){cloudReady=true;setSyncStatus('오프라인 · 기기에 저장된 데이터');return;}
   cloudReady=false;
   setSyncStatus('불러오는 중…');
   const {data,error}=await supabaseClient.from('wordloop_data').select('words').eq('user_id',currentUser.id).maybeSingle();
@@ -880,7 +873,7 @@ async function pullCloud(){
   const hasCloud=!!data;
   const localOnly=mergeCloudWords(data?.words||[]);
   cloudReady=true;
-  if(localOnly||!hasCloud||(!hasLocal&&hasCloud)){
+  if(localOnly||!hasCloud||(!hasLocal&&hasCloud)||offlinePending){
     await writeCloud();
   }else{
     setSyncStatus('동기화 완료');
@@ -906,8 +899,7 @@ function subscribeToCloud(){
       }
     }).subscribe();
 }
-async function activateAccount(user){
-  if(!user)return;
+async function activateAccount(user){\n  if(!user)return;\n  try{localStorage.setItem(OFFLINE_USER_KEY,JSON.stringify({id:user.id,email:user.email||OWNER_EMAIL,updatedAt:Date.now()}));}catch(e){}
   if(activatingUserId===user.id)return;
   if(currentUser&&currentUser.id===user.id&&cloudReady)return;
   activatingUserId=user.id;
@@ -926,7 +918,7 @@ async function activateAccount(user){
   // Render the app before waiting for Supabase. A slow or stalled network request
   // must not leave every main section hidden behind the header.
   activateTab(restoreTab);
-  try{await pullCloud();}catch(error){console.error('Wordloop cloud startup failed:',error);setSyncStatus('동기화 오류 · 화면은 계속 사용할 수 있어요');}
+  try{if(!navigator.onLine||!supabaseClient?.from){cloudReady=true;setSyncStatus('오프라인 · 기기에 저장된 데이터');}else await pullCloud();}catch(error){console.error('Wordloop cloud startup failed:',error);cloudReady=true;setSyncStatus('동기화 오류 · 화면은 계속 사용할 수 있어요');}
   activatingUserId=null;
   const savedScroll=sessionStorage.getItem('wordloop-scroll-y');
   if(savedScroll!==null){sessionStorage.removeItem('wordloop-scroll-y');requestAnimationFrame(()=>window.scrollTo(0,Math.max(0,Number(savedScroll)||0)));}
@@ -950,9 +942,7 @@ function authErrorMessage(error){
   if(msg.toLowerCase().includes('invalid login credentials'))return '이메일 또는 비밀번호가 맞지 않아요. 처음 이용한다면 계정 만들기를 먼저 해 주세요.';
   return msg;
 }
-async function bootAuth(){
-  $('authMessage').textContent='로그인 상태를 확인하고 있어요…';
-  if(!supabaseClient?.auth){$('authGate').classList.remove('hidden');$('authMessage').textContent='로그인 기능 초기화 오류: '+String(window.wordloopAuthInitError||'Supabase 연결을 확인해 주세요.');return;}
+async function bootAuth(){\n  $('authMessage').textContent='로그인 상태를 확인하고 있어요…';\n  const cachedOfflineUser=()=>{try{const u=JSON.parse(localStorage.getItem(OFFLINE_USER_KEY)||'null');return u?.id?{id:u.id,email:u.email||OWNER_EMAIL}:null;}catch(e){return null;}};\n  if(!navigator.onLine){const cached=cachedOfflineUser();if(cached){await activateAccount(cached);return;}}\n  if(!supabaseClient?.auth){const cached=cachedOfflineUser();if(cached){await activateAccount(cached);return;} $('authGate').classList.remove('hidden');$('authMessage').textContent='로그인 기능 초기화 오류: '+String(window.wordloopAuthInitError||'Supabase 연결을 확인해 주세요.');return;}
   supabaseClient.auth.onAuthStateChange((event,session)=>{
     if(session){backupAuthSession(session);setTimeout(()=>activateAccount(session.user),0);return;}
     if(event==='SIGNED_OUT'&&!currentUser){$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');}
@@ -963,11 +953,7 @@ async function bootAuth(){
       supabaseClient.auth.getSession(),
       new Promise((_,reject)=>setTimeout(()=>reject(new Error('Safari에서 로그인 세션 확인이 8초 이상 지연됐어요. 브라우저 인증 잠금 또는 저장 공간을 확인해야 해요.')),8000))
     ]);
-  }catch(sessionCheckError){
-    $('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');
-    $('authMessage').textContent='로그인 세션 확인 실패: '+String(sessionCheckError.message||sessionCheckError)+' · '+authStorageDiagnostic();
-    return;
-  }
+  }catch(sessionCheckError){\n    const cached=cachedOfflineUser();if(!navigator.onLine&&cached){await activateAccount(cached);return;}\n    $('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');\n    $('authMessage').textContent='로그인 세션 확인 실패: '+String(sessionCheckError.message||sessionCheckError)+' · '+authStorageDiagnostic();\n    return;\n  }
   let {data,error}=authResult;
   if(!error&&!data.session){
     try{
@@ -984,9 +970,7 @@ async function bootAuth(){
       }
     }catch(recoveryError){console.error('Wordloop refresh-token recovery failed:',recoveryError);error=recoveryError;}
   }
-  if(error){console.error('Wordloop session restore failed:',error);$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent='로그인 복원 오류: '+String(error.message||error)+' · '+authStorageDiagnostic();return;}
-  if(data.session){backupAuthSession(data.session);await activateAccount(data.session.user);}
-  else{$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent=authStorageDiagnostic();}
+  if(error){const cached=cachedOfflineUser();if(!navigator.onLine&&cached){await activateAccount(cached);return;}console.error('Wordloop session restore failed:',error);$('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent='로그인 복원 오류: '+String(error.message||error)+' · '+authStorageDiagnostic();return;}\n  if(data.session){backupAuthSession(data.session);await activateAccount(data.session.user);}\n  else{const cached=cachedOfflineUser();if(!navigator.onLine&&cached){await activateAccount(cached);return;} $('authGate').classList.remove('hidden');$('appMain').classList.add('hidden');$('authMessage').textContent=authStorageDiagnostic();}
 }
 // Login uses the early capture-phase handler registered before app initialization.
 $('signupBtn').onclick=async()=>{
@@ -1004,8 +988,8 @@ $('signupBtn').onclick=async()=>{
 $('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();try{localStorage.removeItem(AUTH_BACKUP_KEY);}catch(e){}showSignedOut();};
 $('logoHomeBtn').addEventListener('click',()=>activateTab('home'));
 $('logoHomeBtn').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activateTab('home');}});
-window.addEventListener('focus',()=>{if(currentUser&&cloudReady)refreshCloud();});
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&currentUser&&cloudReady)refreshCloud();});
+window.addEventListener('focus',()=>{if(currentUser&&cloudReady&&navigator.onLine)refreshCloud();});\nwindow.addEventListener('online',async()=>{if(!currentUser)return;setSyncStatus('온라인 · 동기화 연결 중…');try{let session=(await supabaseClient?.auth?.getSession())?.data?.session;if(!session&&supabaseClient?.auth)session=(await supabaseClient.auth.refreshSession()).data?.session;if(session){currentUser=session.user;await pullCloud();}else setSyncStatus('온라인 · 다시 로그인하면 동기화돼요');}catch(error){console.error('Wordloop reconnect sync failed:',error);setSyncStatus('동기화 대기 · 다시 시도해 주세요');}});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&currentUser&&cloudReady&&navigator.onLine)refreshCloud();});
 function getDirectionProgress(w,direction){
   if(!w.directionProgress||typeof w.directionProgress!=='object')w.directionProgress={};
   if(!w.directionProgress[direction])w.directionProgress[direction]={streak:0,next:0,reps:0,lastGrade:null};
@@ -2098,5 +2082,5 @@ try{renderExampleFields([]);}catch(error){console.error('Wordloop example-field 
 try{renderStats();}catch(error){console.error('Wordloop dashboard startup failed:',error);}
 try{renderList();}catch(error){console.error('Wordloop list startup failed:',error);}
 </script>
-</body>
+<script>\nif('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(error=>console.warn('Wordloop offline setup failed:',error)));}\n</script>\n</body>
 </html>
