@@ -538,7 +538,7 @@ button.secondary,button.ghost,button.danger{font-size:13px}
 </head>
 <body>
 <header>
-  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 204</span></div></div>
+  <div><div class="logo-lockup" id="logoHomeBtn" role="button" tabindex="0" aria-label="대시보드로 이동"><svg class="logo-bear" viewBox="4 6 40 40" role="img" aria-label="곰 로고"><path d="M8 18C5 15 6 9 10 8c4-1 7 2 8 6 4-2 8-2 12 0 1-4 4-7 8-6 4 1 5 7 2 10 2 3 3 6 3 10 0 9-7 15-19 15S5 37 5 28c0-4 1-7 3-10Z" fill="none" stroke="#315d48" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="25" r="1.7" fill="#315d48"/><circle cx="30" cy="25" r="1.7" fill="#315d48"/><ellipse cx="24" cy="30" rx="2.3" ry="1.7" fill="#315d48"/></svg><h1>Wordloop</h1></div><div class="sub">나만의 단어장 · 오늘 배운 단어를 오래 기억하기 <span style="font-size:10px;color:#9a9b92;margin-left:5px;white-space:nowrap">수정본 205</span></div></div>
   <div class="top-actions hidden" id="topActions"><span class="account-email" id="currentAccount"></span><span class="sync-status" id="syncStatus">연결 중</span><button class="ghost refresh-app-btn" id="refreshAppBtn" type="button" aria-label="앱 새로고침" title="최신 화면으로 새로고침">↻</button><button class="ghost" id="logoutBtn">로그아웃</button></div>
 </header>
 <div id="appToast" class="toast" role="status" aria-live="polite"></div>
@@ -855,7 +855,7 @@ function mergeCloudWords(remoteWords){
   const map=new Map(remote.filter(w=>w&&w.id&&w.id!==SENTENCE_STORE_ID&&!w._deleted&&!deletedIds.has(String(w.id))).map(w=>[String(w.id),w]));
   for(const w of words){
     if(!w||!w.id||deletedIds.has(String(w.id)))continue;
-    if(!map.has(String(w.id))){map.set(String(w.id),w);cloudNeedsUpdate=true;}
+    const hasRemoteWord=map.has(String(w.id));if(!hasRemoteWord||offlinePending){map.set(String(w.id),w);if(!hasRemoteWord)cloudNeedsUpdate=true;}
   }
   const remoteTombstones=new Set(remote.filter(w=>w&&w.id&&w._deleted).map(w=>String(w.id)));
   if([...deletedIds].some(id=>!remoteTombstones.has(id)))cloudNeedsUpdate=true;
@@ -988,7 +988,7 @@ $('signupBtn').onclick=async()=>{
 $('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();try{localStorage.removeItem(AUTH_BACKUP_KEY);}catch(e){}showSignedOut();};
 $('logoHomeBtn').addEventListener('click',()=>activateTab('home'));
 $('logoHomeBtn').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activateTab('home');}});
-window.addEventListener('focus',()=>{if(currentUser&&cloudReady&&navigator.onLine)refreshCloud();});\nwindow.addEventListener('online',async()=>{if(!currentUser)return;setSyncStatus('온라인 · 동기화 연결 중…');try{let session=(await supabaseClient?.auth?.getSession())?.data?.session;if(!session&&supabaseClient?.auth)session=(await supabaseClient.auth.refreshSession()).data?.session;if(session){currentUser=session.user;await pullCloud();}else setSyncStatus('온라인 · 다시 로그인하면 동기화돼요');}catch(error){console.error('Wordloop reconnect sync failed:',error);setSyncStatus('동기화 대기 · 다시 시도해 주세요');}});
+window.addEventListener('focus',()=>{if(currentUser&&cloudReady&&navigator.onLine)refreshCloud();});\nwindow.addEventListener('offline',()=>{if(currentUser)setSyncStatus('오프라인 · 변경 내용은 기기에 저장돼요');});window.addEventListener('online',async()=>{if(!currentUser)return;setSyncStatus('온라인 · 동기화 연결 중…');try{let session=(await supabaseClient?.auth?.getSession())?.data?.session;if(!session&&supabaseClient?.auth)session=(await supabaseClient.auth.refreshSession()).data?.session;if(session){currentUser=session.user;await pullCloud();}else setSyncStatus('온라인 · 다시 로그인하면 동기화돼요');}catch(error){console.error('Wordloop reconnect sync failed:',error);setSyncStatus('동기화 대기 · 다시 시도해 주세요');}});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&currentUser&&cloudReady&&navigator.onLine)refreshCloud();});
 function getDirectionProgress(w,direction){
   if(!w.directionProgress||typeof w.directionProgress!=='object')w.directionProgress={};
